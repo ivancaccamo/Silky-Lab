@@ -1,4 +1,4 @@
-package com.example.ecommerce.model;
+package com.example.progetto.backend;
 
 public class Product {
     private Long id;
