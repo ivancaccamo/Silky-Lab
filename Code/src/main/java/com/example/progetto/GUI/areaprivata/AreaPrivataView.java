@@ -24,7 +24,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 public class AreaPrivataView extends Composite<VerticalLayout> {
 
     public AreaPrivataView() {
-        H1 h1 = new H1();
+        H1 h1 = new H1("registrazione");
         HorizontalLayout layoutRow = new HorizontalLayout();
         TextField textField = new TextField();
         HorizontalLayout layoutRow2 = new HorizontalLayout();
@@ -34,13 +34,14 @@ public class AreaPrivataView extends Composite<VerticalLayout> {
         EmailField emailField = new EmailField();
         PasswordField passwordField = new PasswordField();
         HorizontalLayout layoutRow4 = new HorizontalLayout();
-        Button buttonPrimary = new Button();
+        Button buttonPrimary = new Button("salva", event -> {
+        	
+        });
         Button buttonSecondary = new Button();
         Paragraph textMedium = new Paragraph();
         RouterLink routerLink = new RouterLink();
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
-        h1.setText("Registrazione");
         h1.setWidth("max-content");
         layoutRow.setWidthFull();
         getContent().setFlexGrow(1.0, layoutRow);
@@ -72,7 +73,7 @@ public class AreaPrivataView extends Composite<VerticalLayout> {
         layoutRow4.addClassName(Gap.MEDIUM);
         layoutRow4.setWidth("100%");
         layoutRow4.getStyle().set("flex-grow", "1");
-        buttonPrimary.setText("Salva");
+    
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Cancella");
