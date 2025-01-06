@@ -1,5 +1,6 @@
 package com.example.progetto.GUI.areaprivata;
 
+import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -35,7 +36,7 @@ public class AreaPrivataView extends Composite<VerticalLayout> {
         PasswordField passwordField = new PasswordField();
         HorizontalLayout layoutRow4 = new HorizontalLayout();
         Button buttonPrimary = new Button("salva", event -> {
-        	
+        	var utente = new User();
         });
         Button buttonSecondary = new Button();
         Paragraph textMedium = new Paragraph();
