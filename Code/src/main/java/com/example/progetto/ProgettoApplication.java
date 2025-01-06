@@ -1,6 +1,7 @@
 package com.example.progetto;
 
 
+import com.example.DatabaseTest;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import javax.sql.DataSource;
@@ -17,5 +18,6 @@ public class ProgettoApplication implements AppShellConfigurator{
 	public static void main(String[] args) {
 		SpringApplication.run(ProgettoApplication.class, args);
 	}
+	
 
 }
