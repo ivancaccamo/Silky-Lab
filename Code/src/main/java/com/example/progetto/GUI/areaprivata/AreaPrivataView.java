@@ -1,11 +1,13 @@
 package com.example.progetto.GUI.areaprivata;
 
+import com.example.application.services.DatabaseManager;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,10 +19,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+
+import java.sql.SQLException;
+
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Area Privata")
-@Route("Login")
+@Route("Registration")
 @Menu(order = 1, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
 public class AreaPrivataView extends Composite<VerticalLayout> {
 
@@ -36,7 +41,25 @@ public class AreaPrivataView extends Composite<VerticalLayout> {
         PasswordField passwordField = new PasswordField();
         HorizontalLayout layoutRow4 = new HorizontalLayout();
         Button buttonPrimary = new Button("salva", event -> {
-        	var utente = new User();
+            // Creazione di un nuovo utente
+            User utente = new User();
+            utente.setName(textField.getValue()); // Nome
+            utente.setSurname(textField2.getValue()); // Cognome
+            utente.setEmail(emailField.getValue()); // Email
+            utente.setPassword(passwordField.getValue()); // Password
+            utente.setRole("CLIENT"); // Ruolo predefinito
+            
+
+            try {
+                // Aggiungi l'utente al database
+                DatabaseManager dbManager = new DatabaseManager();
+                dbManager.saveUser(utente); // Metodo per inserire l'utente nel database
+                Notification.show("Registrazione completata!");
+                getUI().ifPresent(ui -> ui.navigate("Profile"));
+            } catch (SQLException e) {
+                Notification.show("Errore durante la registrazione.");
+                e.printStackTrace();
+            }
         });
         Button buttonSecondary = new Button();
         Paragraph textMedium = new Paragraph();
@@ -93,9 +116,8 @@ public class AreaPrivataView extends Composite<VerticalLayout> {
         layoutRow.add(layoutRow2);
         layoutRow2.add(textField2);
         getContent().add(layoutRow3);
-        layoutRow3.add(textField3);
-        layoutRow3.add(emailField);
-        getContent().add(passwordField);
+        layoutRow3.add(emailField); 
+        layoutRow3.add(passwordField);
         getContent().add(layoutRow4);
         layoutRow4.add(buttonPrimary);
         layoutRow4.add(buttonSecondary);
