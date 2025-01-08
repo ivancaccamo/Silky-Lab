@@ -14,14 +14,9 @@ import com.vaadin.flow.router.Route;
 
 @Route("login")
 public class LoginView extends VerticalLayout {
-
-    /**
-	 * 
-	 */
 	
-
 	public LoginView() {
-    	
+    	CurrentUser.getInstance();
         TextField emailField = new TextField("Email");
         PasswordField passwordField = new PasswordField("Password");
         Button loginButton = new Button("Login", event -> {

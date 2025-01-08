@@ -25,6 +25,7 @@ public class DatabaseManager {
                     User user = new User();
                     user.setId(rs.getInt("ID"));
                     user.setName(rs.getString("name"));
+                    user.setSurname(rs.getString("surname"));
                     user.setEmail(rs.getString("email"));
                     user.setPassword(rs.getString("password"));
                     user.setRole(rs.getString("role"));
@@ -48,7 +49,7 @@ public class DatabaseManager {
         }
     }
     public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET name = ?, surname = ?, email = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE User SET name = ?, surname = ?, email = ?, password = ? WHERE id = ?";
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getName());
