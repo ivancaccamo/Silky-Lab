@@ -26,8 +26,8 @@ public class ProfileView extends VerticalLayout {
     	
     	
 
-        // Form per modificare i dati personali
-        TextField nameField = new TextField("Nome");
+       if(user != null) {
+    	   TextField nameField = new TextField("Nome");
         nameField.setValue(user.getName());
 
         TextField surnameField = new TextField("Cognome");
@@ -48,7 +48,8 @@ public class ProfileView extends VerticalLayout {
 
             try {
                 DatabaseManager dbManager = new DatabaseManager();
-                dbManager.updateUser(user); // Metodo per aggiornare i dati nel database
+                dbManager.updateUser(user);// Metodo per aggiornare i dati nel database
+                getUI().ifPresent(ui -> ui.getPage().reload());
                 Notification.show("Dati aggiornati con successo!");
             } catch (SQLException e) {
                 Notification.show("Errore durante l'aggiornamento dei dati.");
@@ -59,5 +60,9 @@ public class ProfileView extends VerticalLayout {
 
         // Layout
         add(nameField, surnameField, emailField, passwordField, saveButton);
+    }else {
+    	
     }
+       }
+        
 }

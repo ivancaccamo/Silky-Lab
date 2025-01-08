@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperti
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@Theme(variant = "light")
 
 public class ProgettoApplication implements AppShellConfigurator{
 

@@ -29,6 +29,7 @@ public class LoginView extends VerticalLayout {
                 if (user != null && user.getPassword().equals(password)) {
                 	Notification.show("Credenziali valide");
                 	CurrentUser.setUser(user);
+                	getUI().ifPresent(ui -> ui.getPage().reload());
                 	 getUI().ifPresent(ui -> ui.navigate("Profile"));
                     if ("ADMIN".equals(user.getRole())) {
                         getUI().ifPresent(ui -> ui.navigate("admin-home"));

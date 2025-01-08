@@ -26,7 +26,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Area Privata")
 @Route("Registration")
-@Menu(order = 1, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
+@Menu(order = 2, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
 public class AreaPrivataView extends Composite<VerticalLayout> {
 
     public AreaPrivataView() {
@@ -56,6 +56,7 @@ public class AreaPrivataView extends Composite<VerticalLayout> {
                 dbManager.saveUser(utente); // Metodo per inserire l'utente nel database
                 Notification.show("Registrazione completata!");
                 getUI().ifPresent(ui -> ui.navigate("Profile"));
+                getUI().ifPresent(ui -> ui.getPage().reload());
             } catch (SQLException e) {
                 Notification.show("Errore durante la registrazione.");
                 e.printStackTrace();

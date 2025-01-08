@@ -12,6 +12,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.FontSize;
@@ -24,9 +25,9 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Image Gallery")
-@Route("")
-@Menu(order = 0, icon = LineAwesomeIconUrl.TH_LIST_SOLID)
+@PageTitle("Shop")
+@Route("Shop")
+@Menu(order = 1, icon = LineAwesomeIconUrl.TH_LIST_SOLID)
 public class ImageGalleryView extends Main implements HasComponents, HasStyle {
 
     private OrderedList imageContainer;
@@ -50,7 +51,7 @@ public class ImageGalleryView extends Main implements HasComponents, HasStyle {
     }
 
     private void constructUI() {
-        addClassNames("image-gallery-view");
+        addClassNames("image-gallery-view.css");
         addClassNames(MaxWidth.SCREEN_LARGE, Margin.Horizontal.AUTO, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
 
         HorizontalLayout container = new HorizontalLayout();

@@ -1,11 +1,15 @@
 package com.example.progetto.GUI;
 
+import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.User;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -17,6 +21,9 @@ import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+
 /**
  * The main view is a top-level placeholder for other views.
  */
@@ -25,13 +32,15 @@ import java.util.List;
 public class MainLayout extends AppLayout {
 
     private H1 viewTitle;
-
-    public MainLayout() {
-        setPrimarySection(Section.DRAWER);
+    private User user = CurrentUser.getUser();
+    @Autowired
+    public MainLayout(ApplicationEventPublisher eventPublisher) {
+    	setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
+        
     }
-
+    
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
@@ -68,17 +77,42 @@ public class MainLayout extends AppLayout {
     }
 
     private Footer createFooter() {
-        Footer layout = new Footer();
+        Footer footer = new Footer();
+        footer.addClassNames(LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.BETWEEN, LumoUtility.Padding.MEDIUM);
+        // Icona utente
+        Icon userIcon = new Icon("lumo", "user");
+        userIcon.setSize("50px");
+        userIcon.addClassNames(LumoUtility.Margin.Right.SMALL);
 
-        return layout;
+        // Nome dell'utente corrente
+        Span userNameSpan;
+        String route=null;
+        
+        if(user != null) {
+ 
+        	String currentUserName = user.getName(); // Metodo per ottenere il nome dell'utente
+        	userNameSpan = new Span(currentUserName);
+        	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL);
+        	route = "Profile";
+        	
+        }else {
+        	
+        	userNameSpan = new Span("Login");
+        	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL); 	
+        	route = "login"; 
+        	
+        }
+        
+       
+
+        // Link alla pagina del profilo
+        Anchor profileLink = new Anchor(route, userIcon, userNameSpan); // Cambia "profile" con il tuo route
+        profileLink.addClassNames(LumoUtility.TextColor.SECONDARY, LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER);
+        profileLink.getStyle().set("text-decoration", "none");
+        footer.add(profileLink);
+        return footer;
     }
-
-    @Override
-    protected void afterNavigation() {
-        super.afterNavigation();
-        viewTitle.setText(getCurrentPageTitle());
-    }
-
+ 
     private String getCurrentPageTitle() {
         return MenuConfiguration.getPageHeader(getContent()).orElse("");
     }
