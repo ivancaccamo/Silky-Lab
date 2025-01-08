@@ -30,7 +30,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 public class AreaPrivataView extends Composite<VerticalLayout> {
 
     public AreaPrivataView() {
-        H1 h1 = new H1("registrazione");
+        H1 h1 = new H1("Registrazione");
         HorizontalLayout layoutRow = new HorizontalLayout();
         TextField textField = new TextField();
         HorizontalLayout layoutRow2 = new HorizontalLayout();

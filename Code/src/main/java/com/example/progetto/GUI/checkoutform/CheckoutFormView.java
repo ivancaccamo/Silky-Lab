@@ -39,7 +39,7 @@ import java.util.Set;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Checkout Form")
-@Route("checkout-form")
+@Route("Checkout-form")
 @Menu(order = 3, icon = LineAwesomeIconUrl.CREDIT_CARD)
 public class CheckoutFormView extends Div {
 
