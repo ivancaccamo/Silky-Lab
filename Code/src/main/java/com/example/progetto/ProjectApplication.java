@@ -1,7 +1,4 @@
 package com.example.progetto;
-
-
-
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import javax.sql.DataSource;
@@ -12,12 +9,11 @@ import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperti
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@Theme(variant = "light")
-
-public class ProgettoApplication implements AppShellConfigurator{
+@Theme("Progetto")
+public class ProjectApplication implements AppShellConfigurator{
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProgettoApplication.class, args);
+		SpringApplication.run(ProjectApplication.class, args);
 	}
 	
 
