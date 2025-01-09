@@ -30,7 +30,6 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Log in area")
 @Route("Login")
-@Menu(order = 0, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
 public class LoginView extends Composite<VerticalLayout> {
 	
     public LoginView() {

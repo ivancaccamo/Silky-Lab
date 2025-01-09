@@ -28,7 +28,7 @@ public class DatabaseManager {
                     user.setSurname(rs.getString("surname"));
                     user.setEmail(rs.getString("email"));
                     user.setPassword(rs.getString("password"));
-                    user.setRole(rs.getString("role"));
+                    user.setRole(rs.getString("role"));                 
                     return user;
                 }
             }
@@ -59,6 +59,15 @@ public class DatabaseManager {
             pstmt.setInt(5, user.getId());
             pstmt.executeUpdate();
         }
+    }
+    public ResultSet returnAllUser() throws SQLException {
+    	String sql = "SELECT * FROM User";
+    	ResultSet rs=null;
+    	try (Connection conn = this.getConnection();
+    			PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    			rs = pstmt.executeQuery();
+           }
+    	return rs;
     }
   
 }
