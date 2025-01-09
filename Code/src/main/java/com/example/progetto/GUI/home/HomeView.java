@@ -2,7 +2,7 @@ package com.example.progetto.GUI.home;
 
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-import com.example.progetto.GUI.areaprivata.AreaPrivataView;
+import com.example.progetto.GUI.areaprivata.RegistrationView;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.Composite;
