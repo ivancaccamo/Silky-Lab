@@ -1,6 +1,7 @@
 package com.example.progetto.GUI;
 
 import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.MyListener;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
@@ -29,16 +31,30 @@ import org.springframework.context.ApplicationEventPublisher;
  */
 @Layout
 @AnonymousAllowed
-public class MainLayout extends AppLayout {
-
+public class MainLayout extends AppLayout implements MyListener{
+	
     private H1 viewTitle;
     private User user = CurrentUser.getUser();
     @Autowired
-    public MainLayout(ApplicationEventPublisher eventPublisher) {
+    public MainLayout() {
+    	
     	setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
         
+    }
+    @Override
+    public void onMethodCalled() {
+    	Notification.show("Credenziali non valide");
+        updateFooter();  
+    }
+    private void updateFooter() {
+        Footer footer = createFooter(); // Crea un nuovo footer con l'utente corrente
+        getChildren()
+            .filter(component -> component instanceof Footer)
+            .findFirst()
+            .ifPresent(this::remove); // Rimuovi il vecchio footer
+        addToDrawer(footer); // Aggiungi il nuovo footer
     }
     
     private void addHeaderContent() {
@@ -99,7 +115,7 @@ public class MainLayout extends AppLayout {
         	
         	userNameSpan = new Span("Login");
         	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL); 	
-        	route = "login"; 
+        	route = "Login"; 
         	
         }
         

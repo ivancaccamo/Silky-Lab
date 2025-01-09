@@ -24,12 +24,11 @@ import java.sql.SQLException;
 
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Area Privata")
-@Route("Registration")
-@Menu(order = 2, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
-public class AreaPrivataView extends Composite<VerticalLayout> {
+@PageTitle("Registrazione")
+@Route("Registrazione")
+public class RegistrationView extends Composite<VerticalLayout> {
 
-    public AreaPrivataView() {
+    public RegistrationView () {
         H1 h1 = new H1("Registrazione");
         HorizontalLayout layoutRow = new HorizontalLayout();
         TextField textField = new TextField();
@@ -109,7 +108,7 @@ public class AreaPrivataView extends Composite<VerticalLayout> {
         textMedium.setMaxWidth("300px");
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
         routerLink.setText("Login");
-        routerLink.setRoute(AreaPrivataView.class);
+        routerLink.setRoute(LoginView.class);
         layoutRow4.setAlignSelf(FlexComponent.Alignment.START, routerLink);
         getContent().add(h1);
         getContent().add(layoutRow);
