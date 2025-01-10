@@ -23,7 +23,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Shop")
 @Route("Shop")
-@Menu(order = 1, icon = LineAwesomeIconUrl.TH_LIST_SOLID)
+@Menu(order = 1, icon = LineAwesomeIconUrl.SHOPPING_BAG_SOLID)
 public class ImageGalleryView extends Main implements HasComponents, HasStyle {
 
     private OrderedList imageContainer;
@@ -57,7 +57,15 @@ public class ImageGalleryView extends Main implements HasComponents, HasStyle {
         imageContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.NONE, Padding.NONE);
         imageContainer.getStyle().set("display", "grid");
         imageContainer.getStyle().set("grid-template-columns", "repeat(2, 1fr)");
-        imageContainer.getStyle().set("gap", "40px"); // Aggiunge spazio tra le card
+        //imageContainer.getStyle().set("gap", "40px"); // Aggiunge spazio tra le card
+        imageContainer.getStyle().set("row-gap", "30px"); // Spazio verticale più grande
+        imageContainer.getStyle().set("column-gap", "70px"); // Spazio orizzontale più piccolo
+        imageContainer.getStyle().set("justify-content", "center"); // Centra le card
+        imageContainer.getStyle().set("max-width", "1000px"); // Imposta una larghezza massima
+        imageContainer.getStyle().set("width", "100%"); // Assicura che la griglia non si restringa troppo
+        imageContainer.getStyle().set("max-height", "1000px"); // Altezza massima della griglia
+        imageContainer.getStyle().set("height", "100%"); 
+        
         container.add(headerContainer);
         add(container, imageContainer);
     }

@@ -1,5 +1,8 @@
 package com.example.progetto.GUI.imagegallery;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.ListItem;
@@ -21,16 +24,23 @@ public class ImageGalleryViewCard extends ListItem {
             
         // Effetto hover per evidenziare la card
         clickableDiv.getStyle().set("box-shadow", "0px 4px 10px rgba(0, 0, 0, 0.1)");
-        clickableDiv.getStyle().set("border", "1px solid transparent");
+        clickableDiv.getStyle().set("border", "4px solid transparent");
         clickableDiv.getElement().addEventListener("mouseover", e -> clickableDiv.getStyle()
                 .set("box-shadow", "0px 4px 15px rgba(0, 0, 0, 0.2)")
-                .set("border", "1px solid #ccc"));
+                .set("border", "4px solid #ccc"));
         clickableDiv.getElement().addEventListener("mouseout", e -> clickableDiv.getStyle()
                 .set("box-shadow", "0px 2px 10px rgba(0, 0, 0, 0.1)")
-                .set("border", "1px solid transparent"));
-
-        clickableDiv.addClickListener(event -> Notification.show("Hai cliccato su: " + text));
-
+                .set("border", "4px solid transparent"));
+        
+        clickableDiv.getStyle().set("max-height", "350px"); // Altezza massima della card
+        clickableDiv.getStyle().set("overflow", "hidden"); // Nasconde il contenuto in eccesso
+        
+        clickableDiv.addClickListener(event -> {
+            getUI().ifPresent(ui -> {
+                ui.navigate("category-detail");
+            });
+        });
+        
         Div div = new Div();
         div.addClassNames(Background.CONTRAST, Display.FLEX, AlignItems.CENTER, JustifyContent.CENTER,
                 Margin.Bottom.MEDIUM, Overflow.HIDDEN, BorderRadius.MEDIUM, Width.FULL);
