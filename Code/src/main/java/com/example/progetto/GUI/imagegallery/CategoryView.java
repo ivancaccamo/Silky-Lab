@@ -2,6 +2,7 @@ package com.example.progetto.GUI.imagegallery;
 
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Main;
+import com.example.progetto.backend.CurrentUser;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,6 +20,7 @@ import java.util.Map;
 @Route("category-detail")
 public class CategoryView extends VerticalLayout {
 
+	private String category = CurrentUser.getCategoryView();
     public CategoryView() {
     	
     }
