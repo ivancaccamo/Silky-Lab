@@ -3,10 +3,10 @@ package com.example.progetto.backend;
 public class Address {
 	private String address;
 	private String city;
-	private int cap;
+	private double cap;
 	private String country;
 	private int IDuser;
-	public Address(String address, String city, int cap, String country, int iDuser) {
+	public Address(String address, String city, double cap, String country, int iDuser) {
 		super();
 		this.address = address;
 		this.city = city;
@@ -31,10 +31,10 @@ public class Address {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public int getCap() {
+	public double getCap() {
 		return cap;
 	}
-	public void setCap(int cap) {
+	public void setCap(Double cap) {
 		this.cap = cap;
 	}
 	public String getCountry() {

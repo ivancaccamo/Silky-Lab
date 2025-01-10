@@ -7,6 +7,7 @@ import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -28,6 +29,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -40,8 +42,53 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 public class RegistrationView extends Composite<VerticalLayout> {
 	private static final Set<String> countries = new LinkedHashSet<>();
+	static {
+        countries.addAll(Arrays.asList("Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola",
+                "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia",
+                "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize",
+                "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Bouvet Island",
+                "Brazil", "British Indian Ocean Territory", "British Virgin Islands", "Brunei Darussalam", "Bulgaria",
+                "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands",
+                "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands",
+                "Colombia", "Comoros", "Congo", "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Cyprus",
+                "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador",
+                "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands",
+                "Faroe Islands", "Federated States of Micronesia", "Fiji", "Finland", "France", "French Guiana",
+                "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana",
+                "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guinea",
+                "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Honduras", "Hong Kong",
+                "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast",
+                "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos",
+                "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau",
+                "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands",
+                "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Moldova", "Monaco", "Mongolia",
+                "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands",
+                "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue",
+                "Norfolk Island", "North Korea", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau",
+                "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal",
+                "Puerto Rico", "Qatar", "Reunion", "Romania", "Russian Federation", "Rwanda", "Saint Kitts and Nevis",
+                "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe",
+                "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
+                "Solomon Islands", "Somalia", "South Africa", "South Georgia and the South Sandwich Islands",
+                "South Korea", "Spain", "Sri Lanka", "St. Helena", "St. Pierre and Miquelon", "Sudan", "Suriname",
+                "Svalbard and Jan Mayen Islands", "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic",
+                "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago",
+                "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Uganda", "Ukraine",
+                "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands",
+                "United States Virgin Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City State", "Venezuela",
+                "Vietnam", "Wallis and Futuna Islands", "Western Sahara", "Yemen", "Yugoslavia", "Zaire", "Zambia",
+                "Zimbabwe"));
+    }
     public RegistrationView() {
-    	
+    	Notification error = new Notification("Errore durante la registrazione controlla di avere inserito dati validi",2000);
+    	Notification emptyField = new Notification("Riempire tutti i campi per completare la registrazione",2000);
+    	Notification success = new Notification("Registrazione avvenuta con successo",2000);
+    	error.setClassName("custom-notification");
+    	emptyField.setClassName("custom-notification");
+    	success.setClassName("custom-notification");
+    	ComboBox<String> countrySelect = new ComboBox<>("Country");
+        countrySelect.setRequiredIndicatorVisible(true);
+        countrySelect.setItems(countries);
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -65,10 +112,8 @@ public class RegistrationView extends Composite<VerticalLayout> {
         NumberField numberField = new NumberField();
         numberField.setMin(0); // Valore minimo
         numberField.setMax(99999); // Valore massimo (5 cifre)
-        numberField.setStep(1); // Passo incrementale (opzionale)
-        TextField textField7 = new TextField();
         Button buttonPrimary = new Button("Registrati", event -> {
-        	if(textField.getValue()!=null||textField.getValue()!=null||textField2.getValue()!=null||emailField.getValue()!=null||textField4.getValue()!=null||textField5.getValue()!=null||numberField.getValue()!=null||textField7.getValue()!=null) {
+        	if(textField.getValue()==null||textField.getValue()==null||textField2.getValue()==null||emailField.getValue()==null||textField4.getValue()==null||textField5.getValue()==null||countrySelect.getValue()!=null) {
         		 // Creazione di un nuovo utente
                 User user = new User();
                 Address address = new Address();
@@ -79,24 +124,23 @@ public class RegistrationView extends Composite<VerticalLayout> {
                 user.setRole("CLIENT"); // Ruolo predefinito
                 address.setAddress(textField4.getValue());
                 address.setCity(textField4.getValue());
-                int capInt = (int) (numberField.getValue()%numberField.getValue());
-                address.setCap(capInt);
+                address.setCap(numberField.getValue());
                 address.setCountry(textField4.getValue());
                 try {
-                    // Aggiungi l'utente al database
                 	CurrentUser.setUser(user);
                     DatabaseManager dbManager = new DatabaseManager();
                     dbManager.saveUser(user); // Metodo per inserire l'utente nel database
-                    Notification.show("Registrazione completata!");
+                    success.open();
                     getUI().ifPresent(ui -> ui.navigate("Profile"));
                     getUI().ifPresent(ui -> ui.getPage().reload());
                 } catch (SQLException e) {
-                    Notification.show("Errore durante la registrazione.");
+                    error.open();
                     e.printStackTrace();
                 }
-        	}else {
-        		Notification.show("Devi inserire tutti i dati!");
-        	}
+        	}else
+        		emptyField.open();
+        	
+        	
         });
         VerticalLayout layoutColumn4 = new VerticalLayout();
         getContent().setWidth("100%");
@@ -189,10 +233,10 @@ public class RegistrationView extends Composite<VerticalLayout> {
         layoutRow10.setAlignItems(Alignment.CENTER);
         layoutRow10.setJustifyContentMode(JustifyContentMode.CENTER);
         numberField.setLabel("Cap");
-        layoutRow10.setAlignSelf(FlexComponent.Alignment.CENTER, numberField);
-        numberField.setWidth("min-content");
-        textField7.setLabel("Nazione");
-        textField7.setWidth("min-content");
+     	layoutRow10.setAlignSelf(FlexComponent.Alignment.CENTER, numberField);
+     	numberField.setWidth("min-content");
+        countrySelect.setLabel("Nazione");
+        countrySelect.setWidth("min-content");
         buttonPrimary.setText("Registra");
         layoutColumn2.setAlignSelf(FlexComponent.Alignment.CENTER, buttonPrimary);
         buttonPrimary.setWidth("180px");
@@ -220,7 +264,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
         layoutColumn2.add(layoutRow9);
         layoutRow9.add(layoutRow10);
         layoutRow10.add(numberField);
-        layoutRow10.add(textField7);
+        layoutRow10.add(countrySelect);
         layoutColumn2.add(buttonPrimary);
         layoutRow.add(layoutColumn4);
     }

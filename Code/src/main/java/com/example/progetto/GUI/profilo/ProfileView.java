@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -34,6 +35,7 @@ private User user = CurrentUser.getUser();
         H3 h37 = new H3();
         Button buttonPrimary1 = new Button("Modifica",event ->{
         	getUI().ifPresent(ui -> ui.navigate("ModificaDati"));
+        	
         });
         Button buttonPrimary2 = new Button("Modifica",event -> {
         	getUI().ifPresent(ui -> ui.navigate("ModificaDati"));
