@@ -28,6 +28,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 import java.sql.SQLException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
@@ -37,8 +39,9 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Route("Registrazione")
 
 public class RegistrationView extends Composite<VerticalLayout> {
-
+	private static final Set<String> countries = new LinkedHashSet<>();
     public RegistrationView() {
+    	
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();

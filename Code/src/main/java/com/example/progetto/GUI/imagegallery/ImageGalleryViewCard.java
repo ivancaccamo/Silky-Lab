@@ -3,6 +3,7 @@ package com.example.progetto.GUI.imagegallery;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import com.example.progetto.backend.CurrentUser;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.ListItem;
@@ -36,6 +37,7 @@ public class ImageGalleryViewCard extends ListItem {
         clickableDiv.getStyle().set("overflow", "hidden"); // Nasconde il contenuto in eccesso
         
         clickableDiv.addClickListener(event -> {
+        	CurrentUser.setCategoryView(text);
             getUI().ifPresent(ui -> {
                 ui.navigate("category-detail");
             });
