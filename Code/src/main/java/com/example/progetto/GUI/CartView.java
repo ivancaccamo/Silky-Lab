@@ -2,6 +2,10 @@ package com.example.progetto.GUI;
 
 
 
+import com.example.progetto.backend.Cart;
+import com.example.progetto.backend.CartItem;
+import com.example.progetto.backend.Product;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -10,13 +14,16 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.H6;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
+import com.vaadin.flow.data.provider.DataView;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -31,8 +38,19 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Menu(order = 2, icon = LineAwesomeIconUrl.SHOPPING_CART_SOLID)
 @Uses(Icon.class)
 public class CartView extends Composite<VerticalLayout> {
-
+	VerticalLayout cartItemsContainer = new VerticalLayout();
+	
+	
     public CartView() {
+    	
+    	
+    	Scroller scroller = new Scroller();
+        scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        
+        cartItemsContainer.addClassName("cart-items");
+        scroller.setContent(cartItemsContainer);
+      
+		Cart.getCartItems().forEach(this::addCartItem);
         HorizontalLayout layoutRow = new HorizontalLayout();
         H1 h1 = new H1();
         HorizontalLayout layoutRow2 = new HorizontalLayout();
@@ -81,6 +99,8 @@ public class CartView extends Composite<VerticalLayout> {
         h6.setWidth("max-content");
         basicGrid.setWidth("100%");
         basicGrid.getStyle().set("flex-grow", "0");
+        scroller.setWidth("100");
+        scroller.getStyle().set("flex-grow", "0");
         setGridSampleData(basicGrid);
         layoutRow3.setWidthFull();
         layoutColumn2.setFlexGrow(1.0, layoutRow3);
@@ -109,15 +129,46 @@ public class CartView extends Composite<VerticalLayout> {
         layoutColumn3.add(h42);
         layoutColumn3.add(progressBar);
         layoutColumn3.add(h6);
-        layoutColumn3.add(basicGrid);
+        layoutColumn3.add(scroller);
         layoutColumn2.add(layoutRow3);
         layoutRow3.add(buttonPrimary);
         layoutRow3.add(buttonSecondary);
         layoutRow2.add(layoutColumn5);
         getContent().add(layoutRow4);
+       
     }
 
     private void setGridSampleData(Grid grid) {
         grid.setItems();
+    }
+    private Component createCartItemComponent(Product item) {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.addClassName("cart-item");
+
+        Span productName = new Span(item.getName());
+        productName.addClassName("product-name");
+
+        Span productPrice = new Span("Prezzo: €" + item.getPrice());
+        productPrice.addClassName("product-price");
+
+        Span productQuantity = new Span("Quantità: ");
+        productQuantity.addClassName("product-quantity");
+
+        layout.add(productName, productPrice, productQuantity);
+        return layout;
+    }
+    private void addCartItem(CartItem item) {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setWidthFull();
+        Span productName = new Span(item.getProduct().getName());
+        Span quantity = new Span("x" + item.getQuantity());
+        Span price = new Span("€" + (item.getQuantity() * item.getProduct().getPrice()));
+        layout.add(productName, quantity, price);
+        cartItemsContainer.add(layout);
+    }
+
+    public void refresh() {
+    	cartItemsContainer.removeAll();
+        Cart.getCartItems().forEach(this::addCartItem);
     }
 }

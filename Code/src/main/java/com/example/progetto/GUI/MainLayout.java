@@ -1,7 +1,9 @@
 package com.example.progetto.GUI;
 
+import com.example.progetto.backend.Cart;
 import com.example.progetto.backend.CurrentUser;
 import com.example.progetto.backend.MyListener;
+import com.example.progetto.backend.Product;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -33,11 +35,17 @@ import org.springframework.context.ApplicationEventPublisher;
 @AnonymousAllowed
 public class MainLayout extends AppLayout implements MyListener{
 	
+	
+	
     private H1 viewTitle;
     private User user = CurrentUser.getUser();
+    private CartView cartView = new CartView();
+    	// Simula l'aggiunta di un prodotto al carrello
+    	
+    
     @Autowired
     public MainLayout() {
-    	
+    	Cart.addItem(new Product(1, "Maglietta","L",23, 2), 2);
     	setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
@@ -48,6 +56,10 @@ public class MainLayout extends AppLayout implements MyListener{
     	Notification.show("Credenziali non valide");
         updateFooter();  
     }
+    
+    
+    
+    
     private void updateFooter() {
         Footer footer = createFooter(); // Crea un nuovo footer con l'utente corrente
         getChildren()
@@ -56,6 +68,8 @@ public class MainLayout extends AppLayout implements MyListener{
             .ifPresent(this::remove); // Rimuovi il vecchio footer
         addToDrawer(footer); // Aggiungi il nuovo footer
     }
+    
+    
     
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();

@@ -1,17 +1,36 @@
 package com.example.progetto.backend;
 
+import com.vaadin.flow.component.html.Image;
+
 public class Product {
-    private Long id;
+    private int id;
     private String name;
+    private String size;
     private String description;
     private double price;
     private String category;
     private int UserID;
+    private Image image;
+     
     
-	public Long getId() {
+	public Product(int id, String name, String size, double price, int userID) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.size = size;
+		this.price = price;
+		UserID = userID;
+	}
+	public String getSize() {
+		return size;
+	}
+	public void setSize(String size) {
+		this.size = size;
+	}
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -44,6 +63,13 @@ public class Product {
 	public void setUserID(int userID) {
 		UserID = userID;
 	}
+	public Image getImage() {
+		return image;
+	}
+	public void setImage(Image image) {
+		this.image = image;
+	}
+	
 	
     
 }
