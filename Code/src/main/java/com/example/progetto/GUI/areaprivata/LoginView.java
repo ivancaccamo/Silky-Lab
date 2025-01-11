@@ -1,7 +1,7 @@
 package com.example.progetto.GUI.areaprivata;
 
 import com.example.application.services.DatabaseManager;
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -33,7 +33,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 public class LoginView extends Composite<VerticalLayout> {
 	
     public LoginView() {
-    	CurrentUser.getInstance();
+    	Current.getInstance();
         HorizontalLayout layoutRow = new HorizontalLayout();
         H1 h1 = new H1();
         Hr hr = new Hr();
@@ -53,7 +53,7 @@ public class LoginView extends Composite<VerticalLayout> {
                 User user = dbManager.findUserByEmail(email);
                 if (user != null && user.getPassword().equals(password)) {
                 	Notification.show("Credenziali valide");
-                	CurrentUser.setUser(user);
+                	Current.setUser(user);
                 	                 	
                     if ("ADMIN".equals(user.getRole())) {
                         getUI().ifPresent(ui -> ui.navigate("admin-home"));

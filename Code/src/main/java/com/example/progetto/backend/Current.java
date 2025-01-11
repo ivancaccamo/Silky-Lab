@@ -7,8 +7,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CurrentUser{
-	private static CurrentUser theInstance;
+public class Current{
+	private static Current theInstance;
     private static User currentUser;
     private final static List<MyListener> listeners = new ArrayList<>();
     private static String productView;
@@ -19,13 +19,13 @@ public class CurrentUser{
     }
     
       
-    public static CurrentUser getTheInstance() {
+    public static Current getTheInstance() {
 		return theInstance;
 	}
 
 
-	public static void setTheInstance(CurrentUser theInstance) {
-		CurrentUser.theInstance = theInstance;
+	public static void setTheInstance(Current theInstance) {
+		Current.theInstance = theInstance;
 	}
 
 
@@ -35,7 +35,7 @@ public class CurrentUser{
 
 
 	public static void setCurrentUser(User currentUser) {
-		CurrentUser.currentUser = currentUser;
+		Current.currentUser = currentUser;
 	}
 
 
@@ -45,7 +45,7 @@ public class CurrentUser{
 
 
 	public static void setProductView(String productView) {
-		CurrentUser.productView = productView;
+		Current.productView = productView;
 	}
 
 
@@ -55,7 +55,7 @@ public class CurrentUser{
 
 
 	public static void setCategoryView(String categoryView) {
-		CurrentUser.categoryView = categoryView;
+		Current.categoryView = categoryView;
 	}
 
 
@@ -67,16 +67,16 @@ public class CurrentUser{
 	public static User getUser() {
         return currentUser;
     }
-    public static CurrentUser getInstance() {
+    public static Current getInstance() {
     	if(theInstance == null) {
-    		theInstance = new CurrentUser();
+    		theInstance = new Current();
     	}
     	return theInstance;
     }
     public static void setUser(User user) {
     	
     	if(theInstance == null) {
-    		theInstance = new CurrentUser();
+    		theInstance = new Current();
     	}
         currentUser = user;
         notifyListeners();
@@ -89,10 +89,10 @@ public class CurrentUser{
         }
     }
 
-	private CurrentUser() {
+	private Current() {
     	
     }
-    public static CurrentUser ExitUser() {
+    public static Current ExitUser() {
 		return null;	
     }
 }

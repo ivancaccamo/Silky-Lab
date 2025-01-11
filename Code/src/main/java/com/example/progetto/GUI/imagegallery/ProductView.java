@@ -1,6 +1,6 @@
 package com.example.progetto.GUI.imagegallery;
 
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
@@ -18,7 +18,7 @@ public class ProductView extends VerticalLayout{
 
     public ProductView() {
         // Recupera il prodotto selezionata da CurrentUser
-        product = CurrentUser.getProductView();
+        product = Current.getProductView();
 
         if (product == null || product.isEmpty()) {
             product = "Prodotto non trovato";

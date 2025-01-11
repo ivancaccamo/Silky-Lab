@@ -2,7 +2,7 @@ package com.example.progetto.GUI.areaprivata;
 
 import com.example.application.services.DatabaseManager;
 import com.example.progetto.backend.Address;
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -127,7 +127,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
                 address.setCap(numberField.getValue());
                 address.setCountry(textField4.getValue());
                 try {
-                	CurrentUser.setUser(user);
+                	Current.setUser(user);
                     DatabaseManager dbManager = new DatabaseManager();
                     dbManager.saveUser(user); // Metodo per inserire l'utente nel database
                     success.open();

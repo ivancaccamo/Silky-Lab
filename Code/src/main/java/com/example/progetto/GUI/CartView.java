@@ -145,10 +145,10 @@ public class CartView extends Composite<VerticalLayout> {
         HorizontalLayout layout = new HorizontalLayout();
         layout.addClassName("cart-item");
 
-        Span productName = new Span(item.getName());
+        Span productName = new Span(item.getModel().getName());
         productName.addClassName("product-name");
 
-        Span productPrice = new Span("Prezzo: €" + item.getPrice());
+        Span productPrice = new Span("Prezzo: €" + item.getModel().getPrice());
         productPrice.addClassName("product-price");
 
         Span productQuantity = new Span("Quantità: ");
@@ -160,9 +160,9 @@ public class CartView extends Composite<VerticalLayout> {
     private void addCartItem(CartItem item) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setWidthFull();
-        Span productName = new Span(item.getProduct().getName());
+        Span productName = new Span(item.getProduct().getModel().getName());
         Span quantity = new Span("x" + item.getQuantity());
-        Span price = new Span("€" + (item.getQuantity() * item.getProduct().getPrice()));
+        Span price = new Span("€" + (item.getQuantity() * item.getProduct().getModel().getPrice()));
         layout.add(productName, quantity, price);
         cartItemsContainer.add(layout);
     }

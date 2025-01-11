@@ -1,6 +1,6 @@
 package com.example.progetto.GUI.imagegallery;
 
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.ListItem;
@@ -32,7 +32,7 @@ public class ImageGalleryViewCard extends ListItem {
         clickableDiv.getStyle().set("overflow", "hidden"); // Nasconde il contenuto in eccesso
         
         clickableDiv.addClickListener(event -> {
-        	CurrentUser.setCategoryView(text);
+        	Current.setCategoryView(text);
             getUI().ifPresent(ui -> {
                 ui.navigate("category-detail");
             });

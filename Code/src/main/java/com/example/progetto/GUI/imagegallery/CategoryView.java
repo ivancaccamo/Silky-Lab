@@ -17,13 +17,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.application.services.DatabaseManager;
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.Product;
+import com.example.progetto.backend.Model;
+
 
 @PageTitle("Categoria")
 @Route("category-detail")
@@ -33,7 +33,7 @@ public class CategoryView extends VerticalLayout {
 
     public CategoryView() {
         // Recupera la categoria selezionata da CurrentUser
-        category = CurrentUser.getCategoryView();
+        category = Current.getCategoryView();
 
         if (category == null || category.isEmpty()) {
             category = "Categoria non trovata";
@@ -56,12 +56,16 @@ public class CategoryView extends VerticalLayout {
         
         //DatabaseManager dbManager = new DatabaseManager();
         //List<Product> Products = dbManager.returnProductsOnCategory(category);
-        List<Product> Products = new ArrayList<>();
-        Products.add(new Product(1, "Felpa grigia","", 59.99, "Images/SilkyLabIcon.png"));
-        Products.add(new Product(2, "Felpa nera","", 59.99, "Images/SilkyLabIcon.png"));
-        Products.add(new Product(3, "Felpa bianca","", 59.99, "Images/SilkyLabIcon.png"));
-        Products.add(new Product(4, "Felpa blu","", 59.99, "Images/SilkyLabIcon.png"));
-        Products.add(new Product(5, "Felpa rossa","", 59.99, "Images/SilkyLabIcon.png"));
+        ArrayList<Model> models = new ArrayList<>();
+        String nome = "nome";
+        double price = 22.2;
+        String category = "felpe";
+        String image = "Images/SilkyLabIcon.png";
+        models.add(new Model(nome,price,category,image));     
+        models.add(new Model("Felpa blu", 59.99, "caio","Images/SilkyLabIcon.png"));
+        models.add(new Model("Felpa gialla", 59.99, "","Images/SilkyLabIcon.png"));
+        models.add(new Model("Felpa rosa", 59.99, "","Images/SilkyLabIcon.png"));
+        
         
         // Contenitore griglia prodotti
         FlexLayout grid = new FlexLayout();
@@ -76,8 +80,8 @@ public class CategoryView extends VerticalLayout {
         grid.getStyle().set("gap", "30px"); 
         
         // Aggiungi ogni prodotto alla griglia
-        for (Product product : Products) {
-        	 ProductCard productCard = new ProductCard(product);
+        for (Model model : models) {
+        	 ProductCard productCard = new ProductCard(model);
              grid.add(productCard);
         }
 

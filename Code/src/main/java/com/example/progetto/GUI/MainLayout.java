@@ -1,7 +1,7 @@
 package com.example.progetto.GUI;
 
 import com.example.progetto.backend.Cart;
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.MyListener;
 import com.example.progetto.backend.Product;
 import com.example.progetto.backend.User;
@@ -38,15 +38,14 @@ public class MainLayout extends AppLayout implements MyListener{
 	
 	
     private H1 viewTitle;
-    private User user = CurrentUser.getUser();
+    private User user = Current.getUser();
     private CartView cartView = new CartView();
     	// Simula l'aggiunta di un prodotto al carrello
     	
     
     @Autowired
     public MainLayout() {
-    	Cart.addItem(new Product(1, "Maglia","L",23, null), 2);
-    	Cart.addItem(new Product(2, "t-shirt","L",21, null), 2);
+    	
     	setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();

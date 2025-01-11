@@ -1,6 +1,6 @@
 package com.example.progetto.GUI.profilo;
 
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -18,7 +18,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @PageTitle("Profilo personale")
 @Route("Profile")
 public class ProfileView extends Composite<VerticalLayout> {
-private User user = CurrentUser.getUser();
+private User user = Current.getUser();
     public ProfileView() {
     	
     	if(user != null) {

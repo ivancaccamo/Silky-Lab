@@ -1,6 +1,7 @@
 package com.example.progetto.GUI.imagegallery;
 
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Model;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.Product;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
@@ -15,7 +16,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
 public class ProductCard extends Div {
 
-    public ProductCard(Product product) {
+    public ProductCard(Model model) {
         //Card del prodotto
         Div productCard = new Div();
         productCard.addClassName("product-card");
@@ -35,7 +36,7 @@ public class ProductCard extends Div {
         		.set("border", "4px solid transparent"));
 
         // Immagine del prodotto
-        Image productImage = new Image(product.getImageUrl(), "");
+        Image productImage = new Image(model.getImageUrl(), "");
         productImage.setWidth("100%");
         productImage.getStyle().set("object-fit", "cover");
 
@@ -48,9 +49,9 @@ public class ProductCard extends Div {
         productInfo.getStyle().set("width", "100%");
         
         productInfo.addClassName("product-info");
-        productInfo.add(new H3(product.getName()));
+        productInfo.add(new H3(model.getName()));
 
-        Span priceSpan = new Span(product.getPrice() + " €");
+        Span priceSpan = new Span(model.getPrice() + " €");
         priceSpan.getStyle().set("font-weight", "bold");
         priceSpan.getStyle().set("background", "grey"); // Colore di sfondo verde
         priceSpan.getStyle().set("color", "white"); // Colore del testo (bianco)
@@ -64,7 +65,7 @@ public class ProductCard extends Div {
 
         // Gestisci il click per navigare alla pagina dei dettagli
         productCard.addClickListener(event -> {
-            CurrentUser.setProductView(product.getName());
+            Current.setProductView(model.getName());
             getUI().ifPresent(ui -> {
                 ui.navigate("product-detail");
             });
