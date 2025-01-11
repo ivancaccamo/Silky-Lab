@@ -1,6 +1,12 @@
 package com.example.progetto.backend;
 
+import com.example.progetto.GUI.imagegallery.ImageGalleryViewCard;
+import com.vaadin.flow.component.charts.model.Label;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 
 public class Product {
     private int id;
@@ -9,17 +15,16 @@ public class Product {
     private String description;
     private double price;
     private String category;
-    private int UserID;
-    private Image image;
+    private String imageUrl;
      
     
-	public Product(int id, String name, String size, double price, int userID) {
+	public Product(int id, String name, String size, double price, String imageUrl) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.size = size;
 		this.price = price;
-		UserID = userID;
+		this.imageUrl = imageUrl;
 	}
 	public String getSize() {
 		return size;
@@ -57,19 +62,10 @@ public class Product {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public int getUserID() {
-		return UserID;
+	public String getImageUrl() {
+		return imageUrl;
 	}
-	public void setUserID(int userID) {
-		UserID = userID;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
-	public Image getImage() {
-		return image;
-	}
-	public void setImage(Image image) {
-		this.image = image;
-	}
-	
-	
-    
 }

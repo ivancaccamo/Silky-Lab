@@ -31,13 +31,13 @@ public class ImageGalleryView extends Main implements HasComponents, HasStyle {
     public ImageGalleryView() {
         constructUI();
 
-        imageContainer.add(new ImageGalleryViewCard("Snow mountains under stars",
+        imageContainer.add(new ImageGalleryViewCard("Maglie e t-shirt",
                 "https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new ImageGalleryViewCard("Snow covered mountain",
+        imageContainer.add(new ImageGalleryViewCard("Felpe",
                 "https://images.unsplash.com/photo-1512273222628-4daea6e55abb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"));
-        imageContainer.add(new ImageGalleryViewCard("River between mountains",
+        imageContainer.add(new ImageGalleryViewCard("Pantaloni",
                 "https://images.unsplash.com/photo-1536048810607-3dc7f86981cb?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=375&q=80"));
-        imageContainer.add(new ImageGalleryViewCard("Milky way on mountains",
+        imageContainer.add(new ImageGalleryViewCard("Accessori",
                 "https://images.unsplash.com/photo-1515705576963-95cad62945b6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=750&q=80"));
     }
 
@@ -57,9 +57,8 @@ public class ImageGalleryView extends Main implements HasComponents, HasStyle {
         imageContainer.addClassNames(Gap.MEDIUM, Display.GRID, ListStyleType.NONE, Margin.NONE, Padding.NONE);
         imageContainer.getStyle().set("display", "grid");
         imageContainer.getStyle().set("grid-template-columns", "repeat(2, 1fr)");
-        //imageContainer.getStyle().set("gap", "40px"); // Aggiunge spazio tra le card
         imageContainer.getStyle().set("row-gap", "30px"); // Spazio verticale più grande
-        imageContainer.getStyle().set("column-gap", "70px"); // Spazio orizzontale più piccolo
+        imageContainer.getStyle().set("column-gap", "80px"); // Spazio orizzontale più piccolo
         imageContainer.getStyle().set("justify-content", "center"); // Centra le card
         imageContainer.getStyle().set("max-width", "1000px"); // Imposta una larghezza massima
         imageContainer.getStyle().set("width", "100%"); // Assicura che la griglia non si restringa troppo

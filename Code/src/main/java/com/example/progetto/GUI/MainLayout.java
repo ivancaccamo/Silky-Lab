@@ -45,9 +45,8 @@ public class MainLayout extends AppLayout implements MyListener{
     
     @Autowired
     public MainLayout() {
-    	Cart.addItem(new Product(1, "Maglietta","L",23, 2), 2);
-    	Cart.addItem(new Product(2, "calzini","L",21, 2), 2);
-    	Cart.addItem(new Product(3, "sborra","L",21, 2), 2);
+    	Cart.addItem(new Product(1, "Maglia","L",23, null), 2);
+    	Cart.addItem(new Product(2, "t-shirt","L",21, null), 2);
     	setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();

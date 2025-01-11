@@ -1,15 +1,10 @@
 package com.example.progetto.GUI.imagegallery;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import com.example.progetto.backend.CurrentUser;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 public class ImageGalleryViewCard extends ListItem {

@@ -74,7 +74,7 @@ public class DatabaseManager {
            }
     	return rs;
     }
-    public ArrayList<Product> returnProductsOnCategory(String category) throws SQLException {
+    /*public ArrayList<Product> returnProductsOnCategory(String category) throws SQLException {
     	ArrayList prod = new ArrayList<>();
     	String sql = "SELECT * FROM Product WHERE category = "+category;
     	ResultSet rs = null;
@@ -102,7 +102,7 @@ public class DatabaseManager {
         private String category;
         private int UserID;
         private Image image;
-    }
+    }*/
 }
     
 
