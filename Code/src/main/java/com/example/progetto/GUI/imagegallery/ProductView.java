@@ -1,15 +1,13 @@
 package com.example.progetto.GUI.imagegallery;
 
-<<<<<<< Updated upstream
+
 import com.example.progetto.backend.Current;
-=======
 import java.util.Arrays;
 import java.util.List;
 
 import com.example.progetto.backend.Cart;
-import com.example.progetto.backend.CurrentUser;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.Product;
->>>>>>> Stashed changes
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
