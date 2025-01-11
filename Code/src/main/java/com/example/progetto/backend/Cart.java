@@ -24,7 +24,6 @@ public class Cart {
 	        for (CartItem item : items) {
 	            if (item.getProduct().getId()==(product.getId()) && item.getProduct().getSize().equals(product.getSize())) 
 	            {
-	            	
 	                item.setQuantity(item.getQuantity() + quantity);
 	                return;
 	            }
