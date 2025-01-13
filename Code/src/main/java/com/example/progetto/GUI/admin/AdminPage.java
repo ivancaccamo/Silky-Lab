@@ -31,7 +31,7 @@ public class AdminPage extends VerticalLayout {
 	
 	private final String IMAGE_PATH = "src//main//resources//META-INF//resources//Images//";
     private ComboBox<Model> productComboBox = new ComboBox<>("Select Product");
-    private Image productImage = new Image(IMAGE_PATH+"SilkyLablcon.png","caioa");
+    private Image productImage = new Image("/Images/Image_not_found.png","");
     private Button saveButton = new Button("Carica immagine");
     
     
@@ -45,7 +45,8 @@ public class AdminPage extends VerticalLayout {
         List<Model> models = loadProducts();
         productComboBox.setItems(models);
         productComboBox.setItemLabelGenerator(model -> model.getName());
-
+        VerticalLayout verticalBox = new VerticalLayout();
+    
         // Configurazione upload
         FileBuffer fileBuffer = new FileBuffer();
         Upload upload = new Upload(fileBuffer);
@@ -53,12 +54,19 @@ public class AdminPage extends VerticalLayout {
             Notification.show("File uploaded: " + event.getFileName());
             
         });
-
+        
+        productImage.setHeight("100%");
+        productImage.setWidth("100%");
+        upload.setWidth("100%");
+        verticalBox.add(productImage);
+        verticalBox.add(upload);
+        verticalBox.setClassName("upload-image");
+        
         // Configurazione bottone salva
         saveButton.addClickListener(e -> saveImage(productComboBox.getValue(), fileBuffer));
-        productImage.setWidth("400px");
+        
      
-        add(productComboBox, upload, productImage, saveButton);
+        add(productComboBox, verticalBox, saveButton);
     }
     
     private List<Model> loadProducts() {
@@ -90,7 +98,7 @@ public class AdminPage extends VerticalLayout {
         }
 
         try (InputStream inputStream = buffer.getInputStream()) {
-            // Salva il file nella cartella "images"
+            // Salva il file nella cartella "Images"
             File targetFile = new File(IMAGE_PATH+buffer.getFileName());
             try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
                 byte[] bufferData = new byte[1024];
@@ -101,7 +109,7 @@ public class AdminPage extends VerticalLayout {
             }
             
             Files.move(Path.of(IMAGE_PATH+buffer.getFileName()), Path.of(IMAGE_PATH+model.getName()+".png"), StandardCopyOption.REPLACE_EXISTING);
-            //productImage.setSrc(IMAGE_PATH+model.getName()+".png");
+            productImage.setSrc("/Images/"+model.getName()+".png");
         } catch (IOException e) {
             Notification.show("Error saving image: " + e.getMessage());
         }
