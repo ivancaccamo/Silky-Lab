@@ -15,7 +15,7 @@ import com.vaadin.flow.router.Route;
 @Route("")
 @Menu(order = 0, icon = LineAwesomeIconUrl.HOME_SOLID)
 public class HomeView extends Composite<VerticalLayout> {
-
+	 
     public HomeView () {
         Image logo = new Image("Images/SilkyLabIcon.png", "");
         logo.setWidth("660px");
@@ -41,9 +41,9 @@ public class HomeView extends Composite<VerticalLayout> {
         textMedium.setWidth("70%");
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
         textMedium.getStyle().set("margin-left", "90px");
-    
         getContent().add(layoutColumn2);
         layoutColumn2.add(h2);
-        layoutColumn2.add(textMedium);    
+        layoutColumn2.add(textMedium);   
+       
     }
 }
