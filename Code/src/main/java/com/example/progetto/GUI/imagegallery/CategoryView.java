@@ -47,13 +47,13 @@ public class CategoryView extends VerticalLayout {
         H2 header = new H2(category);
         header.getStyle().set("margin-bottom", "10px");
         layout.add(header);
-
+        
         // Bottone per tornare indietro
         Button backButton = new Button("Torna indietro", new Icon(VaadinIcon.ARROW_LEFT));
         backButton.addClickListener(event -> {
             getUI().ifPresent(ui -> ui.navigate("Shop"));
         });
-        
+
         //DatabaseManager dbManager = new DatabaseManager();
         //List<Product> Products = dbManager.returnProductsOnCategory(category);
         ArrayList<Model> models = new ArrayList<>();
@@ -61,15 +61,15 @@ public class CategoryView extends VerticalLayout {
         double price = 22.2;
         String category = "felpe";
         String image = "Images/SilkyLabIcon.png";
-        models.add(new Model(nome,price,category,image));     
+        models.add(new Model(nome,price,category,image));
         models.add(new Model("Felpa blu", 59.99, "caio","Images/SilkyLabIcon.png"));
         models.add(new Model("Felpa gialla", 59.99, "","Images/SilkyLabIcon.png"));
         models.add(new Model("Felpa rosa", 59.99, "","Images/SilkyLabIcon.png"));
-        
-        
+
+
         // Contenitore griglia prodotti
         FlexLayout grid = new FlexLayout();
-       
+
         grid.getStyle().set("display", "grid");
         grid.getStyle().set("grid-template-columns", "repeat(3, 1fr)"); // 3 colonne per riga
         grid.getStyle().set("width", "100%");
@@ -78,10 +78,10 @@ public class CategoryView extends VerticalLayout {
         grid.setAlignItems(FlexLayout.Alignment.START);
 
         grid.getStyle().set("gap", "30px"); 
-        
+
         // Aggiungi ogni prodotto alla griglia
         for (Model model : models) {
-        	 ProductCard productCard = new ProductCard(model);
+             ProductCard productCard = new ProductCard(model);
              grid.add(productCard);
         }
 
@@ -90,4 +90,3 @@ public class CategoryView extends VerticalLayout {
         add(layout);
     }
 }
-

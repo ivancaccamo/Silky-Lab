@@ -1,15 +1,14 @@
 package com.example.progetto.GUI.imagegallery;
 
 
+import com.example.progetto.backend.Cart;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.Model;
+import com.example.progetto.backend.Product;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.example.progetto.backend.Cart;
-import com.example.progetto.backend.Current;
-import com.example.progetto.backend.Product;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H2;
@@ -34,6 +33,7 @@ public class ProductView extends VerticalLayout{
     private List<String> sizes = Arrays.asList("S", "M", "L", "XL"); // Taglie disponibili
     private static final int MAX_QUANTITY = 10; // Quantità massima acquistabile
     private Model m = new Model("Felpa grigia",59.99,"","Images/SilkyLabIcon.png");
+    private Product p = new Product(1, "S", m);
 
     public ProductView() {
         // Recupera il prodotto selezionata da CurrentUser
@@ -111,7 +111,7 @@ public class ProductView extends VerticalLayout{
             } else if (selectedQuantity > MAX_QUANTITY) {
                 Notification.show("Puoi acquistare massimo " + MAX_QUANTITY + " unità di questo prodotto", 3000, Notification.Position.MIDDLE);
             } else {
-                //Cart.addItem(p, selectedQuantity);
+                Cart.addItem(p, selectedQuantity);
                 Notification.show("Prodotto aggiunto al carrello!", 3000, Notification.Position.MIDDLE);
             }
         });

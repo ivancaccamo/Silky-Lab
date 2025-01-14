@@ -4,6 +4,7 @@ package com.example.progetto.GUI;
 
 import com.example.progetto.backend.Cart;
 import com.example.progetto.backend.CartItem;
+import com.example.progetto.backend.Current;
 import com.example.progetto.backend.Product;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -23,14 +24,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
-import com.vaadin.flow.data.provider.DataView;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Carrello")
@@ -38,11 +36,9 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Menu(order = 2, icon = LineAwesomeIconUrl.SHOPPING_CART_SOLID)
 @Uses(Icon.class)
 public class CartView extends Composite<VerticalLayout> {
-	VerticalLayout cartItemsContainer = new VerticalLayout();
-	
+	static VerticalLayout cartItemsContainer = new VerticalLayout();
 	
     public CartView() {
-    	
     	
     	Scroller scroller = new Scroller();
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
@@ -111,9 +107,19 @@ public class CartView extends Composite<VerticalLayout> {
         layoutRow3.setAlignSelf(FlexComponent.Alignment.CENTER, buttonPrimary);
         buttonPrimary.getStyle().set("flex-grow", "1");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonPrimary.addClickListener(event -> {
+            getUI().ifPresent(ui -> {
+                ui.navigate("Checkout-form");
+            });
+        });
         buttonSecondary.setText("Torna allo shop");
         layoutRow3.setAlignSelf(FlexComponent.Alignment.CENTER, buttonSecondary);
         buttonSecondary.getStyle().set("flex-grow", "1");
+        buttonSecondary.addClickListener(event -> {
+            getUI().ifPresent(ui -> {
+                ui.navigate("Shop");
+            });
+        });
         layoutColumn5.setWidth("300px");
         layoutColumn5.getStyle().set("flex-grow", "1");
         layoutRow4.addClassName(Gap.MEDIUM);
@@ -135,40 +141,49 @@ public class CartView extends Composite<VerticalLayout> {
         layoutRow3.add(buttonSecondary);
         layoutRow2.add(layoutColumn5);
         getContent().add(layoutRow4);
-       
+        
     }
 
     private void setGridSampleData(Grid grid) {
         grid.setItems();
     }
-    private Component createCartItemComponent(Product item) {
+    /*private Component createCartItemComponent(Product item) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.addClassName("cart-item");
 
         Span productName = new Span(item.getModel().getName());
         productName.addClassName("product-name");
+        
+        Span productSize = new Span(item.getSize());
+        productSize.addClassName("product-size");
 
         Span productPrice = new Span("Prezzo: €" + item.getModel().getPrice());
         productPrice.addClassName("product-price");
 
         Span productQuantity = new Span("Quantità: ");
-        productQuantity.addClassName("product-quantity");
+        productQuantity.addClassName("product-quantity");    
 
-        layout.add(productName, productPrice, productQuantity);
+        layout.add(productName, productSize, productPrice, productQuantity);
         return layout;
-    }
+    }*/
+    
     private void addCartItem(CartItem item) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setWidthFull();
         Span productName = new Span(item.getProduct().getModel().getName());
+        Span productSize = new Span(item.getProduct().getSize());
         Span quantity = new Span("x" + item.getQuantity());
         Span price = new Span("€" + (item.getQuantity() * item.getProduct().getModel().getPrice()));
-        layout.add(productName, quantity, price);
+        layout.add(productName, productSize, quantity, price);
         cartItemsContainer.add(layout);
     }
 
     public void refresh() {
     	cartItemsContainer.removeAll();
         Cart.getCartItems().forEach(this::addCartItem);
+    }
+
+    public static VerticalLayout getCartItems () {
+    	return cartItemsContainer;
     }
 }

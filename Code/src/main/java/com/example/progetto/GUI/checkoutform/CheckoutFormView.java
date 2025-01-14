@@ -1,5 +1,6 @@
 package com.example.progetto.GUI.checkoutform;
 
+import com.example.progetto.GUI.CartView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -40,21 +41,12 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Checkout Form")
 @Route("Checkout-form")
-@Menu(order = 3, icon = LineAwesomeIconUrl.CREDIT_CARD)
 public class CheckoutFormView extends Div {
 
     private static final Set<String> states = new LinkedHashSet<>();
     private static final Set<String> countries = new LinkedHashSet<>();
 
     static {
-        states.addAll(Arrays.asList("Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
-                "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas",
-                "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-                "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York",
-                "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
-                "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
-                "West Virginia", "Wisconsin", "Wyoming"));
-
         countries.addAll(Arrays.asList("Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola",
                 "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia",
                 "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize",
@@ -111,7 +103,7 @@ public class CheckoutFormView extends Div {
 
         H2 header = new H2("Checkout");
         header.addClassNames(Margin.Bottom.NONE, Margin.Top.XLARGE, FontSize.XXXLARGE);
-        Paragraph note = new Paragraph("All fields are required unless otherwise noted");
+        Paragraph note = new Paragraph("Tutti i campi sono obbligatori (se non diversamente specificato)");
         note.addClassNames(Margin.Bottom.XLARGE, Margin.Top.NONE, TextColor.SECONDARY);
         checkoutForm.add(header, note);
 
@@ -131,27 +123,32 @@ public class CheckoutFormView extends Div {
         Paragraph stepOne = new Paragraph("Checkout 1/3");
         stepOne.addClassNames(Margin.NONE, FontSize.SMALL, TextColor.SECONDARY);
 
-        H3 header = new H3("Personal details");
+        H3 header = new H3("Dettagli personali");
         header.addClassNames(Margin.Bottom.MEDIUM, Margin.Top.SMALL, FontSize.XXLARGE);
 
-        TextField name = new TextField("Name");
+        TextField name = new TextField("Nome");
         name.setRequiredIndicatorVisible(true);
         name.setPattern("[\\p{L} \\-]+");
         name.addClassNames(Margin.Bottom.SMALL);
+        
+        TextField surname = new TextField("Cognome");
+        surname.setRequiredIndicatorVisible(true);
+        surname.setPattern("[\\p{L} \\-]+");
+        surname.addClassNames(Margin.Bottom.SMALL);
 
-        EmailField email = new EmailField("Email address");
+        EmailField email = new EmailField("Email");
         email.setRequiredIndicatorVisible(true);
         email.addClassNames(Margin.Bottom.SMALL);
 
-        TextField phone = new TextField("Phone number");
+        TextField phone = new TextField("Numero di telefono");
         phone.setRequiredIndicatorVisible(true);
         phone.setPattern("[\\d \\-\\+]+");
         phone.addClassNames(Margin.Bottom.SMALL);
 
-        Checkbox rememberDetails = new Checkbox("Remember personal details for next time");
+        Checkbox rememberDetails = new Checkbox("Ricorda i dati personali per la prossima volta");
         rememberDetails.addClassNames(Margin.Top.SMALL);
 
-        personalDetails.add(stepOne, header, name, email, phone, rememberDetails);
+        personalDetails.add(stepOne, header, name, surname, email, phone, rememberDetails);
         return personalDetails;
     }
 
@@ -162,14 +159,14 @@ public class CheckoutFormView extends Div {
         Paragraph stepTwo = new Paragraph("Checkout 2/3");
         stepTwo.addClassNames(Margin.NONE, FontSize.SMALL, TextColor.SECONDARY);
 
-        H3 header = new H3("Shipping address");
+        H3 header = new H3("Indirizzo di spedizione");
         header.addClassNames(Margin.Bottom.MEDIUM, Margin.Top.SMALL, FontSize.XXLARGE);
 
-        ComboBox<String> countrySelect = new ComboBox<>("Country");
+        ComboBox<String> countrySelect = new ComboBox<>("Paese");
         countrySelect.setRequiredIndicatorVisible(true);
         countrySelect.addClassNames(Margin.Bottom.SMALL);
 
-        TextArea address = new TextArea("Street address");
+        TextArea address = new TextArea("Indirizzo");
         address.setMaxLength(200);
         address.setRequiredIndicatorVisible(true);
         address.addClassNames(Margin.Bottom.SMALL);
@@ -177,32 +174,26 @@ public class CheckoutFormView extends Div {
         Div subSection = new Div();
         subSection.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
-        TextField postalCode = new TextField("Postal Code");
+        TextField postalCode = new TextField("Codice postale");
         postalCode.setRequiredIndicatorVisible(true);
         postalCode.setPattern("[\\d \\p{L}]*");
         postalCode.addClassNames(Margin.Bottom.SMALL);
 
-        TextField city = new TextField("City");
+        TextField city = new TextField("Città");
         city.setRequiredIndicatorVisible(true);
         city.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
 
         subSection.add(postalCode, city);
 
-        ComboBox<String> stateSelect = new ComboBox<>("State");
-        stateSelect.setRequiredIndicatorVisible(true);
-
-        stateSelect.setItems(states);
-        stateSelect.setVisible(false);
         countrySelect.setItems(countries);
-        countrySelect
-                .addValueChangeListener(e -> stateSelect.setVisible(countrySelect.getValue().equals("United States")));
+        countrySelect.setValue("Italy");
 
-        Checkbox sameAddress = new Checkbox("Billing address is the same as shipping address");
+        Checkbox sameAddress = new Checkbox("L'indirizzo di fatturazione è lo stesso dell'indirizzo di spedizione");
         sameAddress.addClassNames(Margin.Top.SMALL);
 
-        Checkbox rememberAddress = new Checkbox("Remember address for next time");
+        Checkbox rememberAddress = new Checkbox("Ricorda indirizzo di spedizione per la prossima volta");
 
-        shippingDetails.add(stepTwo, header, countrySelect, address, subSection, stateSelect, sameAddress,
+        shippingDetails.add(stepTwo, header, countrySelect, address, subSection, sameAddress,
                 rememberAddress);
         return shippingDetails;
     }
@@ -214,10 +205,10 @@ public class CheckoutFormView extends Div {
         Paragraph stepThree = new Paragraph("Checkout 3/3");
         stepThree.addClassNames(Margin.NONE, FontSize.SMALL, TextColor.SECONDARY);
 
-        H3 header = new H3("Personal details");
+        H3 header = new H3("Pagamento");
         header.addClassNames(Margin.Bottom.MEDIUM, Margin.Top.SMALL, FontSize.XXLARGE);
 
-        TextField cardHolder = new TextField("Cardholder name");
+        TextField cardHolder = new TextField("Nome del titolare");
         cardHolder.setRequiredIndicatorVisible(true);
         cardHolder.setPattern("[\\p{L} \\-]+");
         cardHolder.addClassNames(Margin.Bottom.SMALL);
@@ -225,16 +216,15 @@ public class CheckoutFormView extends Div {
         Div subSectionOne = new Div();
         subSectionOne.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
-        TextField cardNumber = new TextField("Card Number");
+        TextField cardNumber = new TextField("Numero carta");
         cardNumber.setRequiredIndicatorVisible(true);
         cardNumber.setPattern("[\\d ]{12,23}");
         cardNumber.addClassNames(Margin.Bottom.SMALL);
 
-        TextField securityCode = new TextField("Security Code");
+        TextField securityCode = new TextField("Codice di sicurezza");
         securityCode.setRequiredIndicatorVisible(true);
         securityCode.setPattern("[0-9]{3,4}");
         securityCode.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
-        securityCode.setHelperText("What is this?");
 
         subSectionOne.add(cardNumber, securityCode);
 
@@ -242,18 +232,18 @@ public class CheckoutFormView extends Div {
         subSectionTwo.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
         Select<String> expirationMonth = new Select<>();
-        expirationMonth.setLabel("Expiration month");
+        expirationMonth.setLabel("Mese scadenza");
         expirationMonth.setRequiredIndicatorVisible(true);
         expirationMonth.setItems("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
 
         Select<String> expirationYear = new Select<>();
-        expirationYear.setLabel("Expiration year");
+        expirationYear.setLabel("Anno scadenza");
         expirationYear.setRequiredIndicatorVisible(true);
-        expirationYear.setItems("22", "23", "24", "25", "26");
+        expirationYear.setItems("25", "26", "27", "28", "29");
 
         subSectionTwo.add(expirationMonth, expirationYear);
 
-        paymentInfo.add(stepThree, header, cardHolder, subSectionTwo);
+        paymentInfo.add(stepThree, header, cardHolder, subSectionOne, subSectionTwo);
         return paymentInfo;
     }
 
@@ -261,10 +251,10 @@ public class CheckoutFormView extends Div {
         Footer footer = new Footer();
         footer.addClassNames(Display.FLEX, AlignItems.CENTER, JustifyContent.BETWEEN, Margin.Vertical.MEDIUM);
 
-        Button cancel = new Button("Cancel order");
+        Button cancel = new Button("Elimina ordine");
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-        Button pay = new Button("Pay securely", new Icon(VaadinIcon.LOCK));
+        Button pay = new Button("Paga", new Icon(VaadinIcon.LOCK));
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
         footer.add(cancel, pay);
@@ -277,32 +267,36 @@ public class CheckoutFormView extends Div {
                 Position.STICKY);
         Header headerSection = new Header();
         headerSection.addClassNames(Display.FLEX, AlignItems.CENTER, JustifyContent.BETWEEN, Margin.Bottom.MEDIUM);
-        H3 header = new H3("Order");
+        H3 header = new H3("Ordine");
         header.addClassNames(Margin.NONE);
-        Button edit = new Button("Edit");
+        Button edit = new Button("Torna al carrello");
         edit.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        edit.addClickListener(event -> {
+            getUI().ifPresent(ui -> {
+                ui.navigate("Carrello");
+            });
+        });
+        
         headerSection.add(header, edit);
 
         UnorderedList ul = new UnorderedList();
         ul.addClassNames(ListStyleType.NONE, Margin.NONE, Padding.NONE, Display.FLEX, FlexDirection.COLUMN, Gap.MEDIUM);
 
-        ul.add(createListItem("Vanilla cracker", "With wholemeal flour", "$7.00"));
-        ul.add(createListItem("Vanilla blueberry cake", "With blueberry jam", "$8.00"));
-        ul.add(createListItem("Vanilla pastry", "With wholemeal flour", "$5.00"));
+        ul.add(CartView.getCartItems());
 
         aside.add(headerSection, ul);
         return aside;
     }
 
-    private ListItem createListItem(String primary, String secondary, String price) {
+    /*private ListItem createListItem(String name, String size, String price) {
         ListItem item = new ListItem();
         item.addClassNames(Display.FLEX, JustifyContent.BETWEEN);
 
         Div subSection = new Div();
         subSection.addClassNames(Display.FLEX, FlexDirection.COLUMN);
 
-        subSection.add(new Span(primary));
-        Span secondarySpan = new Span(secondary);
+        subSection.add(new Span(name));
+        Span secondarySpan = new Span(size);
         secondarySpan.addClassNames(FontSize.SMALL, TextColor.SECONDARY);
         subSection.add(secondarySpan);
 
@@ -310,5 +304,5 @@ public class CheckoutFormView extends Div {
 
         item.add(subSection, priceSpan);
         return item;
-    }
+    }*/
 }
