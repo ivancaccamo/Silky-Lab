@@ -24,6 +24,10 @@ public class Model {
 		this.description = description;
 	}
 
+	public Model() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -48,10 +52,10 @@ public class Model {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public String getCategoria() {
+	public String getCategory() {
 		return category;
 	}
-	public void setCategoria(String category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 	public String getDescription() {

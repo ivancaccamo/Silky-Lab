@@ -35,8 +35,7 @@ public class CategoryView extends VerticalLayout {
 
     public CategoryView() {
         // Recupera la categoria selezionata da CurrentUser
-        category = Current.getCategoryView();	
-        DatabaseManager db = new DatabaseManager();
+        category = Current.getCategoryView();
 
         if (category == null || category.isEmpty()) {
             category = "Categoria non trovata";
@@ -59,12 +58,24 @@ public class CategoryView extends VerticalLayout {
 
         DatabaseManager dbManager = new DatabaseManager();
         ArrayList<Model> models = new ArrayList<>();
+<<<<<<< Updated upstream
         try {
 			models = dbManager.returnModelsOnCategory(category);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+=======
+        String nome = "nome";
+        double price = 22.2;
+        String category = "felpe";
+        String image = "Images/SilkyLabIcon.png";
+        //models.add(new Model(nome,price,category,image));
+        //models.add(new Model("Felpa blu", 59.99, "caio","Images/SilkyLabIcon.png"));
+        //models.add(new Model("Felpa gialla", 59.99, "","Images/SilkyLabIcon.png"));
+        //models.add(new Model("Felpa rosa", 59.99, "","Images/SilkyLabIcon.png"));
+
+>>>>>>> Stashed changes
 
         // Contenitore griglia prodotti
         FlexLayout grid = new FlexLayout();

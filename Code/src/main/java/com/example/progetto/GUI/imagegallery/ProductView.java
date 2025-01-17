@@ -109,7 +109,11 @@ public class ProductView extends VerticalLayout{
             } else if (selectedQuantity > MAX_QUANTITY) {
                 Notification.show("Puoi acquistare massimo " + MAX_QUANTITY + " unità di questo prodotto", 3000, Notification.Position.MIDDLE);
             } else {
+<<<<<<< Updated upstream
             	Cart.addItem(p, selectedQuantity);
+=======
+               // Cart.addItem(p, selectedQuantity);
+>>>>>>> Stashed changes
                 Notification.show("Prodotto aggiunto al carrello!", 3000, Notification.Position.MIDDLE);
             }
         });

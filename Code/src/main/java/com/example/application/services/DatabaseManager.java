@@ -93,7 +93,20 @@ public class DatabaseManager {
         }
     return models;	
     }
+
+public void saveModel(Model model) throws SQLException {
+    String query = "INSERT INTO Model (name, price, category, description) VALUES (?, ?, ?, ?)";
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, model.getName());
+        stmt.setDouble(2, model.getPrice());
+        stmt.setString(3, model.getCategory());
+        stmt.setString(4, model.getDescription());
+        stmt.executeUpdate();
+    }
 }
-    
+	
+}
+ 
 
 

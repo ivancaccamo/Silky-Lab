@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route("admin")
+@Route("admins")
 public class AdminPage extends VerticalLayout {
 	
 	private final String IMAGE_PATH = "src//main//resources//META-INF//resources//Images//";
