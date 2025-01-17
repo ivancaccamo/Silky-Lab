@@ -16,5 +16,5 @@ public class ProjectApplication implements AppShellConfigurator{
 		SpringApplication.run(ProjectApplication.class, args);
 	}
 	
-
+	
 }

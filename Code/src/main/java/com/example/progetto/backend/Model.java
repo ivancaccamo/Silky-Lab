@@ -15,14 +15,15 @@ public class Model {
 		this.description = description;
 		this.imageUrl=image;
 	}
-	public Model(String name, double price, String category,String image) {
-		this.id = 0;
+	
+	public Model(int id, String name, double price, String category, String description) {
+		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.category = category;
-		this.description = "ciao";
-		this.imageUrl=image;
+		this.description = description;
 	}
+
 	public int getId() {
 		return id;
 	}

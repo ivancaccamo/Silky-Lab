@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.example.progetto.backend.Model;
 import com.example.progetto.backend.Product;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.html.Image;
@@ -74,9 +75,9 @@ public class DatabaseManager {
            }
     	return rs;
     }
-    /*public ArrayList<Product> returnProductsOnCategory(String category) throws SQLException {
-    	ArrayList prod = new ArrayList<>();
-    	String sql = "SELECT * FROM Product WHERE category = "+category;
+    public ArrayList<Model> returnModelsOnCategory(String category) throws SQLException {
+    	ArrayList<Model> models = new ArrayList<>();
+    	String sql = "SELECT * FROM Model WHERE category = "+category;
     	ResultSet rs = null;
     	try (Connection conn = this.getConnection();
     			PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -85,24 +86,13 @@ public class DatabaseManager {
     	while (rs.next()) {
             int id = rs.getInt("ID");
             String name = rs.getString("name");
-            String size = rs.getString("size");
             String description = rs.getString("description");
             double price = rs.getDouble("price");
-            
-
-            // Crea un oggetto Product e aggiungilo alla lista
-            Product product = new Product(id, name, description, price, category);
-            products.add(product);
+            Model model = new Model(id,name,price,category,description);
+            models.add(model);
         }
-    	private int id;
-        private String name;
-        private String size;
-        private String description;
-        private double price;
-        private String category;
-        private int UserID;
-        private Image image;
-    }*/
+    return models;	
+    }
 }
     
 

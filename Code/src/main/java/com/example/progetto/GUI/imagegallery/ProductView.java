@@ -32,8 +32,7 @@ public class ProductView extends VerticalLayout{
     private String shipping = "Spedizione gratuita per gli ordini superiori a 100 €.";
     private List<String> sizes = Arrays.asList("S", "M", "L", "XL"); // Taglie disponibili
     private static final int MAX_QUANTITY = 10; // Quantità massima acquistabile
-    private Model m = new Model("Felpa grigia",59.99,"","Images/SilkyLabIcon.png");
-    private Product p = new Product(1, "S", m);
+    
 
     public ProductView() {
         // Recupera il prodotto selezionata da CurrentUser

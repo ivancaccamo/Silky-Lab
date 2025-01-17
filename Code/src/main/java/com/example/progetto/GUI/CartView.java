@@ -42,11 +42,8 @@ public class CartView extends Composite<VerticalLayout> {
     	
     	Scroller scroller = new Scroller();
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        
-        cartItemsContainer.addClassName("cart-items");
         scroller.setContent(cartItemsContainer);
-      
-		Cart.getCartItems().forEach(this::addCartItem);
+        refresh();
         HorizontalLayout layoutRow = new HorizontalLayout();
         H1 h1 = new H1();
         HorizontalLayout layoutRow2 = new HorizontalLayout();
@@ -97,7 +94,6 @@ public class CartView extends Composite<VerticalLayout> {
         basicGrid.getStyle().set("flex-grow", "0");
         scroller.setWidth("100");
         scroller.getStyle().set("flex-grow", "0");
-        setGridSampleData(basicGrid);
         layoutRow3.setWidthFull();
         layoutColumn2.setFlexGrow(1.0, layoutRow3);
         layoutRow3.addClassName(Gap.MEDIUM);
@@ -144,29 +140,6 @@ public class CartView extends Composite<VerticalLayout> {
         
     }
 
-    private void setGridSampleData(Grid grid) {
-        grid.setItems();
-    }
-    /*private Component createCartItemComponent(Product item) {
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.addClassName("cart-item");
-
-        Span productName = new Span(item.getModel().getName());
-        productName.addClassName("product-name");
-        
-        Span productSize = new Span(item.getSize());
-        productSize.addClassName("product-size");
-
-        Span productPrice = new Span("Prezzo: €" + item.getModel().getPrice());
-        productPrice.addClassName("product-price");
-
-        Span productQuantity = new Span("Quantità: ");
-        productQuantity.addClassName("product-quantity");    
-
-        layout.add(productName, productSize, productPrice, productQuantity);
-        return layout;
-    }*/
-    
     private void addCartItem(CartItem item) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setWidthFull();
