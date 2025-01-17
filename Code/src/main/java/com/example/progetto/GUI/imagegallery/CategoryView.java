@@ -2,6 +2,7 @@ package com.example.progetto.GUI.imagegallery;
 
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -53,49 +54,35 @@ public class CategoryView extends VerticalLayout {
         // Bottone per tornare indietro
         Button backButton = new Button("Torna indietro", new Icon(VaadinIcon.ARROW_LEFT));
         backButton.addClickListener(event -> {
+        	Notification.show("File uploaded: "+category);
             getUI().ifPresent(ui -> ui.navigate("Shop"));
         });
 
         DatabaseManager dbManager = new DatabaseManager();
         ArrayList<Model> models = new ArrayList<>();
-<<<<<<< Updated upstream
+
         try {
 			models = dbManager.returnModelsOnCategory(category);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-=======
-        String nome = "nome";
-        double price = 22.2;
-        String category = "felpe";
-        String image = "Images/SilkyLabIcon.png";
-        //models.add(new Model(nome,price,category,image));
-        //models.add(new Model("Felpa blu", 59.99, "caio","Images/SilkyLabIcon.png"));
-        //models.add(new Model("Felpa gialla", 59.99, "","Images/SilkyLabIcon.png"));
-        //models.add(new Model("Felpa rosa", 59.99, "","Images/SilkyLabIcon.png"));
-
->>>>>>> Stashed changes
-
         // Contenitore griglia prodotti
         FlexLayout grid = new FlexLayout();
 
         grid.getStyle().set("display", "grid");
-        grid.getStyle().set("grid-template-columns", "repeat(3, 1fr)"); // 3 colonne per riga
+        grid.getStyle().set("grid-template-columns", "repeat(3, 1fr)");
         grid.getStyle().set("width", "100%");
         grid.setFlexWrap(FlexLayout.FlexWrap.WRAP);
         grid.setJustifyContentMode(FlexLayout.JustifyContentMode.START);
         grid.setAlignItems(FlexLayout.Alignment.START);
-
         grid.getStyle().set("gap", "30px"); 
 
         // Aggiungi ogni prodotto alla griglia
         for (Model model : models) {
              ProductCard productCard = new ProductCard(model);
-             grid.add(productCard);
-        }
-
-        // Aggiungi gli elementi alla View
+             grid.add(productCard);             
+        } 
         layout.add(backButton, grid);
         add(layout);
     }

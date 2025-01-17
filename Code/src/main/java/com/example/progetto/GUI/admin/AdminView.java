@@ -8,8 +8,13 @@ import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -19,7 +24,18 @@ import com.vaadin.flow.component.upload.receivers.FileBuffer;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 
+
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
@@ -28,9 +44,70 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Route("admin")
 @Menu(order = 0, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
 public class AdminView extends Composite<VerticalLayout> {
-
+	
+	
+	private final String FlexComponent = null;
+	private final String IMAGE_PATH = "src//main//resources//META-INF//resources//Images//";
     public AdminView() {
-        VerticalLayout layoutColumn2 = new VerticalLayout();
+    	if(Current.getCurrentUser()==null||Current.getCurrentUser().getRole().equals("CLIENT")) {
+    		HorizontalLayout layoutRow = new HorizontalLayout();
+            H1 h12 = new H1();
+            HorizontalLayout layoutRow2 = new HorizontalLayout();
+            VerticalLayout layoutColumn8 = new VerticalLayout();
+            VerticalLayout layoutColumn2 = new VerticalLayout();
+            VerticalLayout layoutColumn3 = new VerticalLayout();
+            Paragraph textMedium2 = new Paragraph();
+            Image image = new Image("/Images/warning.png","");
+            VerticalLayout layoutColumn9 = new VerticalLayout();
+            HorizontalLayout layoutRow5 = new HorizontalLayout();
+            getContent().setWidth("100%");
+            getContent().getStyle().set("flex-grow", "1");
+            getContent().setJustifyContentMode(JustifyContentMode.CENTER);
+            getContent().setAlignItems(Alignment.CENTER);
+            layoutRow.addClassName(Gap.MEDIUM);
+            layoutRow.setWidth("100%");
+            layoutRow.setHeight("min-content");
+            layoutRow.setAlignItems(Alignment.CENTER);
+            layoutRow.setJustifyContentMode(JustifyContentMode.CENTER);
+            h12.setText("Impossibile accedere alla pagina");
+          
+            h12.setWidth("max-content");
+            layoutRow2.addClassName(Gap.MEDIUM);
+            layoutRow2.setWidth("100%");
+            layoutRow2.getStyle().set("flex-grow", "1");
+            layoutColumn8.getStyle().set("flex-grow", "1");
+            layoutColumn2.setWidth("100%");
+            layoutColumn2.getStyle().set("flex-grow", "1");
+            layoutColumn3.setWidthFull();
+            layoutColumn2.setFlexGrow(1.0, layoutColumn3);
+            layoutColumn3.setWidth("100%");
+            layoutColumn3.getStyle().set("flex-grow", "1");
+            layoutColumn3.setAlignSelf(Alignment.CENTER, image);
+            layoutColumn3.setAlignSelf(Alignment.CENTER, textMedium2);
+            image.setHeight("300px");
+            image.setWidth("300px");
+            textMedium2.setText("Attenzione! Stai cercando di accedere ad una pagina che richiede un rango che non possiedi");
+           
+            textMedium2.setWidth("max-content");
+            textMedium2.getStyle().set("font-size", "var(--lumo-font-size-m)");
+            layoutColumn9.getStyle().set("flex-grow", "1");
+            layoutRow5.addClassName(Gap.MEDIUM);
+            layoutRow5.setWidth("100%");
+            layoutRow5.setHeight("min-content");
+            getContent().add(layoutRow);
+            layoutRow.add(h12);
+            getContent().add(layoutRow2);
+            layoutRow2.add(layoutColumn8);
+            layoutRow2.add(layoutColumn2);
+            layoutColumn2.add(layoutColumn3);
+            layoutColumn3.add(image);
+            layoutColumn3.add(textMedium2);
+            
+            layoutRow2.add(layoutColumn9);
+            getContent().add(layoutRow5);
+	    
+	}else {
+		VerticalLayout layoutColumn2 = new VerticalLayout();
         TextField textField = new TextField();
         NumberField numberField = new NumberField();
         TextArea textArea = new TextArea();
@@ -52,16 +129,18 @@ public class AdminView extends Composite<VerticalLayout> {
                         model.setPrice(numberField.getValue());
                         model.setCategory(Current.getCategoryView());
                         model.setDescription(textArea.getValue());                        
-                        dbManager.saveModel(model); 
+                        dbManager.saveModel(model);        
                         Notification.show("Modello aggiunto con successo!");
                         getUI().ifPresent(ui -> ui.navigate("category-detail"));   
                     } catch (SQLException e) {                  
                         e.printStackTrace();
                         Notification.show("Qualcosa è andato storto");
                     }
+                    saveImage(model,fileBuffer);
             	}else
             		Notification.show("Riempi tutti i campi per proseguire");
         	}
+        	
         });
        
         getContent().setWidth("100%");
@@ -90,7 +169,27 @@ public class AdminView extends Composite<VerticalLayout> {
         layoutColumn2.add(textArea);
         layoutColumn2.add(upload);
         layoutColumn2.add(buttonPrimary);
-        layoutColumn2.add(textMedium);
+        layoutColumn2.add(textMedium); 
+	}
+    }
         
+    
+    private void saveImage(Model model, FileBuffer buffer) {
+        try (InputStream inputStream = buffer.getInputStream()) {
+            // Salva il file nella cartella "Images"
+            File targetFile = new File(IMAGE_PATH+buffer.getFileName());
+            try (FileOutputStream outputStream = new FileOutputStream(targetFile)) {
+                byte[] bufferData = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(bufferData)) != -1) {
+                    outputStream.write(bufferData, 0, bytesRead);
+                }
+            }
+            
+            Files.move(Path.of(IMAGE_PATH+buffer.getFileName()), Path.of(IMAGE_PATH+model.getName()+".png"), StandardCopyOption.REPLACE_EXISTING);
+            
+        } catch (IOException e) {
+            Notification.show("Error saving image: " + e.getMessage());
+        }
     }
 }

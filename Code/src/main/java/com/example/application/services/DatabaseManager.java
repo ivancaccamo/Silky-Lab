@@ -11,13 +11,14 @@ import com.example.progetto.backend.Model;
 import com.example.progetto.backend.Product;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.notification.Notification;
 
 import jakarta.validation.constraints.AssertFalse.List;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:databases/db.db";
 
-    public static Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL);
     }
 
@@ -77,19 +78,22 @@ public class DatabaseManager {
     }
     public ArrayList<Model> returnModelsOnCategory(String category) throws SQLException {
     	ArrayList<Model> models = new ArrayList<>();
-    	String sql = "SELECT * FROM Model WHERE category = "+category;
+    	String sql = "SELECT * FROM Model WHERE category = '"+category+"'";
     	ResultSet rs = null;
     	try (Connection conn = this.getConnection();
     			PreparedStatement pstmt = conn.prepareStatement(sql)) {
     			rs = pstmt.executeQuery();
+    			while (rs.next()) {
+    			
+    				int id = rs.getInt("ID");
+    				String name = rs.getString("name");
+    				String description = rs.getString("description");
+    				double price = rs.getDouble("price");
+    				Model model = new Model(id,name,price,category,description);
+    				models.add(model);  	
            }
-    	while (rs.next()) {
-            int id = rs.getInt("ID");
-            String name = rs.getString("name");
-            String description = rs.getString("description");
-            double price = rs.getDouble("price");
-            Model model = new Model(id,name,price,category,description);
-            models.add(model);
+
+    
         }
     return models;	
     }
@@ -103,6 +107,54 @@ public void saveModel(Model model) throws SQLException {
         stmt.setString(3, model.getCategory());
         stmt.setString(4, model.getDescription());
         stmt.executeUpdate();
+    }
+}
+public Model returnModelByName(String name) throws SQLException {
+	
+	String sql = "SELECT * FROM Model WHERE name = '"+name+"'";
+	ResultSet rs = null;
+	try (Connection conn = this.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			rs = pstmt.executeQuery();
+				int id = rs.getInt("ID");
+				String category = rs.getString("category");
+				String description = rs.getString("description");
+				double price = rs.getDouble("price");
+				Model model = new Model(id,name,price,category,description);
+				return model;
+    }
+}
+public Product returnProductByModel(Model model,String size,int qnt) throws SQLException {
+	String sql = "SELECT *\r\n"
+			+ "FROM (\r\n"
+			+ "    SELECT *\r\n"
+			+ "    FROM Product\r\n"
+			+ "    WHERE modelID = '?' AND size = '?'\r\n"
+			+ "    LIMIT ?\r\n"
+			+ ") Subquery\r\n"
+			+ "WHERE (SELECT COUNT(*)\r\n"
+			+ "       FROM product\r\n"
+			+ "       WHERE modelID = '?' AND size = '?') = ?;";
+	ResultSet rs = null;
+	try (Connection conn = this.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql)) {
+				pstmt.setInt(1, model.getId());	
+				pstmt.setString(2, size);
+				pstmt.setInt(3, qnt);
+				pstmt.setInt(4, model.getId());
+				pstmt.setString(5, size);
+				pstmt.setInt(6, qnt);
+				rs = pstmt.executeQuery();
+				if(rs==null) {
+					return null;
+				}else {
+					int id = rs.getInt("ID");
+					String description = rs.getString("description");
+					double price = rs.getDouble("price");
+					Product product = new Product(id,size,model);
+					return product;
+				}
+				
     }
 }
 	

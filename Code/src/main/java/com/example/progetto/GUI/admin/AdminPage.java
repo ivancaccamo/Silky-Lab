@@ -71,7 +71,8 @@ public class AdminPage extends VerticalLayout {
     
     private List<Model> loadProducts() {
         List<Model> products = new ArrayList<>();
-        try (Connection conn = DatabaseManager.getConnection();
+        DatabaseManager db = new DatabaseManager();
+        try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Model");
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -92,11 +93,6 @@ public class AdminPage extends VerticalLayout {
     }
 
     private void saveImage(Model model, FileBuffer buffer) {
-        if (model == null) {
-            Notification.show("Please select a product.");
-            return;
-        }
-
         try (InputStream inputStream = buffer.getInputStream()) {
             // Salva il file nella cartella "Images"
             File targetFile = new File(IMAGE_PATH+buffer.getFileName());

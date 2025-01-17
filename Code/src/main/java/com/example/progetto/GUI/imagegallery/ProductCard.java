@@ -36,7 +36,7 @@ public class ProductCard extends Div {
         		.set("border", "4px solid transparent"));
 
         // Immagine del prodotto
-        Image productImage = new Image(model.getImageUrl(), "");
+        Image productImage = new Image("Images/"+model.getName()+".png", "");
         productImage.setWidth("100%");
         productImage.getStyle().set("object-fit", "cover");
 

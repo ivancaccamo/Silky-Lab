@@ -56,7 +56,7 @@ public class LoginView extends Composite<VerticalLayout> {
                 	Current.setUser(user);
                 	                 	
                     if ("ADMIN".equals(user.getRole())) {
-                        getUI().ifPresent(ui -> ui.navigate("admin-home"));
+                        getUI().ifPresent(ui -> ui.navigate(""));
                         
                     } else if ("CLIENT".equals(user.getRole())) { 
                     	
