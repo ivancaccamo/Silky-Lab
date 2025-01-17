@@ -17,6 +17,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.application.services.DatabaseManager;
@@ -55,11 +57,14 @@ public class CategoryView extends VerticalLayout {
             getUI().ifPresent(ui -> ui.navigate("Shop"));
         });
 
-        //DatabaseManager dbManager = new DatabaseManager();
-        //List<Product> Products = dbManager.returnProductsOnCategory(category);
+        DatabaseManager dbManager = new DatabaseManager();
         ArrayList<Model> models = new ArrayList<>();
-        models = 
-
+        try {
+			models = dbManager.returnModelsOnCategory(category);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // Contenitore griglia prodotti
         FlexLayout grid = new FlexLayout();

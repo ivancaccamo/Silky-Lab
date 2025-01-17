@@ -2,6 +2,7 @@ package com.example.progetto.GUI.home;
 
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
+import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.Composite;
@@ -44,6 +45,24 @@ public class HomeView extends Composite<VerticalLayout> {
         getContent().add(layoutColumn2);
         layoutColumn2.add(h2);
         layoutColumn2.add(textMedium);   
-       
+        
+        // Footer con Contatti
+        Footer footer = new Footer();
+        
+        footer.getStyle().set("width", "100%");
+        footer.getStyle().set("background-color", "#f8f9fa");
+        footer.getStyle().set("padding", "10px 0");
+        footer.getStyle().set("text-align", "center");
+        footer.getStyle().set("margin-top", "auto"); // Fa in modo che il footer rimanga sempre in basso
+
+        Paragraph contactInfo = new Paragraph("Contattaci: info@silkylab.com | m.brozzoni4@studenti.unibg.it"
+        		+ " i.caccamo@studenti.unibg.it"
+        		+ " s.preda2@studenti.unibg.it");
+
+        VerticalLayout footerContent = new VerticalLayout(contactInfo);
+        footerContent.setAlignItems(Alignment.CENTER);
+
+        footer.add(footerContent);
+        getContent().add(footer);
     }
 }
