@@ -93,23 +93,31 @@ public class RegistrationView extends Composite<VerticalLayout> {
         VerticalLayout layoutColumn3 = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H2 h2 = new H2();
+        Paragraph note = new Paragraph();
         FormLayout formLayout2Col = new FormLayout();
         HorizontalLayout layoutRow2 = new HorizontalLayout();
         TextField textField = new TextField();
+        textField.setRequiredIndicatorVisible(true);
         TextField textField2 = new TextField();
+        textField2.setRequiredIndicatorVisible(true);
         HorizontalLayout layoutRow3 = new HorizontalLayout();
         HorizontalLayout layoutRow4 = new HorizontalLayout();
         HorizontalLayout layoutRow5 = new HorizontalLayout();
         EmailField emailField = new EmailField();
+        emailField.setRequiredIndicatorVisible(true);
         PasswordField passwordField = new PasswordField();
+        passwordField.setRequiredIndicatorVisible(true);
         HorizontalLayout layoutRow6 = new HorizontalLayout();
         HorizontalLayout layoutRow7 = new HorizontalLayout();
         HorizontalLayout layoutRow8 = new HorizontalLayout();
         TextField textField4 = new TextField();
+        textField4.setRequiredIndicatorVisible(true);
         TextField textField5 = new TextField();
+        textField5.setRequiredIndicatorVisible(true);
         HorizontalLayout layoutRow9 = new HorizontalLayout();
         HorizontalLayout layoutRow10 = new HorizontalLayout();
         NumberField numberField = new NumberField();
+        numberField.setRequiredIndicatorVisible(true);
         numberField.setMin(0); // Valore minimo
         numberField.setMax(99999); // Valore massimo (5 cifre)
         Button buttonPrimary = new Button("Registrati", event -> {
@@ -154,6 +162,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
         h2.setText("Registrazione");
         layoutColumn2.setAlignSelf(FlexComponent.Alignment.CENTER, h2);
         h2.setWidth("175px");
+        note.setText("Tutti i campi sono obbligatori");
         formLayout2Col.setWidth("100%");
         layoutRow2.setHeightFull();
         layoutRow2.addClassName(Gap.MEDIUM);
@@ -215,7 +224,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
         textField4.setLabel("Indirizzo");
         textField4.setWidth("min-content");
         textField4.setHeight("60px");
-        textField5.setLabel("CittÃ ");
+        textField5.setLabel("Città");
         textField5.setWidth("min-content");
         textField5.setHeight("60px");
         layoutRow9.setWidthFull();
@@ -246,7 +255,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
         getContent().add(layoutRow);
         layoutRow.add(layoutColumn3);
         layoutRow.add(layoutColumn2);
-        layoutColumn2.add(h2);
+        layoutColumn2.add(h2, note);
         layoutColumn2.add(formLayout2Col);
         formLayout2Col.add(layoutRow2);
         layoutRow2.add(textField);

@@ -1,6 +1,8 @@
 package com.example.progetto.GUI.checkoutform;
 
 import com.example.progetto.GUI.CartView;
+import com.example.progetto.backend.Current;
+import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -13,7 +15,6 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
@@ -37,13 +38,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Checkout Form")
 @Route("Checkout-form")
 public class CheckoutFormView extends Div {
-
-    private static final Set<String> states = new LinkedHashSet<>();
+    
+	private User currentUser = Current.getCurrentUser();
+    
     private static final Set<String> countries = new LinkedHashSet<>();
 
     static {
@@ -117,7 +118,7 @@ public class CheckoutFormView extends Div {
     }
 
     private Section createPersonalDetailsSection() {
-        Section personalDetails = new Section();
+    	Section personalDetails = new Section();
         personalDetails.addClassNames(Display.FLEX, FlexDirection.COLUMN, Margin.Bottom.XLARGE, Margin.Top.MEDIUM);
 
         Paragraph stepOne = new Paragraph("Checkout 1/3");
@@ -130,25 +131,26 @@ public class CheckoutFormView extends Div {
         name.setRequiredIndicatorVisible(true);
         name.setPattern("[\\p{L} \\-]+");
         name.addClassNames(Margin.Bottom.SMALL);
+        if (currentUser != null) {
+            name.setValue(currentUser.getName());
+        }
         
         TextField surname = new TextField("Cognome");
         surname.setRequiredIndicatorVisible(true);
         surname.setPattern("[\\p{L} \\-]+");
         surname.addClassNames(Margin.Bottom.SMALL);
+        if (currentUser != null) {
+            surname.setValue(currentUser.getSurname());
+        }
 
         EmailField email = new EmailField("Email");
         email.setRequiredIndicatorVisible(true);
         email.addClassNames(Margin.Bottom.SMALL);
+        if (currentUser != null) {
+            email.setValue(currentUser.getEmail());
+        }
 
-        TextField phone = new TextField("Numero di telefono");
-        phone.setRequiredIndicatorVisible(true);
-        phone.setPattern("[\\d \\-\\+]+");
-        phone.addClassNames(Margin.Bottom.SMALL);
-
-        Checkbox rememberDetails = new Checkbox("Ricorda i dati personali per la prossima volta");
-        rememberDetails.addClassNames(Margin.Top.SMALL);
-
-        personalDetails.add(stepOne, header, name, surname, email, phone, rememberDetails);
+        personalDetails.add(stepOne, header, name, surname, email);
         return personalDetails;
     }
 
@@ -287,22 +289,4 @@ public class CheckoutFormView extends Div {
         aside.add(headerSection, ul);
         return aside;
     }
-
-    /*private ListItem createListItem(String name, String size, String price) {
-        ListItem item = new ListItem();
-        item.addClassNames(Display.FLEX, JustifyContent.BETWEEN);
-
-        Div subSection = new Div();
-        subSection.addClassNames(Display.FLEX, FlexDirection.COLUMN);
-
-        subSection.add(new Span(name));
-        Span secondarySpan = new Span(size);
-        secondarySpan.addClassNames(FontSize.SMALL, TextColor.SECONDARY);
-        subSection.add(secondarySpan);
-
-        Span priceSpan = new Span(price);
-
-        item.add(subSection, priceSpan);
-        return item;
-    }*/
 }
