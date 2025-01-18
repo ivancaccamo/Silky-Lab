@@ -149,7 +149,7 @@ public Product returnProductByModel(Model model, String size, int qnt) throws SQ
         Product product = new Product(id, size, model);
         System.out.println("ID: " + id);
         System.out.println("ID: " + model.getId());
-        
+         
         return product;
     }
 }
