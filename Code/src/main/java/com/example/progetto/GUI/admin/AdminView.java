@@ -8,6 +8,7 @@ import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -52,6 +53,7 @@ public class AdminView extends Composite<VerticalLayout> {
     	if(Current.getCurrentUser()==null||Current.getCurrentUser().getRole().equals("CLIENT")) {
     		HorizontalLayout layoutRow = new HorizontalLayout();
             H1 h12 = new H1();
+            
             HorizontalLayout layoutRow2 = new HorizontalLayout();
             VerticalLayout layoutColumn8 = new VerticalLayout();
             VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -107,6 +109,8 @@ public class AdminView extends Composite<VerticalLayout> {
             getContent().add(layoutRow5);
 	    
 	}else {
+		ComboBox<String> categoryComboBox = new ComboBox<>("Seleziona una categoria");
+        categoryComboBox.setItems("Felpe", "Pantaloni", "Magliette", "Accessori");
 		VerticalLayout layoutColumn2 = new VerticalLayout();
         TextField textField = new TextField();
         NumberField numberField = new NumberField();
@@ -128,15 +132,20 @@ public class AdminView extends Composite<VerticalLayout> {
                         model.setName(textField.getValue());
                         model.setPrice(numberField.getValue());
                         model.setCategory(Current.getCategoryView());
-                        model.setDescription(textArea.getValue());                        
-                        dbManager.saveModel(model);        
+                        model.setDescription(textArea.getValue());     
+                        model.setCategory(categoryComboBox.getValue()); 
+                        dbManager.saveModel(model);                      
+                        dbManager.loadProducts(dbManager.returnIdModel(model));       
                         Notification.show("Modello aggiunto con successo!");
                         getUI().ifPresent(ui -> ui.navigate("category-detail"));   
                     } catch (SQLException e) {                  
                         e.printStackTrace();
                         Notification.show("Qualcosa è andato storto");
-                    }
+					
+					}
+                    
                     saveImage(model,fileBuffer);
+                    
             	}else
             		Notification.show("Riempi tutti i campi per proseguire");
         	}
@@ -164,6 +173,7 @@ public class AdminView extends Composite<VerticalLayout> {
         textMedium.setWidth("100%");
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
         getContent().add(layoutColumn2);
+        layoutColumn2.add(categoryComboBox);
         layoutColumn2.add(textField);
         layoutColumn2.add(numberField);
         layoutColumn2.add(textArea);

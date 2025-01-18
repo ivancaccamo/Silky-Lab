@@ -70,10 +70,10 @@ html {
 	   	border-color: lightgrey;
 }	
 .product-image {
-    width: 400px;
+    width: 440x;
     height: 530px;
-    border: 2px solid rgba(0, 0, 0, 0.2); /* Bordi leggermente visibili con trasparenza */
+    border: 5px solid rgba(0, 0, 0, 0.2); /* Bordi leggermente visibili con trasparenza */
     border-radius: 15px; /* Arrotondamento dei bordi */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Effetto ombra per migliorare l'estetica */
-    object-fit: cover; /* Assicura che l'immagine mantenga il suo rapporto di aspetto */
+	object-fit: cover;
 }

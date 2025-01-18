@@ -17,6 +17,7 @@ import jakarta.validation.constraints.AssertFalse.List;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:databases/db.db";
+	
 
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL);
@@ -124,41 +125,156 @@ public Model returnModelByName(String name) throws SQLException {
 				return model;
     }
 }
-public Product returnProductByModel(Model model,String size,int qnt) throws SQLException {
-	String sql = "SELECT *\r\n"
-			+ "FROM (\r\n"
-			+ "    SELECT *\r\n"
-			+ "    FROM Product\r\n"
-			+ "    WHERE modelID = '?' AND size = '?'\r\n"
-			+ "    LIMIT ?\r\n"
-			+ ") Subquery\r\n"
-			+ "WHERE (SELECT COUNT(*)\r\n"
-			+ "       FROM product\r\n"
-			+ "       WHERE modelID = '?' AND size = '?') = ?;";
+public Product returnProductByModel(Model model, String size, int qnt) throws SQLException {
+    String sql = "SELECT * FROM Product WHERE modelID = ? AND size = ? LIMIT 1;";
+    ResultSet rs = null;
+
+    try (Connection conn = this.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setInt(1, model.getId());
+        pstmt.setString(2, size);
+        rs = pstmt.executeQuery();
+
+        if (!rs.next()) {
+            System.out.println("ResultSet è vuoto");
+            int id = rs.getInt("ID");
+            System.out.println("ID: " + id);
+            return null;
+        }
+
+        // Se il ResultSet contiene dati
+        int id = rs.getInt("ID");
+        // Creazione del prodotto
+        Product product = new Product(id, size, model);
+        System.out.println("ID: " + id);
+        System.out.println("ID: " + model.getId());
+        
+        return product;
+    }
+}
+
+	
+
+	public int countRecords(Model model,String size) throws SQLException {
+		int count = 0;
+		String sql = "SELECT COUNT(*) AS TotalRecord FROM Product WHERE modelID = ? AND size = ?;";
+		ResultSet rs = null;
+		try (Connection conn = this.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+					pstmt.setInt(1, model.getId());	
+					pstmt.setString(2, size);
+					rs = pstmt.executeQuery();		
+					if(!rs.isBeforeFirst()) {
+						count = 0;
+					}else {
+						count = rs.getInt("TotalRecords");	
+					}				
+					}
+	return count;
+	}
+public void loadProducts(int idModel) throws SQLException {
+	String sql = "INSERT INTO Product (modelID, size)\r\n"
+			+ "VALUES \r\n"
+			+ "-- 15 righe per Small\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "(?, 'Small'),\r\n"
+			+ "\r\n"
+			+ "-- 20 righe per Large\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "(?, 'Large'),\r\n"
+			+ "\r\n"
+			+ "-- 20 righe per Medium\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "(?, 'Medium'),\r\n"
+			+ "\r\n"
+			+ "-- 10 righe per Extra Large\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large'),\r\n"
+			+ "(?, 'Extra Large');\r\n";
 	ResultSet rs = null;
 	try (Connection conn = this.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql)) {
-				pstmt.setInt(1, model.getId());	
-				pstmt.setString(2, size);
-				pstmt.setInt(3, qnt);
-				pstmt.setInt(4, model.getId());
-				pstmt.setString(5, size);
-				pstmt.setInt(6, qnt);
-				rs = pstmt.executeQuery();
-				if(rs==null) {
-					return null;
-				}else {
-					int id = rs.getInt("ID");
-					String description = rs.getString("description");
-					double price = rs.getDouble("price");
-					Product product = new Product(id,size,model);
-					return product;
-				}
-				
+		for (int i = 1; i < 66; i++) {
+			pstmt.setInt(i, idModel);
+		}	
+		pstmt.executeUpdate();
+	}
+}
+public int returnIdModel(Model model) throws SQLException {
+	String sql = "SELECT * FROM Model WHERE name = ? AND price = ? AND category = ? AND description = ?;";
+	ResultSet rs = null;
+    try (Connection conn = this.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setString(1, model.getName());
+        pstmt.setDouble(2, model.getPrice());
+        pstmt.setString(3, model.getCategory());
+        pstmt.setString(4, model.getDescription());
+        rs = pstmt.executeQuery();
+        return rs.getInt("ID");
     }
+    
+}
 }
 	
-}
+	
+
  
 
 

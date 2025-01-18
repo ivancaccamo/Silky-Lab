@@ -40,11 +40,14 @@ public class ProductView extends VerticalLayout{
     private static final int MAX_QUANTITY = 10; // Quantità massima acquistabile
     private Product p = new Product();
     private Model model = new Model();
+    DatabaseManager dbManager = new DatabaseManager();
     public ProductView() {
     	
-    	DatabaseManager dbManager = new DatabaseManager();
+    	
     	try {
 			model = dbManager.returnModelByName(productName);
+           
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -103,16 +106,15 @@ public class ProductView extends VerticalLayout{
             } else if (selectedQuantity > MAX_QUANTITY) {
                 Notification.show("Puoi acquistare massimo " + MAX_QUANTITY + " unità di questo prodotto", 3000, Notification.Position.MIDDLE);
             } else {
-            	DatabaseManager db = new DatabaseManager();
-            	try {
-					p = db.returnProductByModel(model, selectedSize, selectedQuantity);
-					
+            	
+            	try {	
+					p = dbManager.returnProductByModel(model, selectedSize, selectedQuantity);				
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
             	if(p == null) {
-            		Notification.show("Non possediamo "+selectedQuantity+"prodotti da lei selezionati in magazzano!\nci scusiamo per il disagio", 2000, Notification.Position.MIDDLE);
+            		Notification.show("Non possediamo "+selectedQuantity+" prodotti da lei selezionati in magazzino!", 3000, Notification.Position.MIDDLE);
             	}else {
             		Cart.addItem(p, selectedQuantity);
                // Cart.addItem(p, selectedQuantity);
@@ -154,7 +156,6 @@ public class ProductView extends VerticalLayout{
         String price = String.valueOf(model.getPrice());
         h3.setText(price+" euro");
         h3.setWidth("max-content");
-        sizeSelector.setLabel("Seleziona la taglia");
         sizeSelector.setWidth("100%");
         addToCartButton.setText("Aggiungi al carrello");
         addToCartButton.setWidth("100%");
