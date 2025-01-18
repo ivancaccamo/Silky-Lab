@@ -8,6 +8,8 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -49,20 +51,30 @@ public class HomeView extends Composite<VerticalLayout> {
         // Footer con Contatti
         Footer footer = new Footer();
         
+        footer.getStyle().set("font-weight", "bold");
         footer.getStyle().set("width", "100%");
-        footer.getStyle().set("background-color", "#f8f9fa");
-        footer.getStyle().set("padding", "10px 0");
+        footer.getStyle().set("background-color", "grey");
+        footer.getStyle().set("color", "white");
         footer.getStyle().set("text-align", "center");
         footer.getStyle().set("margin-top", "auto"); // Fa in modo che il footer rimanga sempre in basso
+        
+        HorizontalLayout emailLayout = new HorizontalLayout();
+        Paragraph contactInfo = new Paragraph("Contattaci: info@silkylab.com |");  
+        Paragraph email1 = new Paragraph("m.brozzoni4@studenti.unibg.it");
+        Paragraph email2 = new Paragraph("i.caccamo@studenti.unibg.it");
+        Paragraph email3 = new Paragraph("s.preda2@studenti.unibg.it");
+        
+        emailLayout.setWidthFull(); // Imposta la larghezza completa
+        emailLayout.setAlignItems(Alignment.CENTER); // Centra verticalmente
+        emailLayout.setJustifyContentMode(JustifyContentMode.CENTER); // Centra orizzontalmente
+        
+        contactInfo.getStyle().set("margin-right", "20px");
+        email1.getStyle().set("margin-right", "20px");
+        email2.getStyle().set("margin-right", "20px");
+        
+        emailLayout.add(contactInfo, email1, email2, email3);
 
-        Paragraph contactInfo = new Paragraph("Contattaci: info@silkylab.com | m.brozzoni4@studenti.unibg.it"
-        		+ " i.caccamo@studenti.unibg.it"
-        		+ " s.preda2@studenti.unibg.it");
-
-        VerticalLayout footerContent = new VerticalLayout(contactInfo);
-        footerContent.setAlignItems(Alignment.CENTER);
-
-        footer.add(footerContent);
+        footer.add(emailLayout);
         getContent().add(footer);
     }
 }
