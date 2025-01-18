@@ -37,13 +37,15 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Uses(Icon.class)
 public class CartView extends Composite<VerticalLayout> {
 	static VerticalLayout cartItemsContainer = new VerticalLayout();
-	
+	private static double tot = 0;
     public CartView() {
     	
     	Scroller scroller = new Scroller();
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
+        tot=0;
         scroller.setContent(cartItemsContainer);
         refresh();
+        
         HorizontalLayout layoutRow = new HorizontalLayout();
         H1 h1 = new H1();
         HorizontalLayout layoutRow2 = new HorizontalLayout();
@@ -54,7 +56,7 @@ public class CartView extends Composite<VerticalLayout> {
         H4 h42 = new H4();
         ProgressBar progressBar = new ProgressBar();
         H6 h6 = new H6();
-        Grid basicGrid = new Grid();
+        
         HorizontalLayout layoutRow3 = new HorizontalLayout();
         Button buttonPrimary = new Button();
         Button buttonSecondary = new Button();
@@ -83,15 +85,26 @@ public class CartView extends Composite<VerticalLayout> {
         layoutColumn2.setFlexGrow(1.0, layoutColumn3);
         layoutColumn3.setWidth("100%");
         layoutColumn3.getStyle().set("flex-grow", "1");
-        h4.setText("Totale:");
+        
         h4.setWidth("max-content");
-        h42.setText("Altri x euro per avere la spedizione gratuita");
+        
+        
         h42.setWidth("max-content");
-        progressBar.setValue(0.5);
-        h6.setText("costo di spedizione : x");
-        h6.setWidth("max-content");
-        basicGrid.setWidth("100%");
-        basicGrid.getStyle().set("flex-grow", "0");
+        if(tot==0)
+        h4.setText("Aggiungi qualcosa al carrello per procedere al checkout");
+        if(tot!=0)
+        h4.setText("Totale: "+tot+" euro");	
+        if(tot < 100) {
+        	
+        	h42.setText("Altri "+(100-tot)+" euro per avere la spedizione gratuita");
+        	h6.setText("Costo di spedizione : 14,90 euro");
+        	progressBar.setValue(tot/100);
+        }else {
+        	progressBar.setValue(1);
+        	h6.setText("Spedizione gratutita");
+        }
+        
+        h6.setWidth("max-content");     
         scroller.setWidth("100");
         scroller.getStyle().set("flex-grow", "0");
         layoutRow3.setWidthFull();
@@ -149,6 +162,7 @@ public class CartView extends Composite<VerticalLayout> {
         Span price = new Span("€" + (item.getQuantity() * item.getProduct().getModel().getPrice()));
         layout.add(productName, productSize, quantity, price);
         cartItemsContainer.add(layout);
+        tot = item.getQuantity() * item.getProduct().getModel().getPrice()+tot;
     }
 
     public void refresh() {
@@ -157,6 +171,6 @@ public class CartView extends Composite<VerticalLayout> {
     }
 
     public static VerticalLayout getCartItems () {
-    	return cartItemsContainer;
+    	return cartItemsContainer;  
     }
 }
