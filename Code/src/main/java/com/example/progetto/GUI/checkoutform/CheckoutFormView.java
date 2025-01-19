@@ -4,6 +4,7 @@ import com.example.progetto.GUI.CartView;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasOrderedComponents;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -35,6 +37,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
+
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -86,12 +90,15 @@ public class CheckoutFormView extends Div {
     }
 
     public CheckoutFormView() {
-        addClassNames("checkout-form-view");
+    	addClassNames("checkout-form-view");
         addClassNames(Display.FLEX, FlexDirection.COLUMN, Height.FULL);
 
         Main content = new Main();
-        content.addClassNames(Display.GRID, Gap.XLARGE, AlignItems.START, JustifyContent.CENTER, MaxWidth.SCREEN_MEDIUM,
-                Margin.Horizontal.AUTO, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
+        content.addClassNames(Display.GRID, Gap.XLARGE, AlignItems.START, JustifyContent.START, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
+        
+        // Rimuovi qualsiasi larghezza massima predefinita
+        content.getStyle().set("max-width", "none");
+        content.getStyle().set("margin-left", "90px"); // Assicura che il contenitore sia spostato a sinistra
 
         content.add(createCheckoutForm());
         content.add(createAside());
@@ -192,11 +199,10 @@ public class CheckoutFormView extends Div {
 
         Checkbox sameAddress = new Checkbox("L'indirizzo di fatturazione è lo stesso dell'indirizzo di spedizione");
         sameAddress.addClassNames(Margin.Top.SMALL);
+        //da riportare l'indirizzo del current user
+        
 
-        Checkbox rememberAddress = new Checkbox("Ricorda indirizzo di spedizione per la prossima volta");
-
-        shippingDetails.add(stepTwo, header, countrySelect, address, subSection, sameAddress,
-                rememberAddress);
+        shippingDetails.add(stepTwo, header, countrySelect, address, subSection, sameAddress);
         return shippingDetails;
     }
 
@@ -259,6 +265,12 @@ public class CheckoutFormView extends Div {
         Button pay = new Button("Paga", new Icon(VaadinIcon.LOCK));
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
+        pay.addClickListener(event -> {
+                // Mostra la notifica di successo se tutti i campi sono validi
+                Notification.show("Pagamento avvenuto con successo!", 3000, Notification.Position.MIDDLE);
+            //fare il controllo di tutti i campi compilati
+        });
+        
         footer.add(cancel, pay);
         return footer;
     }
@@ -267,10 +279,14 @@ public class CheckoutFormView extends Div {
         Aside aside = new Aside();
         aside.addClassNames(Background.CONTRAST_5, BoxSizing.BORDER, Padding.LARGE, BorderRadius.LARGE,
                 Position.STICKY);
+        aside.getStyle().set("width", "170%"); // Modifica la larghezza qui
+        
         Header headerSection = new Header();
         headerSection.addClassNames(Display.FLEX, AlignItems.CENTER, JustifyContent.BETWEEN, Margin.Bottom.MEDIUM);
+        
         H3 header = new H3("Ordine");
         header.addClassNames(Margin.NONE);
+        
         Button edit = new Button("Torna al carrello");
         edit.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         edit.addClickListener(event -> {
@@ -286,7 +302,17 @@ public class CheckoutFormView extends Div {
 
         ul.add(CartView.getCartItems());
 
-        aside.add(headerSection, ul);
+     // Ottieni il totale dinamico e visualizzalo
+        DecimalFormat df = new DecimalFormat("0.00");
+        float total = CartView.getTotal();
+        float totalWithDelivery = total < 100 ? total + 7.9f : total;
+
+        Span totalPrice = new Span("Totale: €" + df.format(totalWithDelivery));
+        totalPrice.addClassNames(FontSize.LARGE, TextColor.PRIMARY);
+
+        aside.add(headerSection, ul, totalPrice);
+        
         return aside;
     }
+    
 }

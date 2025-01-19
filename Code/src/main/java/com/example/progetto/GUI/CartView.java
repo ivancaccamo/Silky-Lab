@@ -192,4 +192,8 @@ public class CartView extends Composite<VerticalLayout> {
     public static VerticalLayout getCartItems () {
     	return cartItemsContainer;  
     }
+    
+    public static float getTotal() {
+        return tot;
+    }
 }
