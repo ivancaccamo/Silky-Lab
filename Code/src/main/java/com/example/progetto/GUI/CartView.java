@@ -31,6 +31,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
+import java.text.DecimalFormat;
+
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Carrello")
@@ -39,12 +41,14 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Uses(Icon.class)
 public class CartView extends Composite<VerticalLayout> {
 	static VerticalLayout cartItemsContainer = new VerticalLayout();
-	private static double tot = 0;
+	private static float tot = 0;
     public CartView() {
     	
     	Scroller scroller = new Scroller();
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         tot=0;
+        DecimalFormat df = new DecimalFormat("0.00");
+        
         scroller.setContent(cartItemsContainer);
         refresh();
         
@@ -90,14 +94,16 @@ public class CartView extends Composite<VerticalLayout> {
         h4.setWidth("max-content");
         h42.setWidth("max-content");
         if(tot==0)
-        h4.setText("Carrello vuoto");
-        if(tot!=0)
-        h4.setText("Totale: "+tot+" euro");	
+        	h4.setText("Carrello vuoto");
+        if(tot<100)
+        	h4.setText("Totale: "+(tot+7.9)+" euro");
+        if(tot>=100)
+        	h4.setText("Totale: "+tot+" euro");
         if(tot < 100) {
-        	
-        	h42.setText("Altri "+(100-tot)+" euro per avere la spedizione gratuita");
+        	String formatted = df.format(100-tot); 
+        	h42.setText("Altri "+formatted+" euro per avere la spedizione gratuita");
         
-        	h6.setText("Costo di spedizione : 14,90 euro");
+        	h6.setText("Costo di spedizione : 7,90 euro");
         	progressBar.setValue(tot/100);
         }else {
         	progressBar.setValue(1);
@@ -157,7 +163,7 @@ public class CartView extends Composite<VerticalLayout> {
         getContent().add(layoutRow4);
         
     }
-
+    
     private void addCartItem(CartItem item) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setWidthFull();
@@ -167,7 +173,7 @@ public class CartView extends Composite<VerticalLayout> {
         Span price = new Span("€" + (item.getQuantity() * item.getProduct().getModel().getPrice()));
         layout.add(productName, productSize, quantity, price);
         cartItemsContainer.add(layout);
-        tot = item.getQuantity() * item.getProduct().getModel().getPrice()+tot;
+        tot = (float) (item.getQuantity() * item.getProduct().getModel().getPrice()+tot);
     }
 
     public void refresh() {

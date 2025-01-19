@@ -9,6 +9,15 @@ public class Cart {
 	public static List<CartItem> getCartItems() {
 		return items;
 	}
+	public static int getCartItemByProduct(Model model,String size) {
+		
+		for(CartItem item : items) {
+			if(item.getProduct()==) {
+				return item.getQuantity();
+			}
+		}
+		return 0;
+	}
 	public static void setCartItems(List<CartItem> cartItems) {
 		items = cartItems;
 	}

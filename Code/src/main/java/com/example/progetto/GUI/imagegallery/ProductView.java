@@ -122,7 +122,7 @@ public class ProductView extends VerticalLayout {
             sizeButton.setWidth("80px");
             sizeButton.setHeight("40px");
 
-            if (availableQuantity > 0) {
+            if (availableQuantity - Cart.getCartItemByProduct(model,size)> 0) {
                 sizeButton.addClickListener(event -> {
                 	selectedSize = size;
                 	// Deseleziona il pulsante precedentemente selezionato
