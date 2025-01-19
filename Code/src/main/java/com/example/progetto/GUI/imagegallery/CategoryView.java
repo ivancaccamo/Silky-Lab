@@ -26,7 +26,11 @@ import com.example.application.services.DatabaseManager;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.Product;
 import com.example.progetto.backend.Model;
-
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 @PageTitle("Categoria")
 @Route("category-detail")
@@ -93,4 +97,5 @@ public class CategoryView extends VerticalLayout {
         layout.add(backButton, grid); 
         add(layout);
     }
+    
 }

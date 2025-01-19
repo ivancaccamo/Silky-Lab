@@ -271,6 +271,15 @@ public int returnIdModel(Model model) throws SQLException {
     }
     
 }
+public void deleteModelByName(String name) throws SQLException {
+	String sql = "DELETE FROM Model WHERE name = ?";
+	Connection conn = this.getConnection();
+	try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	    stmt.setString(1, name); // Sostituisci 'modelName' con il nome del modello
+	    int rowsAffected = stmt.executeUpdate();
+	    System.out.println(rowsAffected + " record(s) eliminato/i.");
+	}
+}
 }
 	
 	
