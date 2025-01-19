@@ -57,21 +57,11 @@ html {
        padding: 10px;
        z-index: 10000; /* Porta la notifica in primo piano */
    }
-.upload-image{
-		width: 350px; /* Larghezza fissa */
-	   	height: 700px; /* Altezza fissa */
-		max-width: 600px;
-	   	border: 2px solid black; /* Bordo visibile con spessore 2 */
-	   	display: flex; /* Layout flessibile per il posizionamento */
-	   	justify-content: flex-end; /* Assicura che gli elementi inizino dal basso */
-	   	overflow: hidden; /* Nasconde gli elementi fuori dal box */
-	   	box-sizing: border-box; /* Includi il bordo nel calcolo delle dimensioni */
-	   	border-radius: 20px;
-	   	border-color: lightgrey;
-}	
+
 .product-image {
     width: 440x;
     height: 530px;
+	margin: 20px;
     border: 5px solid rgba(0, 0, 0, 0.2); /* Bordi leggermente visibili con trasparenza */
     border-radius: 15px; /* Arrotondamento dei bordi */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Effetto ombra per migliorare l'estetica */

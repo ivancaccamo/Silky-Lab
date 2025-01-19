@@ -36,10 +36,10 @@ public class ProductCard extends Div {
         		.set("border", "4px solid transparent"));
 
         // Immagine del prodotto
+        
         Image productImage = new Image("Images/"+model.getName()+".png", "");
         productImage.setWidth("100%");
         productImage.getStyle().set("object-fit", "cover");
-
         // Nome e prezzo
         Div productInfo = new Div();
         
@@ -73,5 +73,11 @@ public class ProductCard extends Div {
 
         // Aggiungi la card al contenitore
         add(productCard);
+    }
+    private void refreshUI(String newImagePath) {
+        // Rendi questa parte thread-safe se necessario
+        getUI().ifPresent(ui -> ui.access(() -> {
+            Image newImage = new Image("/Images/" + newImagePath,"");        
+        }));
     }
 }
