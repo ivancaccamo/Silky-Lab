@@ -93,12 +93,15 @@ public class CartView extends Composite<VerticalLayout> {
         layoutColumn3.getStyle().set("flex-grow", "1");
         h4.setWidth("max-content");
         h42.setWidth("max-content");
+        
+        String total = df.format(tot);
+        String totalWithDelivery = df.format(tot+7.9);
         if(tot==0)
         	h4.setText("Carrello vuoto");
         if(tot<100)
-        	h4.setText("Totale: "+(tot+7.9)+" euro");
+        	h4.setText("Totale: "+totalWithDelivery+" euro");
         if(tot>=100)
-        	h4.setText("Totale: "+tot+" euro");
+        	h4.setText("Totale: "+total+" euro");
         if(tot < 100) {
         	String formatted = df.format(100-tot); 
         	h42.setText("Altri "+formatted+" euro per avere la spedizione gratuita");
@@ -166,13 +169,17 @@ public class CartView extends Composite<VerticalLayout> {
     
     private void addCartItem(CartItem item) {
         HorizontalLayout layout = new HorizontalLayout();
+        
         layout.setWidthFull();
         Span productName = new Span(item.getProduct().getModel().getName());
         Span productSize = new Span(item.getProduct().getSize());
         Span quantity = new Span("x" + item.getQuantity());
-        Span price = new Span("€" + (item.getQuantity() * item.getProduct().getModel().getPrice()));
+        DecimalFormat df = new DecimalFormat("0.00");
+        String PruductsPrice = df.format(item.getQuantity() * item.getProduct().getModel().getPrice());
+        Span price = new Span("€" + PruductsPrice);
         layout.add(productName, productSize, quantity, price);
         cartItemsContainer.add(layout);
+        cartItemsContainer.setWidth("100%");
         tot = (float) (item.getQuantity() * item.getProduct().getModel().getPrice()+tot);
     }
 
