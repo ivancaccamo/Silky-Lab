@@ -28,7 +28,7 @@ public class ImageGalleryViewCard extends ListItem {
                 .set("box-shadow", "0px 2px 10px rgba(0, 0, 0, 0.1)")
                 .set("border", "4px solid transparent"));
         
-        clickableDiv.getStyle().set("max-height", "350px"); // Altezza massima della card
+        clickableDiv.getStyle().set("max-height", "480px"); // Altezza massima della card
         clickableDiv.getStyle().set("overflow", "hidden"); // Nasconde il contenuto in eccesso
         
         clickableDiv.addClickListener(event -> {

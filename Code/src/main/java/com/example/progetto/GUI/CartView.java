@@ -190,6 +190,15 @@ public class CartView extends Composite<VerticalLayout> {
     }
 
     public static VerticalLayout getCartItems () {
+    	 cartItemsContainer.getChildren().forEach(child -> {
+    	        // Verifica se l'elemento è un pulsante e se è un deleteButton
+    	     child.getChildren().forEach(child2-> {   
+    		 if (child2 instanceof Button && ((Button) child2).getText().equals("")) {
+    	            // Rimuovi il pulsante di eliminazione
+    	            child2.removeFromParent();
+    	        }
+    	    });
+    	 });
     	return cartItemsContainer;  
     }
     

@@ -266,8 +266,10 @@ public class CheckoutFormView extends Div {
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
         pay.addClickListener(event -> {
-                // Mostra la notifica di successo se tutti i campi sono validi
-                Notification.show("Pagamento avvenuto con successo!", 3000, Notification.Position.MIDDLE);
+        	// Naviga alla pagina di riepilogo ordine
+            getUI().ifPresent(ui -> {
+                ui.navigate("Riepilogo-ordine");
+            });
             //fare il controllo di tutti i campi compilati
         });
         
@@ -314,5 +316,4 @@ public class CheckoutFormView extends Div {
         
         return aside;
     }
-    
 }
