@@ -15,8 +15,10 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.H6;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
@@ -85,18 +87,16 @@ public class CartView extends Composite<VerticalLayout> {
         layoutColumn2.setFlexGrow(1.0, layoutColumn3);
         layoutColumn3.setWidth("100%");
         layoutColumn3.getStyle().set("flex-grow", "1");
-        
         h4.setWidth("max-content");
-        
-        
         h42.setWidth("max-content");
         if(tot==0)
-        h4.setText("Aggiungi qualcosa al carrello per procedere al checkout");
+        h4.setText("Carrello vuoto");
         if(tot!=0)
         h4.setText("Totale: "+tot+" euro");	
         if(tot < 100) {
         	
         	h42.setText("Altri "+(100-tot)+" euro per avere la spedizione gratuita");
+        
         	h6.setText("Costo di spedizione : 14,90 euro");
         	progressBar.setValue(tot/100);
         }else {
@@ -118,7 +118,12 @@ public class CartView extends Composite<VerticalLayout> {
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonPrimary.addClickListener(event -> {
             getUI().ifPresent(ui -> {
-                ui.navigate("Checkout-form");
+            	if(tot > 0) {
+            		ui.navigate("Checkout-form");
+            	}else {
+            		Notification.show("Aggiugni qualcosa al carrello per procedere al checkout");
+            	}
+                
             });
         });
         buttonSecondary.setText("Torna allo shop");

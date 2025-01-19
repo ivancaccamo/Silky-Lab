@@ -136,7 +136,7 @@ public Product returnProductByModel(Model model, String size, int qnt) throws SQ
         pstmt.setString(2, size);
         rs = pstmt.executeQuery();
 
-        if (!rs.next()) {
+        if (!rs.next()||countRecords(model,size)<qnt) {
             System.out.println("ResultSet è vuoto");
             int id = rs.getInt("ID");
             System.out.println("ID: " + id);
@@ -165,10 +165,10 @@ public Product returnProductByModel(Model model, String size, int qnt) throws SQ
 					pstmt.setInt(1, model.getId());	
 					pstmt.setString(2, size);
 					rs = pstmt.executeQuery();		
-					if(!rs.isBeforeFirst()) {
-						count = 0;
+					if(rs.next()) {
+						count = rs.getInt("TotalRecord");	
 					}else {
-						count = rs.getInt("TotalRecords");	
+						count = 0;
 					}				
 					}
 	return count;
