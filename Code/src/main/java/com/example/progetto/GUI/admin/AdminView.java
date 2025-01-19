@@ -72,7 +72,6 @@ import com.vaadin.hilla.ApplicationContextProvider;
         	H1 h1 = new H1();	
         	TextField textField = new TextField("Inserisci il nome del prodotto");
             TextArea textArea = new TextArea("Descrizione dettagliata");
-            Paragraph textMedium = new Paragraph();
             NumberField numberField = new NumberField("Prezzo modello");
             FileBuffer fileBuffer = new FileBuffer();
             Upload upload = new Upload(fileBuffer);

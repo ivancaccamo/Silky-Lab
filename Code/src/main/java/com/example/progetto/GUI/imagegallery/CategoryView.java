@@ -54,7 +54,7 @@ public class CategoryView extends VerticalLayout {
         // Bottone per tornare indietro
         Button backButton = new Button("Torna indietro", new Icon(VaadinIcon.ARROW_LEFT));
         backButton.addClickListener(event -> {
-        	Notification.show("File uploaded: "+category);
+        	
             getUI().ifPresent(ui -> ui.navigate("Shop"));
         });
 
@@ -71,19 +71,26 @@ public class CategoryView extends VerticalLayout {
         FlexLayout grid = new FlexLayout();
 
         grid.getStyle().set("display", "grid");
-        grid.getStyle().set("grid-template-columns", "repeat(3, 1fr)");
-        grid.getStyle().set("width", "100%");
+        grid.getStyle().set("grid-template-columns", "repeat(3, 0fr)");
+        grid.setWidth("100%");
+        grid.setWidthFull();
         grid.setFlexWrap(FlexLayout.FlexWrap.WRAP);
-        grid.setJustifyContentMode(FlexLayout.JustifyContentMode.START);
-        grid.setAlignItems(FlexLayout.Alignment.START);
-        grid.getStyle().set("gap", "30px"); 
+        grid.setJustifyContentMode(FlexLayout.JustifyContentMode.CENTER);
+        grid.setAlignItems(FlexLayout.Alignment.CENTER);
+        grid.getStyle().set("gap", "70px"); 
 
         // Aggiungi ogni prodotto alla griglia
         for (Model model : models) {
              ProductCard productCard = new ProductCard(model);
              grid.add(productCard);             
         } 
-        layout.add(backButton, grid);
+        if(Current.getUser()==null||Current.getUser().getRole().equals("ADMIN")) {
+        	ProductCard productCard = new ProductCard();
+        	grid.add(productCard);
+        }
+        layout.setWidth("100%");
+        layout.setAlignSelf(Alignment.CENTER);
+        layout.add(backButton, grid); 
         add(layout);
     }
 }
