@@ -4,25 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-	private static List<CartItem> items = new ArrayList<>();
+	private static ArrayList<CartItem> items = new ArrayList<>();
 	
-	public static List<CartItem> getCartItems() {
+	public static ArrayList<CartItem> getCartItems() {
 		return items;
 	}
-	public static int getCartItemByProduct(Model model,String size) {
+	public static int getCartItemByModel(Model model,String size) {
 		
 		for(CartItem item : items) {
-			if(item.getProduct()==) {
+			System.out.println(item.getProduct().getModel().getName()+item.getProduct().getSize());
+			System.out.println(model.getName()+size);
+			if(item.getProduct().getModel().getName().equals(model.getName())&&item.getProduct().getSize().equals(size)) {
 				return item.getQuantity();
 			}
 		}
 		return 0;
 	}
-	public static void setCartItems(List<CartItem> cartItems) {
+	public static void setCartItems(ArrayList<CartItem> cartItems) {
 		items = cartItems;
 	}
 	
-	public void removeCartItem(int id) {
+	public void removeCartItem(int id) { 
 		items.remove(id);
 	}
 	public static void emptyCart() {

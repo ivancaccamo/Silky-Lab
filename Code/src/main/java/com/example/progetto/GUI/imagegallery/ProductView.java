@@ -112,44 +112,9 @@ public class ProductView extends VerticalLayout {
         sizeLayout.setSpacing(true);
         sizeLayout.setAlignItems(Alignment.CENTER);
         
-       
         
-        for (String size : sizes) {
-            int availableQuantity;
-            availableQuantity = sizeAvailability.get(size);
-			
-            Button sizeButton = new Button(size);
-            sizeButton.setWidth("80px");
-            sizeButton.setHeight("40px");
-
-            if (availableQuantity - Cart.getCartItemByProduct(model,size)> 0) {
-                sizeButton.addClickListener(event -> {
-                	selectedSize = size;
-                	// Deseleziona il pulsante precedentemente selezionato
-                    if (previouslySelectedButton != null) {
-                        previouslySelectedButton.removeThemeVariants(ButtonVariant.LUMO_PRIMARY); 
-                    }
-                	sizeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-                	previouslySelectedButton = sizeButton; // Aggiorna il riferimento
-                	if (sizeAvailability.get(size) < MAX_QUANTITY) {
-                		max = availableQuantity;
-                		quantityField.setValue(1);
-                		quantityField.setMax(max);
-                    }
-                		else {
-                			max = MAX_QUANTITY;
-                			quantityField.setValue(1);
-                			quantityField.setMax(max);
-                		}
-                });
-            } else {
-            	sizeButton.getStyle().set("background-color", "#e0e0e0"); // Colore grigio per taglia non disponibile
-                sizeButton.getStyle().set("color", "#b0b0b0"); // Colore del testo grigio
-                sizeButton.setEnabled(false); // Disabilita il bottone
-            }
-
-            sizeLayout.add(sizeButton);
-        }
+        
+        refreshSizeButtons(sizeAvailability, sizeLayout, quantityField);       
 
         H5 selectSizeLabel = new H5("Seleziona la taglia");
         
@@ -181,8 +146,12 @@ public class ProductView extends VerticalLayout {
                 } else {
                     Cart.addItem(p, selectedQuantity);
                     Notification.show("Prodotto aggiunto al carrello!", 3000, Notification.Position.MIDDLE);
-                }
-            }
+                    int availability = Math.min(MAX_QUANTITY, sizeAvailability.get(selectedSize));
+                    //int newAvailability = availability - selectedQuantity;
+                    sizeAvailability.put(selectedSize, availability);
+                    refreshSizeButtons(sizeAvailability, sizeLayout, quantityField);
+                } 
+            }   	 	
         });
 
         // Bottone per tornare al catalogo
@@ -228,4 +197,37 @@ public class ProductView extends VerticalLayout {
         
         layoutRow.expand(layoutColumn);
     }
+    private void refreshSizeButtons (Map<String, Integer> sizeAvailability, HorizontalLayout sizeLayout, IntegerField quantityField) {
+        	sizeLayout.removeAll(); // Rimuovi i pulsanti precedenti
+
+            for (String size : sizes) {
+                int availableQuantity = sizeAvailability.get(size) - Cart.getCartItemByModel(model,size);
+
+                Button sizeButton = new Button(size);
+                sizeButton.setWidth("80px");
+                sizeButton.setHeight("40px");
+
+                if (availableQuantity > 0) {
+                    sizeButton.addClickListener(event -> {
+                        selectedSize = size;
+
+                        if (previouslySelectedButton != null) {
+                            previouslySelectedButton.removeThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                        }
+
+                        sizeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                        previouslySelectedButton = sizeButton;
+
+                        max = Math.min(MAX_QUANTITY, availableQuantity);
+                        quantityField.setMax(max);
+                    });
+                } else {
+                    sizeButton.getStyle().set("background-color", "#e0e0e0");
+                    sizeButton.getStyle().set("color", "#b0b0b0");
+                    sizeButton.setEnabled(false);
+                }
+                quantityField.setValue(0);
+                sizeLayout.add(sizeButton);
+            }
+        }
 }
