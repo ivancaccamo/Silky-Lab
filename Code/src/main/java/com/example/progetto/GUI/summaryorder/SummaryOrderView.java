@@ -43,7 +43,7 @@ public class SummaryOrderView extends VerticalLayout {
         goBack.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         goBack.addClickListener(event -> {
             getUI().ifPresent(ui -> {
-                ui.navigate("home");
+                ui.navigate("");
             });
         });
 
