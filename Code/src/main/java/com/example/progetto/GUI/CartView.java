@@ -1,23 +1,17 @@
 package com.example.progetto.GUI;
 
-
-
 import com.example.progetto.backend.Cart;
 import com.example.progetto.backend.CartItem;
-import com.example.progetto.backend.Current;
-import com.example.progetto.backend.Product;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.H6;
-import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
@@ -50,6 +44,7 @@ public class CartView extends Composite<VerticalLayout> {
         DecimalFormat df = new DecimalFormat("0.00");
         
         scroller.setContent(cartItemsContainer);
+        scroller.setHeight("200px");
         refresh();
         
         HorizontalLayout layoutRow = new HorizontalLayout();
@@ -114,7 +109,7 @@ public class CartView extends Composite<VerticalLayout> {
         }
         
         h6.setWidth("max-content");     
-        scroller.setWidth("100");
+        scroller.setWidth("100%");
         scroller.getStyle().set("flex-grow", "0");
         layoutRow3.setWidthFull();
         layoutColumn2.setFlexGrow(1.0, layoutRow3);
@@ -129,10 +124,9 @@ public class CartView extends Composite<VerticalLayout> {
             getUI().ifPresent(ui -> {
             	if(tot > 0) {
             		ui.navigate("Checkout-form");
-            	}else {
+            	} else {
             		Notification.show("Aggiugni qualcosa al carrello per procedere al checkout");
-            	}
-                
+            	}    
             });
         });
         buttonSecondary.setText("Torna allo shop");
@@ -163,8 +157,7 @@ public class CartView extends Composite<VerticalLayout> {
         layoutRow3.add(buttonPrimary);
         layoutRow3.add(buttonSecondary);
         layoutRow2.add(layoutColumn5);
-        getContent().add(layoutRow4);
-        
+        getContent().add(layoutRow4);   
     }
     
     private void addCartItem(CartItem item) {
@@ -177,7 +170,15 @@ public class CartView extends Composite<VerticalLayout> {
         DecimalFormat df = new DecimalFormat("0.00");
         String PruductsPrice = df.format(item.getQuantity() * item.getProduct().getModel().getPrice());
         Span price = new Span("€" + PruductsPrice);
-        layout.add(productName, productSize, quantity, price);
+        
+        Button deleteButton = new Button("", new Icon(VaadinIcon.TRASH), event -> {
+            Cart.removeItem(item); // Rimuove l'elemento dal carrello
+            refresh(); // Aggiorna la UI
+        });
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR);
+        deleteButton.getStyle().set("margin-left", "auto");
+        
+        layout.add(productName, productSize, quantity, price, deleteButton);
         cartItemsContainer.add(layout);
         cartItemsContainer.setWidth("100%");
         tot = (float) (item.getQuantity() * item.getProduct().getModel().getPrice()+tot);
@@ -190,5 +191,9 @@ public class CartView extends Composite<VerticalLayout> {
 
     public static VerticalLayout getCartItems () {
     	return cartItemsContainer;  
+    }
+    
+    public static float getTotal() {
+        return tot;
     }
 }

@@ -60,6 +60,7 @@ public class ProductView extends VerticalLayout {
             try {
                 // Recupera la quantità disponibile per ogni taglia
                 int availableQuantity = dbManager.countRecords(model, size);
+                if (availableQuantity > MAX_QUANTITY) availableQuantity = MAX_QUANTITY;
                 sizeAvailability.put(size, availableQuantity);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -221,8 +222,9 @@ public class ProductView extends VerticalLayout {
                     sizeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                     previouslySelectedButton = sizeButton;
 
-                    max = Math.min(MAX_QUANTITY, availableQuantity); // Aggiorna la quantità massima disponibile
+                    max = Math.min(MAX_QUANTITY - Cart.getCartItemByModel(model, selectedSize), availableQuantity); // Aggiorna la quantità massima disponibile
                     quantityField.setMax(max);
+                    quantityField.setValue(0);
                 });
             } else {
                 // Disattiva il pulsante se non ci sono quantità disponibili
@@ -230,7 +232,8 @@ public class ProductView extends VerticalLayout {
                 sizeButton.getStyle().set("color", "#b0b0b0");
                 sizeButton.setEnabled(false);
             }
-            quantityField.setValue(0); // Imposta la quantità a zero
+             // Imposta la quantità a zero
+            quantityField.setValue(0);
             sizeLayout.add(sizeButton);
         }
     }
