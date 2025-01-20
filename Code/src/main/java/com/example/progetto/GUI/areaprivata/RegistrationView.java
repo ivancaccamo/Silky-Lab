@@ -118,7 +118,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
         HorizontalLayout layoutRow10 = new HorizontalLayout();
         NumberField numberField = new NumberField();
         numberField.setRequiredIndicatorVisible(true);
-        numberField.setMin(0); // Valore minimo
+        numberField.setMin(1); // Valore minimo
         numberField.setMax(99999); // Valore massimo (5 cifre)
         Button buttonPrimary = new Button("Registrati", event -> {
         	if(textField.getValue()==null||textField.getValue()==null||textField2.getValue()==null||emailField.getValue()==null||textField4.getValue()==null||textField5.getValue()==null||countrySelect.getValue()!=null) {
@@ -131,16 +131,27 @@ public class RegistrationView extends Composite<VerticalLayout> {
                 user.setPassword(passwordField.getValue()); // Password
                 user.setRole("CLIENT"); // Ruolo predefinito
                 address.setAddress(textField4.getValue());
-                address.setCity(textField4.getValue());
-                address.setCap(numberField.getValue());
-                address.setCountry(textField4.getValue());
+                address.setCity(textField5.getValue());
+                address.setCap( (int) Math.round(numberField.getValue()));
+                address.setCountry(countrySelect.getValue());
+                
                 try {
                 	Current.setUser(user);
+                	
                     DatabaseManager dbManager = new DatabaseManager();
-                    dbManager.saveUser(user); // Metodo per inserire l'utente nel database
-                    success.open();
+                    dbManager.saveUser(user);
+
+                    User savedUser = dbManager.findUserByEmail(user.getEmail());
+                    if (savedUser == null) {
+                    	throw new RuntimeException("Errore: l'utente non è stato salvato correttamente.");
+                    }
+
+                    dbManager.saveAddress(address, savedUser.getId());
                     getUI().ifPresent(ui -> ui.navigate("Profile"));
+                    success.open();
+                   
                     getUI().ifPresent(ui -> ui.getPage().reload());
+                    
                 } catch (SQLException e) {
                     error.open();
                     e.printStackTrace();

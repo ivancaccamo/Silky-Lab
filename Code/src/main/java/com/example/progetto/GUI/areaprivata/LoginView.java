@@ -54,11 +54,15 @@ public class LoginView extends Composite<VerticalLayout> {
                 if (user != null && user.getPassword().equals(password)) {
                 	Notification.show("Credenziali valide");
                 	Current.setUser(user);
+                	Thread t = new Thread();
                 	                 	
                     if ("ADMIN".equals(user.getRole())) {
+                    	getUI().ifPresent(ui -> ui.getPage().reload());
+                    	
                         getUI().ifPresent(ui -> ui.navigate(""));
                         
                     } else if ("CLIENT".equals(user.getRole())) { 
+                    	getUI().ifPresent(ui -> ui.getPage().reload());
                     	
                         getUI().ifPresent(ui -> ui.navigate(""));
                         

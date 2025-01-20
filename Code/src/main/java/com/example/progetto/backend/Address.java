@@ -1,24 +1,36 @@
 package com.example.progetto.backend;
 
 public class Address {
+	private int ID;
 	private String address;
 	private String city;
-	private double cap;
+	private int cap;
 	private String country;
 	private int IDuser;
-	public Address(String address, String city, double cap, String country, int iDuser) {
-		super();
+	
+	
+	public Address() {
+	
+	}
+	
+	public Address(int iD, String address, String city, int cap, String country, int iDuser) {
+		
+		ID = iD;
 		this.address = address;
 		this.city = city;
 		this.cap = cap;
 		this.country = country;
 		IDuser = iDuser;
 	}
-	public Address() {
-		
-	
-	
-}
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
 	public String getAddress() {
 		return address;
 	}
@@ -31,10 +43,10 @@ public class Address {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public double getCap() {
+	public int getCap() {
 		return cap;
 	}
-	public void setCap(Double cap) {
+	public void setCap(int cap) {
 		this.cap = cap;
 	}
 	public String getCountry() {

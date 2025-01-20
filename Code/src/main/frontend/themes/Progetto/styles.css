@@ -67,4 +67,9 @@ html {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Effetto ombra per migliorare l'estetica */
 	object-fit: cover;
 }
-
+.address {
+		border: 2px solid rgba(0, 0, 0, 0.2); /* Bordi leggermente visibili con trasparenza */
+	    border-radius: 15px; /* Arrotondamento dei bordi */
+		width: 300px;
+		
+}

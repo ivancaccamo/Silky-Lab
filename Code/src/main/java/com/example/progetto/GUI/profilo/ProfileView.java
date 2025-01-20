@@ -1,5 +1,7 @@
 package com.example.progetto.GUI.profilo;
 
+import com.example.application.services.DatabaseManager;
+import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
@@ -13,16 +15,23 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Profilo personale")
 @Route("Profile")
 public class ProfileView extends Composite<VerticalLayout> {
 private User user = Current.getUser();
-    public ProfileView() {
-    	
+private ArrayList<Address> addresses = new ArrayList<>();
+    public ProfileView() throws SQLException {
+    	DatabaseManager dbManager = new DatabaseManager();
     	if(user != null) {
-    		 VerticalLayout layoutColumn2 = new VerticalLayout();
+    			
+    	addresses = dbManager.getAddressesByUserId(user.getId());
+    	VerticalLayout layoutColumn2 = new VerticalLayout();
     	H1 h1 = new H1();	 
         H3 h3 = new H3();
         H3 h32 = new H3();
@@ -40,6 +49,7 @@ private User user = Current.getUser();
         Button buttonPrimary2 = new Button("Modifica",event -> {
         	getUI().ifPresent(ui -> ui.navigate("ModificaDati"));
         });
+        
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         layoutColumn2.setWidthFull();
@@ -53,11 +63,11 @@ private User user = Current.getUser();
         h32.setWidth("max-content");
         h34.setText("Email: "+user.getEmail());
         h34.setWidth("max-content");
-        h35.setText("Indirizzo");
+        h35.setText("Indirizzo: "+addresses.get(0).getAddress());
         h35.setWidth("max-content");
-        h36.setText("Città");
+        h36.setText("Città: "+addresses.get(0).getCity());
         h36.setWidth("max-content");
-        h37.setText("Cap");
+        h37.setText("Cap: "+addresses.get(0).getCap());
         h37.setWidth("max-content");
         buttonPrimary1.setWidth("min-content");
         buttonPrimary1.addThemeVariants(ButtonVariant.LUMO_PRIMARY);

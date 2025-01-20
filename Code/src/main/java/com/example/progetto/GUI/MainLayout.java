@@ -1,9 +1,7 @@
 package com.example.progetto.GUI;
 
-import com.example.progetto.backend.Cart;
+
 import com.example.progetto.backend.Current;
-import com.example.progetto.backend.MyListener;
-import com.example.progetto.backend.Product;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -14,7 +12,6 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
@@ -24,42 +21,26 @@ import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
+
 
 /**
  * The main view is a top-level placeholder for other views.
  */
 @Layout
 @AnonymousAllowed
-public class MainLayout extends AppLayout implements MyListener{
+public class MainLayout extends AppLayout{
 	
 	
 	
     private H1 viewTitle;
     private User user = Current.getUser();
-    private CartView cartView = new CartView();
-    	// Simula l'aggiunta di un prodotto al carrello
-    	
-    
     @Autowired
     public MainLayout() {
-    	
     	setPrimarySection(Section.DRAWER);
         addDrawerContent();
-        addHeaderContent();
-        
+        addHeaderContent();       
     }
-    @Override
-    public void onMethodCalled() {
-    	Notification.show("Credenziali non valide");
-        updateFooter();  
-    }
-    
-    
-    
-    
     private void updateFooter() {
         Footer footer = createFooter(); // Crea un nuovo footer con l'utente corrente
         getChildren()
@@ -68,16 +49,11 @@ public class MainLayout extends AppLayout implements MyListener{
             .ifPresent(this::remove); // Rimuovi il vecchio footer
         addToDrawer(footer); // Aggiungi il nuovo footer
     }
-    
-    
-    
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
-
         viewTitle = new H1();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-
         addToNavbar(true, toggle, viewTitle);
     }
 
@@ -124,23 +100,21 @@ public class MainLayout extends AppLayout implements MyListener{
         	userNameSpan = new Span(currentUserName);
         	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL);
         	route = "Profile";
-        	
+
         }else {
         	
         	userNameSpan = new Span("Login");
         	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL); 	
-        	route = "Login"; 
+        	route = "Login"; 	
         	
         }
-        
-       
-
         // Link alla pagina del profilo
         Anchor profileLink = new Anchor(route, userIcon, userNameSpan); // Cambia "profile" con il tuo route
         profileLink.addClassNames(LumoUtility.TextColor.SECONDARY, LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER);
         profileLink.getStyle().set("text-decoration", "none");
         footer.add(profileLink);
         return footer;
+        
     }
  
     private String getCurrentPageTitle() {

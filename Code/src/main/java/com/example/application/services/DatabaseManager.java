@@ -5,8 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Model;
 import com.example.progetto.backend.Product;
 import com.example.progetto.backend.User;
@@ -20,7 +22,22 @@ public class DatabaseManager {
 	
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
+    		
+    	 Connection connection = null;
+         try {
+             // Connessione al database
+             connection = DriverManager.getConnection(URL);
+             System.out.println("Connessione al database stabilita.");
+
+             // Abilita le chiavi esterne
+             try (Statement stmt = connection.createStatement()) {
+                 stmt.execute("PRAGMA foreign_keys = ON;");
+                 System.out.println("Chiavi esterne abilitate.");
+             }
+         } catch (SQLException e) {
+             System.err.println("Errore durante la connessione al database: " + e.getMessage());
+         }
+         return connection;
     }
 
     public User findUserByEmail(String email) throws SQLException {
@@ -36,7 +53,8 @@ public class DatabaseManager {
                     user.setSurname(rs.getString("surname"));
                     user.setEmail(rs.getString("email"));
                     user.setPassword(rs.getString("password"));
-                    user.setRole(rs.getString("role"));                 
+                    user.setRole(rs.getString("role"));   
+                    
                     return user;
                 }
             }
@@ -280,6 +298,65 @@ public void deleteModelByName(String name) throws SQLException {
 	    System.out.println(rowsAffected + " record(s) eliminato/i.");
 	}
 }
+public void saveAddress(Address address, int IDuser) throws SQLException {
+	String query = "INSERT INTO Address (address, city, cap, country, IDuser) VALUES (?, ?, ?, ?, ?)";
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, address.getAddress());
+        stmt.setString(2, address.getCity());
+        stmt.setInt	  (3, address.getCap());
+        stmt.setString(4, address.getCountry());
+        stmt.setInt   (5, IDuser);
+        stmt.executeUpdate();
+    }
+}
+public void updateAddressById(Address address) throws SQLException {
+    String query = "UPDATE Address SET address = ?, country = ?, cap = ?, city = ? WHERE id = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, address.getAddress());
+        stmt.setString(2, address.getCountry());
+        stmt.setInt(3, address.getCap());
+        stmt.setString(4, address.getCity());
+        stmt.setInt(5, address.getID());
+        stmt.executeUpdate();
+    }
+}
+
+public ArrayList<Address> getAddressesByUserId(int userId) throws SQLException {
+    String query = "SELECT * FROM Address WHERE IDuser = ?";
+    ArrayList<Address> addresses = new ArrayList<>();
+    
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, userId);
+        
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Address address = new Address();
+                address.setID(rs.getInt("ID"));
+                address.setAddress(rs.getString("address"));
+                address.setCity(rs.getString("city"));
+                address.setCap(rs.getInt("cap"));
+                address.setCountry(rs.getString("country"));
+                address.setIDuser(rs.getInt("IDuser"));
+                addresses.add(address);
+            }
+        }
+    }
+    return addresses;
+}
+public void deleteAddressById(int addressId) throws SQLException {
+    String query = "DELETE FROM Address WHERE id = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, addressId);
+        stmt.executeUpdate();
+    }
+}
+
+
+
 }
 	
 	
