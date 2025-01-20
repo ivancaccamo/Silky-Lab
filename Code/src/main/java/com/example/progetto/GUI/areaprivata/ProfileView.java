@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.example.application.services.DatabaseManager;
 import com.example.progetto.GUI.MainLayout;
+import com.example.progetto.GUI.dialogs.AddressAddDialog;
 import com.example.progetto.GUI.dialogs.AddressEditDialog;
 import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Current;
@@ -27,7 +28,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 
-@Route(value = "pro", layout = MainLayout.class)
+@Route(value = "Profile", layout = MainLayout.class)
 @PageTitle("Profilo Personale")
 public class ProfileView extends VerticalLayout {
     private ArrayList<Address> addresses = new ArrayList<>();
@@ -114,6 +115,7 @@ public class ProfileView extends VerticalLayout {
     }
 
     private VerticalLayout createAddressesSection() throws SQLException {
+    	AddressAddDialog dialog = new AddressAddDialog(dbManager,Current.getCurrentUser().getId());
         VerticalLayout layout = new VerticalLayout();
         Span addressesLabel = new Span("Elenco Indirizzi:");
         
@@ -122,8 +124,13 @@ public class ProfileView extends VerticalLayout {
         for (Address address : addresses) {
             addressList.add(createAddressItem(address));
         }
-
-        Button addButton = new Button("Aggiungi Indirizzo", VaadinIcon.PLUS.create());
+        
+        Button addButton = new Button("Aggiungi Indirizzo", VaadinIcon.PLUS.create(),event ->{
+        	dialog.open();        	
+        	
+        	
+        }
+);
         layout.add(addressesLabel, addressList, addButton);
 
         return layout;
@@ -139,13 +146,7 @@ public class ProfileView extends VerticalLayout {
         Button deleteButton = new Button("Elimina", VaadinIcon.TRASH.create());
         Button editButton = new Button("Modifica", VaadinIcon.PENCIL.create(),event ->{
         	editDialog.open();
-        	addressItem.getParent().ifPresent(parent -> {
-        		if (parent instanceof VerticalLayout) {
-                    ((VerticalLayout) parent).remove(addressItem);
-                    ((VerticalLayout) parent).add(addressItem);
-                }
         	
-        	});
         });
         Hr hr = new Hr();
         deleteButton.addClickListener(event -> addressItem.getParent().ifPresent(parent -> {

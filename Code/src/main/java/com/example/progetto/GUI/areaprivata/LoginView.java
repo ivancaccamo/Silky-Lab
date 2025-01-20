@@ -1,9 +1,11 @@
 package com.example.progetto.GUI.areaprivata;
 
 import com.example.application.services.DatabaseManager;
+import com.example.progetto.GUI.MainLayout;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
@@ -29,10 +31,12 @@ import java.sql.SQLException;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Log in area")
-@Route("Login")
+@Route(value="Login",layout = MainLayout.class)
 public class LoginView extends Composite<VerticalLayout> {
-	
+private User user = Current.getCurrentUser();	
     public LoginView() {
+    	if(user==null) {
+    	
     	Current.getInstance();
         HorizontalLayout layoutRow = new HorizontalLayout();
         H1 h1 = new H1();
@@ -51,18 +55,18 @@ public class LoginView extends Composite<VerticalLayout> {
             try {
                 DatabaseManager dbManager = new DatabaseManager();
                 User user = dbManager.findUserByEmail(email);
-                if (user != null && user.getPassword().equals(password)) {
-                	Notification.show("Credenziali valide");
+                if (user != null && user.getPassword().equals(password)) {	
                 	Current.setUser(user);
-                	Thread t = new Thread();
-                	                 	
+                	 UI.getCurrent().access(() -> {
+                         MainLayout.getInstance().updateFooter();
+                     });         	
                     if ("ADMIN".equals(user.getRole())) {
-                    	getUI().ifPresent(ui -> ui.getPage().reload());
+                    	
                     	
                         getUI().ifPresent(ui -> ui.navigate(""));
                         
                     } else if ("CLIENT".equals(user.getRole())) { 
-                    	getUI().ifPresent(ui -> ui.getPage().reload());
+                    	
                     	
                         getUI().ifPresent(ui -> ui.navigate(""));
                         
@@ -133,5 +137,8 @@ public class LoginView extends Composite<VerticalLayout> {
         layoutRow3.add(buttonPrimary);
         layoutRow3.add(buttonSecondary);
         layoutRow2.add(layoutColumn4);
+    }else {
+    	
     }
+ }
 }

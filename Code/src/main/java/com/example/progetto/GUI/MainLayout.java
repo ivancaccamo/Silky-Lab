@@ -34,20 +34,32 @@ public class MainLayout extends AppLayout{
 	
 	
     private H1 viewTitle;
+    private Footer footer;
     private User user = Current.getUser();
+    private static MainLayout instance;
     @Autowired
     public MainLayout() {
+    	instance = this;
+    	footer = new Footer();
+    	createFooter();
+    	
     	setPrimarySection(Section.DRAWER);
         addDrawerContent();
-        addHeaderContent();       
+        addHeaderContent();    
+        addToDrawer(footer);
     }
-    private void updateFooter() {
-        Footer footer = createFooter(); // Crea un nuovo footer con l'utente corrente
-        getChildren()
-            .filter(component -> component instanceof Footer)
-            .findFirst()
-            .ifPresent(this::remove); // Rimuovi il vecchio footer
-        addToDrawer(footer); // Aggiungi il nuovo footer
+    
+    public static MainLayout getInstance() {
+		return instance;
+	}
+
+	public static void setInstance(MainLayout instance) {
+		MainLayout.instance = instance;
+	}
+
+	public void updateFooter() {
+    	footer.removeAll();
+    	createFooter(); 
     }
     private void addHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
@@ -64,7 +76,7 @@ public class MainLayout extends AppLayout{
 
         Scroller scroller = new Scroller(createNavigation());
 
-        addToDrawer(header, scroller, createFooter());
+        addToDrawer(header, scroller);
     }
 
     private SideNav createNavigation() {
@@ -82,8 +94,8 @@ public class MainLayout extends AppLayout{
         return nav;
     }
 
-    private Footer createFooter() {
-        Footer footer = new Footer();
+    private void createFooter() {
+        
         footer.addClassNames(LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER, LumoUtility.JustifyContent.BETWEEN, LumoUtility.Padding.MEDIUM);
         // Icona utente
         Icon userIcon = new Icon("lumo", "user");
@@ -93,10 +105,10 @@ public class MainLayout extends AppLayout{
         // Nome dell'utente corrente
         Span userNameSpan;
         String route=null;
-        
+        user = Current.getUser();
         if(user != null) {
  
-        	String currentUserName = user.getName(); // Metodo per ottenere il nome dell'utente
+        	String currentUserName = "ciao, "+user.getName(); // Metodo per ottenere il nome dell'utente
         	userNameSpan = new Span(currentUserName);
         	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL);
         	route = "Profile";
@@ -112,12 +124,12 @@ public class MainLayout extends AppLayout{
         Anchor profileLink = new Anchor(route, userIcon, userNameSpan); // Cambia "profile" con il tuo route
         profileLink.addClassNames(LumoUtility.TextColor.SECONDARY, LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER);
         profileLink.getStyle().set("text-decoration", "none");
-        footer.add(profileLink);
-        return footer;
-        
+        footer.add(profileLink); 
     }
+
  
     private String getCurrentPageTitle() {
         return MenuConfiguration.getPageHeader(getContent()).orElse("");
     }
+    
 }
