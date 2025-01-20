@@ -44,4 +44,8 @@ public class Cart {
 	 public static void removeItem(CartItem item) {
 		 items.removeIf(existingItem -> existingItem.equals(item));
 	}
+	 
+	 public static void removeAll() {
+		 items.clear();
+	}
 }

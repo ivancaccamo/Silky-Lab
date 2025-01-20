@@ -4,7 +4,6 @@ import com.example.progetto.GUI.CartView;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasOrderedComponents;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -33,7 +32,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Height;
 import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 import com.vaadin.flow.theme.lumo.LumoUtility.ListStyleType;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
-import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
@@ -50,6 +48,19 @@ public class CheckoutFormView extends Div {
 	private User currentUser = Current.getCurrentUser();
     
     private static final Set<String> countries = new LinkedHashSet<>();
+    
+    private static TextField name;
+    private static TextField surname;
+    private static EmailField email;
+    private static ComboBox<String> countrySelect;
+    private static TextArea address;
+    private static TextField postalCode;
+    private static TextField city;
+    private static TextField cardHolder;
+    private static TextField cardNumber;
+    private static TextField securityCode;
+    private static Select<String> expirationMonth;
+    private static Select<String> expirationYear;
 
     static {
         countries.addAll(Arrays.asList("Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola",
@@ -96,7 +107,6 @@ public class CheckoutFormView extends Div {
         Main content = new Main();
         content.addClassNames(Display.GRID, Gap.XLARGE, AlignItems.START, JustifyContent.START, Padding.Bottom.LARGE, Padding.Horizontal.LARGE);
         
-        // Rimuovi qualsiasi larghezza massima predefinita
         content.getStyle().set("max-width", "none");
         content.getStyle().set("margin-left", "90px"); // Assicura che il contenitore sia spostato a sinistra
 
@@ -134,7 +144,7 @@ public class CheckoutFormView extends Div {
         H3 header = new H3("Dettagli personali");
         header.addClassNames(Margin.Bottom.MEDIUM, Margin.Top.SMALL, FontSize.XXLARGE);
 
-        TextField name = new TextField("Nome");
+        name = new TextField("Nome");
         name.setRequiredIndicatorVisible(true);
         name.setPattern("[\\p{L} \\-]+");
         name.addClassNames(Margin.Bottom.SMALL);
@@ -142,7 +152,7 @@ public class CheckoutFormView extends Div {
             name.setValue(currentUser.getName());
         }
         
-        TextField surname = new TextField("Cognome");
+        surname = new TextField("Cognome");
         surname.setRequiredIndicatorVisible(true);
         surname.setPattern("[\\p{L} \\-]+");
         surname.addClassNames(Margin.Bottom.SMALL);
@@ -150,7 +160,7 @@ public class CheckoutFormView extends Div {
             surname.setValue(currentUser.getSurname());
         }
 
-        EmailField email = new EmailField("Email");
+        email = new EmailField("Email");
         email.setRequiredIndicatorVisible(true);
         email.addClassNames(Margin.Bottom.SMALL);
         if (currentUser != null) {
@@ -171,11 +181,11 @@ public class CheckoutFormView extends Div {
         H3 header = new H3("Indirizzo di spedizione");
         header.addClassNames(Margin.Bottom.MEDIUM, Margin.Top.SMALL, FontSize.XXLARGE);
 
-        ComboBox<String> countrySelect = new ComboBox<>("Paese");
+        countrySelect = new ComboBox<>("Paese");
         countrySelect.setRequiredIndicatorVisible(true);
         countrySelect.addClassNames(Margin.Bottom.SMALL);
 
-        TextArea address = new TextArea("Indirizzo");
+        address = new TextArea("Indirizzo");
         address.setMaxLength(200);
         address.setRequiredIndicatorVisible(true);
         address.addClassNames(Margin.Bottom.SMALL);
@@ -183,12 +193,13 @@ public class CheckoutFormView extends Div {
         Div subSection = new Div();
         subSection.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
-        TextField postalCode = new TextField("Codice postale");
+        postalCode = new TextField("Codice postale");
         postalCode.setRequiredIndicatorVisible(true);
-        postalCode.setPattern("[\\d \\p{L}]*");
+        postalCode.setPattern("[0-9]{5}");
         postalCode.addClassNames(Margin.Bottom.SMALL);
+        postalCode.setWidth("240px");
 
-        TextField city = new TextField("Città");
+        city = new TextField("Città");
         city.setRequiredIndicatorVisible(true);
         city.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
 
@@ -216,7 +227,7 @@ public class CheckoutFormView extends Div {
         H3 header = new H3("Pagamento");
         header.addClassNames(Margin.Bottom.MEDIUM, Margin.Top.SMALL, FontSize.XXLARGE);
 
-        TextField cardHolder = new TextField("Nome del titolare");
+        cardHolder = new TextField("Nome del titolare");
         cardHolder.setRequiredIndicatorVisible(true);
         cardHolder.setPattern("[\\p{L} \\-]+");
         cardHolder.addClassNames(Margin.Bottom.SMALL);
@@ -224,14 +235,22 @@ public class CheckoutFormView extends Div {
         Div subSectionOne = new Div();
         subSectionOne.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
-        TextField cardNumber = new TextField("Numero carta");
+        cardNumber = new TextField("Numero carta");
         cardNumber.setRequiredIndicatorVisible(true);
-        cardNumber.setPattern("[\\d ]{12,23}");
+        cardNumber.setPattern("[\\d ]{19}");  // 19 perchè aggiunge gli spazi
         cardNumber.addClassNames(Margin.Bottom.SMALL);
+        cardNumber.setWidth("240px");
+        
+        // Listener per gestire la formattazione
+        cardNumber.addValueChangeListener(event -> {
+            String value = event.getValue();
+            value = value.replaceAll("(\\d{4})(?=\\d)", "$1 "); // Aggiunge uno spazio ogni 4 numeri
+            cardNumber.setValue(value);  // Imposta il valore formattato
+        });
 
-        TextField securityCode = new TextField("Codice di sicurezza");
+        securityCode = new TextField("Codice di sicurezza");
         securityCode.setRequiredIndicatorVisible(true);
-        securityCode.setPattern("[0-9]{3,4}");
+        securityCode.setPattern("[0-9]{3}");
         securityCode.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
 
         subSectionOne.add(cardNumber, securityCode);
@@ -239,15 +258,17 @@ public class CheckoutFormView extends Div {
         Div subSectionTwo = new Div();
         subSectionTwo.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
-        Select<String> expirationMonth = new Select<>();
+        expirationMonth = new Select<>();
         expirationMonth.setLabel("Mese scadenza");
         expirationMonth.setRequiredIndicatorVisible(true);
         expirationMonth.setItems("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
+        expirationMonth.setWidth("240px");
 
-        Select<String> expirationYear = new Select<>();
+        expirationYear = new Select<>();
         expirationYear.setLabel("Anno scadenza");
         expirationYear.setRequiredIndicatorVisible(true);
         expirationYear.setItems("25", "26", "27", "28", "29");
+        expirationYear.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
 
         subSectionTwo.add(expirationMonth, expirationYear);
 
@@ -260,14 +281,20 @@ public class CheckoutFormView extends Div {
         footer.addClassNames(Display.FLEX, AlignItems.CENTER, JustifyContent.BETWEEN, Margin.Vertical.MEDIUM);
 
         Button cancel = new Button("Elimina ordine");
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancel.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        cancel.setWidth("240px");
 
         Button pay = new Button("Paga", new Icon(VaadinIcon.LOCK));
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+        pay.setWidth("240px");
 
         pay.addClickListener(event -> {
         	// Naviga alla pagina di riepilogo ordine
             getUI().ifPresent(ui -> {
+            	 if (!validateForm()) {
+            		 Notification.show("Per favore compila tutti i campi obbligatori correttamente.", 3000, Notification.Position.MIDDLE);
+            		 return; // Interrompi l'esecuzione
+            	 }
                 ui.navigate("Riepilogo-ordine");
             });
             //fare il controllo di tutti i campi compilati
@@ -279,9 +306,8 @@ public class CheckoutFormView extends Div {
 
     private Aside createAside() {
         Aside aside = new Aside();
-        aside.addClassNames(Background.CONTRAST_5, BoxSizing.BORDER, Padding.LARGE, BorderRadius.LARGE,
-                Position.STICKY);
-        aside.getStyle().set("width", "170%"); // Modifica la larghezza qui
+        aside.addClassNames(Background.CONTRAST_5, BoxSizing.BORDER, Padding.LARGE, BorderRadius.LARGE, Position.STICKY);
+        aside.getStyle().set("width", "150%"); // Modifica la larghezza
         
         Header headerSection = new Header();
         headerSection.addClassNames(Display.FLEX, AlignItems.CENTER, JustifyContent.BETWEEN, Margin.Bottom.MEDIUM);
@@ -315,5 +341,47 @@ public class CheckoutFormView extends Div {
         aside.add(headerSection, ul, totalPrice);
         
         return aside;
+    }
+    
+    private boolean validateForm() {
+    	if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || countrySelect.isEmpty() || address.isEmpty() ||
+    		postalCode.isEmpty() || city.isEmpty() || cardHolder.isEmpty() || cardNumber.isEmpty() || securityCode.isEmpty() ||
+    		expirationMonth.isEmpty() || expirationYear.isEmpty()) {
+    		return false; // Almeno un campo obbligatorio è vuoto
+    	}
+
+    	if (!email.isInvalid() && !cardNumber.isInvalid() && !securityCode.isInvalid()) {
+    		return true; // Tutti i campi sono validi
+    	}
+
+    	return false; // Campi non validi
+    }
+    
+    public static String getName() {
+    	return name.getValue();
+    }
+    
+    public static String getSurname() {
+    	return surname.getValue();
+    }
+    
+    public static String getEmail() {
+    	return email.getValue();
+    }
+    
+    public static String getCountry() {
+    	return countrySelect.getValue();
+    }
+    
+    public static String getAddress() {
+    	return address.getValue();
+    }
+    
+    public static String getPostalCode() {
+    	return postalCode.getValue();
+    }
+    
+    public static String getCity() {
+    	return city.getValue();
     }
 }
