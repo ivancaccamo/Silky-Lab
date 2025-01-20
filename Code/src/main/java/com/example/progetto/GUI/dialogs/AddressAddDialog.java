@@ -13,21 +13,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 
-public class AddressEditDialog extends Dialog {
+public class AddressAddDialog extends Dialog {
 
-    public AddressEditDialog(Address address,DatabaseManager db) {
+    public AddressAddDialog(DatabaseManager db,int idUser) {
         // Campi del form
         TextField addressField = new TextField("Indirizzo");
-        addressField.setValue(address.getAddress());
-
         TextField countryField = new TextField("Paese");
-        countryField.setValue(address.getCountry());
-
         TextField cityField = new TextField("Città");
-        cityField.setValue(address.getCity());
-
         TextField capField = new TextField("CAP");
-        capField.setValue(String.valueOf(address.getCap()));
 
         // Layout del form
         FormLayout formLayout = new FormLayout();
@@ -35,23 +28,22 @@ public class AddressEditDialog extends Dialog {
 
         // Pulsanti
         Button cancelButton = new Button("Annulla", event -> close());
-        Button saveButton = new Button("Salva", event -> {
-            address.setAddress(addressField.getValue());
-            address.setCountry(countryField.getValue());
-            address.setCity(cityField.getValue());
-            address.setCap(Integer.parseInt(capField.getValue()));
+        Button saveButton = new Button("Aggiungi", event -> {
+            Address newAddress = new Address();
+            newAddress.setAddress(addressField.getValue());
+            newAddress.setCountry(countryField.getValue());
+            newAddress.setCity(cityField.getValue());
+            newAddress.setCap(Integer.parseInt(capField.getValue()));
             
-
             try {
-				db.updateAddressById(address);
-				getUI().ifPresent(ui -> ui.getPage().reload());
+				db.saveAddress(newAddress, idUser);
+				getUI().ifPresent(ui -> ui.getPage().reload()); 
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             close();
         });
-
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton, saveButton);
@@ -66,4 +58,5 @@ public class AddressEditDialog extends Dialog {
         setHeight("500px");
     }
 
+    
 }
