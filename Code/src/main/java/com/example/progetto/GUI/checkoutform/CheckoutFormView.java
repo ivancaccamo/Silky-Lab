@@ -1,6 +1,9 @@
 package com.example.progetto.GUI.checkoutform;
 
+import com.example.application.services.DatabaseManager;
 import com.example.progetto.GUI.CartView;
+import com.example.progetto.GUI.dialogs.AddressChooseDialog;
+import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Component;
@@ -14,6 +17,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -36,6 +40,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -46,15 +51,19 @@ import java.util.Set;
 public class CheckoutFormView extends Div {
     
 	private User currentUser = Current.getCurrentUser();
+	
+	private DatabaseManager dbManager = new DatabaseManager();
     
     private static final Set<String> countries = new LinkedHashSet<>();
+    
+    private static Checkbox saveNewAddress = new Checkbox("Salva indirizzo");
     
     private static TextField name;
     private static TextField surname;
     private static EmailField email;
     private static ComboBox<String> countrySelect;
     private static TextArea address;
-    private static TextField postalCode;
+    private static NumberField postalCode;
     private static TextField city;
     private static TextField cardHolder;
     private static TextField cardNumber;
@@ -148,23 +157,19 @@ public class CheckoutFormView extends Div {
         name.setRequiredIndicatorVisible(true);
         name.setPattern("[\\p{L} \\-]+");
         name.addClassNames(Margin.Bottom.SMALL);
-        if (currentUser != null) {
-            name.setValue(currentUser.getName());
-        }
         
         surname = new TextField("Cognome");
         surname.setRequiredIndicatorVisible(true);
         surname.setPattern("[\\p{L} \\-]+");
         surname.addClassNames(Margin.Bottom.SMALL);
-        if (currentUser != null) {
-            surname.setValue(currentUser.getSurname());
-        }
 
         email = new EmailField("Email");
         email.setRequiredIndicatorVisible(true);
         email.addClassNames(Margin.Bottom.SMALL);
         if (currentUser != null) {
-            email.setValue(currentUser.getEmail());
+        	name.setValue(currentUser.getName());
+        	surname.setValue(currentUser.getSurname());
+        	email.setValue(currentUser.getEmail());
         }
 
         personalDetails.add(stepOne, header, name, surname, email);
@@ -184,7 +189,8 @@ public class CheckoutFormView extends Div {
         countrySelect = new ComboBox<>("Paese");
         countrySelect.setRequiredIndicatorVisible(true);
         countrySelect.addClassNames(Margin.Bottom.SMALL);
-
+        countrySelect.setItems(countries);
+        
         address = new TextArea("Indirizzo");
         address.setMaxLength(200);
         address.setRequiredIndicatorVisible(true);
@@ -193,27 +199,58 @@ public class CheckoutFormView extends Div {
         Div subSection = new Div();
         subSection.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
-        postalCode = new TextField("Codice postale");
+        postalCode = new NumberField("Codice postale");
         postalCode.setRequiredIndicatorVisible(true);
-        postalCode.setPattern("[0-9]{5}");
+        postalCode.setMax(99999);
         postalCode.addClassNames(Margin.Bottom.SMALL);
         postalCode.setWidth("240px");
-
+        
         city = new TextField("Città");
         city.setRequiredIndicatorVisible(true);
         city.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
 
+        try {
+            if (currentUser != null) {
+                var addresses = dbManager.getAddressesByUserId(currentUser.getId());
+                
+                // Verifica se ci sono indirizzi
+                if (addresses != null && !addresses.isEmpty()) {
+                    var firstAddress = addresses.getFirst();
+                    countrySelect.setValue(firstAddress.getCountry());
+                    address.setValue(firstAddress.getAddress());
+                    postalCode.setValue((double) firstAddress.getCap());
+                    city.setValue(firstAddress.getCity());
+                } else {
+                    countrySelect.setValue("Italy");
+                    address.setValue("");
+                    postalCode.setValue((double)0);
+                    city.setValue("");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Gestisci l'eccezione SQL
+        }
         subSection.add(postalCode, city);
 
-        countrySelect.setItems(countries);
-        countrySelect.setValue("Italy");
-
-        Checkbox sameAddress = new Checkbox("L'indirizzo di fatturazione è lo stesso dell'indirizzo di spedizione");
-        sameAddress.addClassNames(Margin.Top.SMALL);
-        //da riportare l'indirizzo del current user
+        Button changeAddress = new Button("Scegli un'altro indirizzo", event ->{
+        	AddressChooseDialog acd;
+			try {
+				acd = new AddressChooseDialog(dbManager.getAddressesByUserId(currentUser.getId()), selectedAddress -> {
+					countrySelect.setValue(selectedAddress.getCountry());
+	                address.setValue(selectedAddress.getAddress());
+	                postalCode.setValue((double) selectedAddress.getCap());
+	                city.setValue(selectedAddress.getCity());
+                });
+				acd.open();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        });
         
+        saveNewAddress.addClassNames(Margin.Top.SMALL);
 
-        shippingDetails.add(stepTwo, header, countrySelect, address, subSection, sameAddress);
+        shippingDetails.add(stepTwo, header, countrySelect, address, subSection, changeAddress, saveNewAddress);
         return shippingDetails;
     }
 
@@ -287,17 +324,47 @@ public class CheckoutFormView extends Div {
         Button pay = new Button("Paga", new Icon(VaadinIcon.LOCK));
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         pay.setWidth("240px");
+        pay.getStyle().set("margin-left", "20px");
 
         pay.addClickListener(event -> {
-        	// Naviga alla pagina di riepilogo ordine
-            getUI().ifPresent(ui -> {
-            	 if (!validateForm()) {
-            		 Notification.show("Per favore compila tutti i campi obbligatori correttamente.", 3000, Notification.Position.MIDDLE);
-            		 return; // Interrompi l'esecuzione
-            	 }
-                ui.navigate("Riepilogo-ordine");
-            });
-            //fare il controllo di tutti i campi compilati
+        	if (saveNewAddress.getValue()) {
+	        	try {
+	        		boolean isAddressDifferent = false;
+					
+					if (dbManager.getAddressesByUserId(currentUser.getId()).isEmpty()) {
+						isAddressDifferent = true;
+					} else {
+						for (Address addr : dbManager.getAddressesByUserId(currentUser.getId())) {
+							isAddressDifferent = !addr.getCountry().equals(countrySelect.getValue()) ||
+			                        !addr.getAddress().equals(address.getValue()) ||
+			                        addr.getCap() != postalCode.getValue() ||
+			                        !addr.getCity().equals(city.getValue());
+							if (!isAddressDifferent ) break;
+						} 
+					}
+					
+					if (isAddressDifferent) {
+						 Address newAddress = new Address();
+			             newAddress.setIDuser(currentUser.getId());
+			             newAddress.setCountry(countrySelect.getValue());
+			             newAddress.setAddress(address.getValue());
+			             newAddress.setCap((int)(double)postalCode.getValue());
+			             newAddress.setCity(city.getValue());
+			             dbManager.saveAddress(newAddress, currentUser.getId());
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+				// Naviga alla pagina di riepilogo ordine
+			getUI().ifPresent(ui -> {
+				if (!validateForm()) {
+					Notification.show("Per favore compila tutti i campi obbligatori correttamente.", 3000, Notification.Position.MIDDLE);
+					return; // Interrompi l'esecuzione
+				}
+				ui.navigate("Riepilogo-ordine");
+			});
         });
         
         footer.add(cancel, pay);
@@ -377,7 +444,7 @@ public class CheckoutFormView extends Div {
     	return address.getValue();
     }
     
-    public static String getPostalCode() {
+    public static double getPostalCode() {
     	return postalCode.getValue();
     }
     

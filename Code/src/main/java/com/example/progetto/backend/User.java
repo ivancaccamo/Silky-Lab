@@ -1,7 +1,5 @@
 package com.example.progetto.backend;
 
-import com.vaadin.flow.component.template.Id;
-
 public class User {
 	
     private int id;

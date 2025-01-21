@@ -2,6 +2,8 @@ package com.example.progetto.GUI;
 
 import com.example.progetto.backend.Cart;
 import com.example.progetto.backend.CartItem;
+import com.example.progetto.backend.Current;
+import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -34,6 +36,9 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Menu(order = 2, icon = LineAwesomeIconUrl.SHOPPING_CART_SOLID)
 @Uses(Icon.class)
 public class CartView extends Composite<VerticalLayout> {
+	
+	private User currentUser = Current.getCurrentUser();
+	
 	static VerticalLayout cartItemsContainer = new VerticalLayout();
 	private static float tot = 0;
 	private H4 h4 = new H4();
@@ -100,11 +105,15 @@ public class CartView extends Composite<VerticalLayout> {
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonPrimary.addClickListener(event -> {
             getUI().ifPresent(ui -> {
-            	if(tot > 0) {
-            		ui.navigate("Checkout-form");
+            	if (currentUser != null) {
+	            	if(tot > 0) {
+	            		ui.navigate("Checkout-form");
+	            	} else {
+	            		Notification.show("Aggiungi qualcosa al carrello per procedere al checkout");
+	            	}
             	} else {
-            		Notification.show("Aggiugni qualcosa al carrello per procedere al checkout");
-            	}    
+            		Notification.show("Effettua il login per continuare");
+            	}
             });
         });
         buttonSecondary.setText("Torna allo shop");

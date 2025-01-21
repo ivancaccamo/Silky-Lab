@@ -8,7 +8,6 @@ public class Address {
 	private String country;
 	private int IDuser;
 	
-	
 	public Address() {
 	
 	}
@@ -61,5 +60,4 @@ public class Address {
 	public void setIDuser(int iDuser) {
 		IDuser = iDuser;
 	}
-	
-	}
+}

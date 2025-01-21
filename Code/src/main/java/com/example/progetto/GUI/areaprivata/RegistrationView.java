@@ -289,8 +289,3 @@ public class RegistrationView extends Composite<VerticalLayout> {
         layoutRow.add(layoutColumn4);
     }
 }
-
-
-   
-       
-
