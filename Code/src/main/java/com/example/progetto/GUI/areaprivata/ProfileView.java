@@ -77,7 +77,7 @@ public class ProfileView extends VerticalLayout {
         	Current.ExitUser();
             Notification.show("Disconnesso con successo");
             UI.getCurrent().access(() -> {
-                MainLayout.getInstance().updateFooter();
+            	UI.getCurrent().getPage().executeJs("window.location.href = $0", "");
             });
             getUI().ifPresent(ui -> {
                 ui.navigate("");

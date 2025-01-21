@@ -322,7 +322,7 @@ public class CheckoutFormView extends Div {
         Footer footer = new Footer();
         footer.addClassNames(Display.FLEX, AlignItems.CENTER, JustifyContent.BETWEEN, Margin.Vertical.MEDIUM);
 
-        Button cancel = new Button("Elimina ordine");
+        Button cancel = new Button("Annulla ordine");
         cancel.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancel.setWidth("240px");
 
@@ -432,9 +432,8 @@ public class CheckoutFormView extends Div {
      // Ottieni il totale dinamico e visualizzalo
         DecimalFormat df = new DecimalFormat("0.00");
         float total = CartView.getTotal();
-        float totalWithDelivery = total < 100 ? total + 7.9f : total;
 
-        Span totalPrice = new Span("Totale: €" + df.format(totalWithDelivery));
+        Span totalPrice = new Span("Totale: €" + df.format(total));
         totalPrice.addClassNames(FontSize.LARGE, TextColor.PRIMARY);
 
         aside.add(headerSection, ul, totalPrice);

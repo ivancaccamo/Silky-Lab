@@ -52,23 +52,10 @@ private User user = Current.getCurrentUser();
                 DatabaseManager dbManager = new DatabaseManager();
                 User user = dbManager.findUserByEmail(email);
                 if (user != null && user.getPassword().equals(password)) {	
-                	Current.setUser(user);
+                	 Current.setUser(user); 
                 	 UI.getCurrent().access(() -> {
-                         MainLayout.getInstance().updateFooter();
-                     });
-                	 
-                         	
-                    if ("ADMIN".equals(user.getRole())) {
-                    	
-                    	
-                        getUI().ifPresent(ui -> ui.navigate(""));
-                        
-                    } else if ("CLIENT".equals(user.getRole())) { 
-                    	
-                    	
-                        getUI().ifPresent(ui -> ui.navigate(""));
-                        
-                    }
+                		 UI.getCurrent().getPage().executeJs("window.location.href = $0", "");
+                     });         	
                 } else {
                     Notification.show("Credenziali non valide");
                 }

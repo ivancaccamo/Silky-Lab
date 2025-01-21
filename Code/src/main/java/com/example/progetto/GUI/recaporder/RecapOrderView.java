@@ -56,9 +56,8 @@ public class RecapOrderView extends VerticalLayout {
         // Totale dell'ordine
         DecimalFormat df = new DecimalFormat("0.00");
         float total = CartView.getTotal();
-        float totalWithDelivery = total < 100 ? total + 7.9f : total;
 
-        H3 totalPrice = new H3("Totale: " + df.format(totalWithDelivery) + " €");
+        H3 totalPrice = new H3("Totale: " + df.format(total) + " €");
         totalPrice.getStyle().set("font-weight", "bold");
 
         // Bottone per tornare al carrello o alla home
@@ -113,7 +112,7 @@ public class RecapOrderView extends VerticalLayout {
         mainLayout.add(recapOrderLayout, customerInfoLayout);
         recapOrderLayout.add(message1, message2, cartItems);
         
-        if (total < 100) {
+        if ((total-7.9) < 100) {
         	H5 shipping = new H5("+ Spedizione: 7,90 €");
         	recapOrderLayout.add(shipping);
         }
