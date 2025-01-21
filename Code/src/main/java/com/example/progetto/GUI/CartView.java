@@ -36,13 +36,15 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 public class CartView extends Composite<VerticalLayout> {
 	static VerticalLayout cartItemsContainer = new VerticalLayout();
 	private static float tot = 0;
+	private H4 h4 = new H4();
+    private H4 h42 = new H4();
+    private ProgressBar progressBar = new ProgressBar();
+    private H6 h6 = new H6();
+    
     public CartView() {
     	
     	Scroller scroller = new Scroller();
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
-        tot=0;
-        DecimalFormat df = new DecimalFormat("0.00");
-        
         scroller.setContent(cartItemsContainer);
         scroller.setHeight("200px");
         refresh();
@@ -53,11 +55,6 @@ public class CartView extends Composite<VerticalLayout> {
         VerticalLayout layoutColumn4 = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
-        H4 h4 = new H4();
-        H4 h42 = new H4();
-        ProgressBar progressBar = new ProgressBar();
-        H6 h6 = new H6();
-        
         HorizontalLayout layoutRow3 = new HorizontalLayout();
         Button buttonPrimary = new Button();
         Button buttonSecondary = new Button();
@@ -88,25 +85,6 @@ public class CartView extends Composite<VerticalLayout> {
         layoutColumn3.getStyle().set("flex-grow", "1");
         h4.setWidth("max-content");
         h42.setWidth("max-content");
-        
-        String total = df.format(tot);
-        String totalWithDelivery = df.format(tot+7.9);
-        if(tot==0)
-        	h4.setText("Carrello vuoto");
-        if(tot<100)
-        	h4.setText("Totale: "+totalWithDelivery+" euro");
-        if(tot>=100)
-        	h4.setText("Totale: "+total+" euro");
-        if(tot < 100) {
-        	String formatted = df.format(100-tot); 
-        	h42.setText("Altri "+formatted+" euro per avere la spedizione gratuita");
-        
-        	h6.setText("Costo di spedizione : 7,90 euro");
-        	progressBar.setValue(tot/100);
-        }else {
-        	progressBar.setValue(1);
-        	h6.setText("Spedizione gratutita");
-        }
         
         h6.setWidth("max-content");     
         scroller.setWidth("100%");
@@ -162,17 +140,20 @@ public class CartView extends Composite<VerticalLayout> {
     
     private void addCartItem(CartItem item) {
         HorizontalLayout layout = new HorizontalLayout();
-        
+        layout.setSpacing(true);
         layout.setWidthFull();
+        
         Span productName = new Span(item.getProduct().getModel().getName());
         Span productSize = new Span(item.getProduct().getSize());
         Span quantity = new Span("x" + item.getQuantity());
         DecimalFormat df = new DecimalFormat("0.00");
         String PruductsPrice = df.format(item.getQuantity() * item.getProduct().getModel().getPrice());
-        Span price = new Span("€" + PruductsPrice);
+        Span price = new Span(PruductsPrice + " €");
+        tot += (float) item.getQuantity() * item.getProduct().getModel().getPrice();
         
         Button deleteButton = new Button("", new Icon(VaadinIcon.TRASH), event -> {
-            Cart.removeItem(item); // Rimuove l'elemento dal carrello
+        	tot -= item.getQuantity() * item.getProduct().getModel().getPrice();
+        	Cart.removeItem(item); // Rimuove l'elemento dal carrello
             refresh(); // Aggiorna la UI
         });
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR);
@@ -181,12 +162,34 @@ public class CartView extends Composite<VerticalLayout> {
         layout.add(productName, productSize, quantity, price, deleteButton);
         cartItemsContainer.add(layout);
         cartItemsContainer.setWidth("100%");
-        tot = (float) (item.getQuantity() * item.getProduct().getModel().getPrice()+tot);
     }
 
     public void refresh() {
     	cartItemsContainer.removeAll();
+    	tot=0;
         Cart.getCartItems().forEach(this::addCartItem);
+        
+     // Aggiorna il totale visualizzato nell'interfaccia
+        DecimalFormat df = new DecimalFormat("0.00");
+        String total = df.format(tot);
+        String totalWithDelivery = df.format(tot + 7.9);
+
+        if (tot == 0) {
+            h4.setText("Carrello vuoto");
+            h42.setText("");
+            h6.setText("");
+            progressBar.setValue(0);
+        } else if (tot < 100) {
+            h4.setText("Totale: " + totalWithDelivery + " €");
+            h42.setText("Altri " + df.format(100 - tot) + " € per la spedizione gratuita.");
+            h6.setText("Costo di spedizione: 7,90 €");
+            progressBar.setValue(tot / 100);
+        } else {
+            h4.setText("Totale: " + total + " €");
+            h42.setText("Hai raggiunto la soglia per la spedizione gratuita!");
+            h6.setText("Costo di spedizione: gratis");
+            progressBar.setValue(1);
+        }
     }
 
     public static VerticalLayout getCartItems () {

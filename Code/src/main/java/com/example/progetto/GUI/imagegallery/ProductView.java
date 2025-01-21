@@ -180,7 +180,7 @@ public class ProductView extends VerticalLayout {
         add(layoutRow);
         image.getStyle().set("position", "sticky");
         image.getStyle().set("top", "0");
-        image.getStyle().set("height", "85vh");
+        image.getStyle().set("height", "84vh");
         layoutRow.add(image);
         layoutRow.add(layoutColumn);
         layoutColumn.add(h2);
