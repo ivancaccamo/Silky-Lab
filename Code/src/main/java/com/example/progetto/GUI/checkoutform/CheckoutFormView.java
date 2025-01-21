@@ -67,7 +67,7 @@ public class CheckoutFormView extends Div {
     private static EmailField email;
     private static ComboBox<String> countrySelect;
     private static TextArea address;
-    private static NumberField postalCode;
+    private static TextField postalCode;
     private static TextField city;
     private static TextField cardHolder;
     private static TextField cardNumber;
@@ -203,9 +203,10 @@ public class CheckoutFormView extends Div {
         Div subSection = new Div();
         subSection.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
 
-        postalCode = new NumberField("Codice postale");
+        postalCode = new TextField("Codice postale");
         postalCode.setRequiredIndicatorVisible(true);
-        postalCode.setMax(99999);
+        postalCode.setPattern("[0-9]{5}"); 
+        postalCode.setMaxLength(5);
         postalCode.addClassNames(Margin.Bottom.SMALL);
         postalCode.setWidth("240px");
         
@@ -222,12 +223,12 @@ public class CheckoutFormView extends Div {
                     var firstAddress = addresses.getFirst();
                     countrySelect.setValue(firstAddress.getCountry());
                     address.setValue(firstAddress.getAddress());
-                    postalCode.setValue((double) firstAddress.getCap());
+                    postalCode.setValue(firstAddress.getCap());
                     city.setValue(firstAddress.getCity());
                 } else {
                     countrySelect.setValue("Italy");
                     address.setValue("");
-                    postalCode.setValue((double)0);
+                    postalCode.setValue(" ");
                     city.setValue("");
                 }
             }
@@ -242,7 +243,7 @@ public class CheckoutFormView extends Div {
 				acd = new AddressChooseDialog(dbManager.getAddressesByUserId(currentUser.getId()), selectedAddress -> {
 					countrySelect.setValue(selectedAddress.getCountry());
 	                address.setValue(selectedAddress.getAddress());
-	                postalCode.setValue((double) selectedAddress.getCap());
+	                postalCode.setValue(selectedAddress.getCap());
 	                city.setValue(selectedAddress.getCity());
                 });
 				acd.open();
@@ -352,7 +353,7 @@ public class CheckoutFormView extends Div {
 			             newAddress.setIDuser(currentUser.getId());
 			             newAddress.setCountry(countrySelect.getValue());
 			             newAddress.setAddress(address.getValue());
-			             newAddress.setCap((int)(double)postalCode.getValue());
+			             newAddress.setCap(postalCode.getValue());
 			             newAddress.setCity(city.getValue());
 			             dbManager.saveAddress(newAddress, currentUser.getId());
 					}
@@ -448,7 +449,7 @@ public class CheckoutFormView extends Div {
     		return false; // Almeno un campo obbligatorio è vuoto
     	}
 
-    	if (!email.isInvalid() && !cardNumber.isInvalid() && !securityCode.isInvalid()) {
+    	if (!email.isInvalid() && !cardNumber.isInvalid() && !securityCode.isInvalid() && !postalCode.isInvalid()&& cardHolder.isInvalid()) {
     		return true; // Tutti i campi sono validi
     	}
 
@@ -475,7 +476,7 @@ public class CheckoutFormView extends Div {
     	return address.getValue();
     }
     
-    public static double getPostalCode() {
+    public static String getPostalCode() {
     	return postalCode.getValue();
     }
     

@@ -302,24 +302,25 @@ public void deleteModelByName(String name) throws SQLException {
 	}
 }
 public void saveAddress(Address address, int IDuser) throws SQLException {
-	String query = "INSERT INTO Address (address, city, cap, country, IDuser) VALUES (?, ?, ?, ?, ?)";
+    String query = "INSERT INTO Address (address, city, cap, country, IDuser) VALUES (?, ?, ?, ?, ?)";
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setString(1, address.getAddress());
         stmt.setString(2, address.getCity());
-        stmt.setInt	  (3, address.getCap());
+        stmt.setString(3, address.getCap()); // CAP gestito come stringa
         stmt.setString(4, address.getCountry());
-        stmt.setInt   (5, IDuser);
+        stmt.setInt(5, IDuser);
         stmt.executeUpdate();
     }
 }
+
 public void updateAddressById(Address address) throws SQLException {
     String query = "UPDATE Address SET address = ?, country = ?, cap = ?, city = ? WHERE id = ?";
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setString(1, address.getAddress());
         stmt.setString(2, address.getCountry());
-        stmt.setInt(3, address.getCap());
+        stmt.setString(3, address.getCap()); // CAP gestito come stringa
         stmt.setString(4, address.getCity());
         stmt.setInt(5, address.getID());
         stmt.executeUpdate();
@@ -329,18 +330,18 @@ public void updateAddressById(Address address) throws SQLException {
 public ArrayList<Address> getAddressesByUserId(int userId) throws SQLException {
     String query = "SELECT * FROM Address WHERE IDuser = ?";
     ArrayList<Address> addresses = new ArrayList<>();
-    
+
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setInt(1, userId);
-        
+
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Address address = new Address();
                 address.setID(rs.getInt("ID"));
                 address.setAddress(rs.getString("address"));
                 address.setCity(rs.getString("city"));
-                address.setCap(rs.getInt("cap"));
+                address.setCap(rs.getString("cap")); // CAP gestito come stringa
                 address.setCountry(rs.getString("country"));
                 address.setIDuser(rs.getInt("IDuser"));
                 addresses.add(address);
@@ -349,6 +350,7 @@ public ArrayList<Address> getAddressesByUserId(int userId) throws SQLException {
     }
     return addresses;
 }
+
 public void deleteAddressById(int addressId) throws SQLException {
     String query = "DELETE FROM Address WHERE id = ?";
     try (Connection conn = getConnection();
@@ -357,6 +359,7 @@ public void deleteAddressById(int addressId) throws SQLException {
         stmt.executeUpdate();
     }
 }
+
 public ArrayList<SoldProduct> getSoldProductsByOrderId(int orderId) throws SQLException {
     String query = "SELECT * FROM SoldProducts WHERE IDorder = ?";
     ArrayList<SoldProduct> soldProducts = new ArrayList<>();
@@ -412,10 +415,9 @@ public void saveOrder(int userId, double total, ArrayList<SoldProduct> soldProdu
         stmt.executeUpdate();  // Esegui l'insert
         
         Statement stmtID = conn.createStatement();
-        ResultSet rs = stmtID.executeQuery("SELECT LAST_INSERT_ROWID();") ;
+        ResultSet rs = stmtID.executeQuery("SELECT LAST_INSERT_ROWID();");
         	if (rs.next()) {
         	        int lastId = rs.getInt(1);
-        	        System.out.println("Ultimo ID inserito: " + lastId);
         	        saveSoldProducts(lastId, soldProducts);
         	    }
         	} catch (SQLException e) { 

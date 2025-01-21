@@ -116,10 +116,12 @@ public class RegistrationView extends Composite<VerticalLayout> {
         textField5.setRequiredIndicatorVisible(true);
         HorizontalLayout layoutRow9 = new HorizontalLayout();
         HorizontalLayout layoutRow10 = new HorizontalLayout();
-        NumberField numberField = new NumberField();
-        numberField.setRequiredIndicatorVisible(true);
-        numberField.setMin(1); // Valore minimo
-        numberField.setMax(99999); // Valore massimo (5 cifre)
+        TextField capField = new TextField();
+        capField.setPattern("[0-9]{5}");
+        capField.setMaxLength(5);
+        capField.setMinLength(5);
+        capField.setRequiredIndicatorVisible(true);
+      
         Button buttonPrimary = new Button("Registrati", event -> {
         	if(textField.getValue()==null||textField.getValue()==null||textField2.getValue()==null||emailField.getValue()==null||textField4.getValue()==null||textField5.getValue()==null||countrySelect.getValue()!=null) {
         		 // Creazione di un nuovo utente
@@ -132,7 +134,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
                 user.setRole("CLIENT"); // Ruolo predefinito
                 address.setAddress(textField4.getValue());
                 address.setCity(textField5.getValue());
-                address.setCap( (int) Math.round(numberField.getValue()));
+                address.setCap(capField.getValue());
                 address.setCountry(countrySelect.getValue());
                 
                 try {
@@ -252,9 +254,9 @@ public class RegistrationView extends Composite<VerticalLayout> {
         layoutRow10.getStyle().set("flex-grow", "1");
         layoutRow10.setAlignItems(Alignment.CENTER);
         layoutRow10.setJustifyContentMode(JustifyContentMode.CENTER);
-        numberField.setLabel("Cap");
-     	layoutRow10.setAlignSelf(FlexComponent.Alignment.CENTER, numberField);
-     	numberField.setWidth("min-content");
+        capField.setLabel("Cap");
+     	layoutRow10.setAlignSelf(FlexComponent.Alignment.CENTER, capField);
+     	capField.setWidth("min-content");
         countrySelect.setLabel("Nazione");
         countrySelect.setWidth("min-content");
         buttonPrimary.setText("Registra");
@@ -283,7 +285,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
         layoutRow8.add(textField5);
         layoutColumn2.add(layoutRow9);
         layoutRow9.add(layoutRow10);
-        layoutRow10.add(numberField);
+        layoutRow10.add(capField);
         layoutRow10.add(countrySelect);
         layoutColumn2.add(buttonPrimary);
         layoutRow.add(layoutColumn4);

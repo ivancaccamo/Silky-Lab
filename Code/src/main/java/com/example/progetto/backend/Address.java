@@ -4,7 +4,7 @@ public class Address {
 	private int ID;
 	private String address;
 	private String city;
-	private int cap;
+	private String cap;
 	private String country;
 	private int IDuser;
 	
@@ -12,7 +12,7 @@ public class Address {
 	
 	}
 	
-	public Address(int iD, String address, String city, int cap, String country, int iDuser) {
+	public Address(int iD, String address, String city, String cap, String country, int iDuser) {
 		
 		ID = iD;
 		this.address = address;
@@ -42,11 +42,11 @@ public class Address {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public int getCap() {
+	public String getCap() {
 		return cap;
 	}
-	public void setCap(int cap) {
-		this.cap = cap;
+	public void setCap(String i) {
+		this.cap = i;
 	}
 	public String getCountry() {
 		return country;

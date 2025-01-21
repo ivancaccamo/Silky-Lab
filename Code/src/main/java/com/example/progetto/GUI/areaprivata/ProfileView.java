@@ -1,7 +1,9 @@
 package com.example.progetto.GUI.areaprivata;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
@@ -98,6 +100,7 @@ public class ProfileView extends VerticalLayout {
                 		Span emptyList = new Span("Noi hai mai effettuato ordini da noi, continua ad esplorare il nostro sito");
                 		content.add(emptyList);
                 	}
+                	Collections.reverse(orders);
                 	for(Order order : orders) {
                 		content.add(cerateOrderDetailLayout(order));
                 		Hr hr = new Hr();
@@ -216,7 +219,9 @@ public class ProfileView extends VerticalLayout {
         Span idOrder = new Span("ID Ordine: #" + order.getID());
         idOrder.getStyle().set("font-weight", "bold");
         orderDetailsLayout.add(idOrder);
-        orderDetailsLayout.add(new Span("Totale: " + order.getTot() + "€"));
+        DecimalFormat df = new DecimalFormat("0.00");
+        String total = df.format(order.getTot());
+        orderDetailsLayout.add(new Span("Totale: " + total + "€"));
         orderDetailsLayout.add(new Span("Data: " + order.getDate()));
 
         // Sezione destra: prodotti venduti
