@@ -3,6 +3,8 @@ package com.example.progetto.GUI.areaprivata;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
+
 import com.example.application.services.DatabaseManager;
 import com.example.progetto.GUI.MainLayout;
 import com.example.progetto.GUI.dialogs.AddressAddDialog;
@@ -13,8 +15,10 @@ import com.example.progetto.backend.Order;
 import com.example.progetto.backend.SoldProduct;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
@@ -24,9 +28,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -34,13 +38,27 @@ import com.vaadin.flow.component.textfield.TextField;
 
 @Route(value = "Profile", layout = MainLayout.class)
 @PageTitle("Profilo Personale")
+@Menu(order = 3, icon = LineAwesomeIconUrl.ADDRESS_CARD_SOLID)
 public class ProfileView extends VerticalLayout {
     private ArrayList<Address> addresses = new ArrayList<>();
     DatabaseManager dbManager = new DatabaseManager();
     private User user = Current.getCurrentUser();
     private ArrayList<Order> orders = new ArrayList<>();
+    
     public ProfileView() throws SQLException {
     	
+    	if (user == null) {
+    		Button goLogin = new Button("Login");
+            goLogin.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            goLogin.addClickListener(event -> {
+                getUI().ifPresent(ui -> {
+                    ui.navigate("Login");
+                }); 
+            });
+    		setAlignItems(Alignment.CENTER);
+            add(new H2("Effettua l'accesso per continuare"), goLogin);
+            return;
+        }
         // Header con l'icona dell'account e il nome
     	orders= dbManager.getOrdersByUserId(user.getId());
         HorizontalLayout header = new HorizontalLayout();

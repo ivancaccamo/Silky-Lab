@@ -112,7 +112,8 @@ public class CartView extends Composite<VerticalLayout> {
 	            		Notification.show("Aggiungi qualcosa al carrello per procedere al checkout");
 	            	}
             	} else {
-            		Notification.show("Effettua il login per continuare");
+            		// Naviga alla pagina di login
+            		ui.navigate("Login");
             	}
             });
         });

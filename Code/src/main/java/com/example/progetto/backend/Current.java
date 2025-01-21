@@ -67,28 +67,13 @@ public class Current{
 	public static User getUser() {
         return currentUser;
     }
-    public static Current getInstance() {
-    	if(theInstance == null) {
-    		theInstance = new Current();
-    	}
-    	return theInstance;
-    }
     public static void setUser(User user) {
     	
     	if(theInstance == null) {
     		theInstance = new Current();
     	}
         currentUser = user;
-        notifyListeners();
     }
-    private static void notifyListeners() {
-        for (MyListener listener : listeners) {
-        	System.out.println("ciao");
-            listener.onMethodCalled();
-            
-        }
-    }
-
 	private Current() {
     	
     }

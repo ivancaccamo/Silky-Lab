@@ -9,6 +9,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.notification.Notification;
@@ -19,16 +20,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 import java.sql.SQLException;
-
-import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Log in area")
 @Route(value="Login",layout = MainLayout.class)
@@ -37,7 +34,6 @@ private User user = Current.getCurrentUser();
     public LoginView() {
     	if(user==null) {
     	
-    	Current.getInstance();
         HorizontalLayout layoutRow = new HorizontalLayout();
         H1 h1 = new H1();
         Hr hr = new Hr();
@@ -137,8 +133,16 @@ private User user = Current.getCurrentUser();
         layoutRow3.add(buttonPrimary);
         layoutRow3.add(buttonSecondary);
         layoutRow2.add(layoutColumn4);
-    }else {
-    	
-    }
- }
+    	}else {
+    		Button goBack = new Button("Chiudi");
+            goBack.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            goBack.addClickListener(event -> {
+                getUI().ifPresent(ui -> {
+                    ui.navigate("");
+                }); 
+            });
+    		getContent().setAlignItems(Alignment.CENTER);
+            getContent().add(new H2("Ciao " + user.getName() + ", sei già loggato"), goBack);
+    	}
+ 	}
 }
