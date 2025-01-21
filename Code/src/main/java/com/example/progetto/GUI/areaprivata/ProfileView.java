@@ -9,16 +9,20 @@ import com.example.progetto.GUI.dialogs.AddressAddDialog;
 import com.example.progetto.GUI.dialogs.AddressEditDialog;
 import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Current;
+import com.example.progetto.backend.Order;
+import com.example.progetto.backend.SoldProduct;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.tabs.Tab;
@@ -34,10 +38,11 @@ public class ProfileView extends VerticalLayout {
     private ArrayList<Address> addresses = new ArrayList<>();
     DatabaseManager dbManager = new DatabaseManager();
     private User user = Current.getCurrentUser();
-
-    public ProfileView() {
+    private ArrayList<Order> orders = new ArrayList<>();
+    public ProfileView() throws SQLException {
     	
         // Header con l'icona dell'account e il nome
+    	orders= dbManager.getOrdersByUserId(user.getId());
         HorizontalLayout header = new HorizontalLayout();
         Image accountIcon = new Image("/images/account-icon.png", "Account Icon");
         accountIcon.setWidth("100px");
@@ -67,7 +72,20 @@ public class ProfileView extends VerticalLayout {
                 } else if (event.getSelectedTab().equals(addressesTab)) {
                     content.add(createAddressesSection());
                 } else if (event.getSelectedTab().equals(ordersTab)) {
-                    content.add(createOrdersSection());
+                	H3 h3 = new H3();
+                	
+                	h3.setText("Elenco dei tuoi ordini: ");
+                	content.add(h3);
+                	if(orders.isEmpty()) {
+                		Span emptyList = new Span("Noi hai mai effettuato ordini da noi, continua ad esplorare il nostro sito");
+                		content.add(emptyList);
+                	}
+                	for(Order order : orders) {
+                		content.add(cerateOrderDetailLayout(order));
+                		Hr hr = new Hr();
+                		content.add(hr);
+                	}
+                    
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -119,7 +137,7 @@ public class ProfileView extends VerticalLayout {
         VerticalLayout layout = new VerticalLayout();
         Span addressesLabel = new Span("Elenco Indirizzi:");
         
-        VerticalLayout addressList = new VerticalLayout();
+        HorizontalLayout addressList = new HorizontalLayout();
         addresses = dbManager.getAddressesByUserId(user.getId());
         for (Address address : addresses) {
             addressList.add(createAddressItem(address));
@@ -156,8 +174,8 @@ public class ProfileView extends VerticalLayout {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            if (parent instanceof VerticalLayout) {
-                ((VerticalLayout) parent).remove(addressItem);
+            if (parent instanceof HorizontalLayout) {
+                ((HorizontalLayout) parent).remove(addressItem);
             }
         }));
 
@@ -171,16 +189,59 @@ public class ProfileView extends VerticalLayout {
         return addressItem;
     }
 
-    private VerticalLayout createOrdersSection() {
-        VerticalLayout layout = new VerticalLayout();
-        Span ordersLabel = new Span("Riepilogo Ordini:");
+    public HorizontalLayout cerateOrderDetailLayout(Order order) throws SQLException {
+        // Sezione sinistra: dettagli dell'ordine
+    	HorizontalLayout orderBox = new HorizontalLayout();
+    	ArrayList<SoldProduct> soldProducts = new ArrayList<>();
+    	soldProducts = dbManager.getSoldProductsByOrderId(order.getID());
+        VerticalLayout orderDetailsLayout = new VerticalLayout();
+        Span idOrder = new Span("ID Ordine: #" + order.getID());
+        idOrder.getStyle().set("font-weight", "bold");
+        orderDetailsLayout.add(idOrder);
+        orderDetailsLayout.add(new Span("Totale: " + order.getTot() + "€"));
+        orderDetailsLayout.add(new Span("Data: " + order.getDate()));
 
-        VerticalLayout orderList = new VerticalLayout();
-        orderList.add(new Span("Ordine #12345 - 100€ - 10/01/2025"),
-                      new Span("Ordine #12346 - 50€ - 15/01/2025"));
+        // Sezione destra: prodotti venduti
+        VerticalLayout productsLayout = new VerticalLayout();
+        for (SoldProduct product : soldProducts) {
+            Div productDiv = new Div();
+            productDiv.add(new Span(product.getModel() + ", Taglia: " + product.getSize()));
+            productDiv.getStyle().set("padding", "1px");
+            productDiv.getStyle().set("align-self", "flex-start");
+            productsLayout.add(productDiv);
+            
+        }
+        productsLayout.getStyle()
+        .set("gap", "1px")           // Spazio tra gli elementi
+        .set("padding", "1px")      // Margine interno
+        .set("margin", "1px");  
 
-        layout.add(ordersLabel, orderList);
-
-        return layout;
+        // Scroller per la sezione dei prodotti
+        Scroller productScroller = new Scroller();
+        productScroller.setContent(productsLayout);
+        productScroller.setHeight("100px");
+        productScroller.setWidth("100%");// Altezza fissa per lo scroller
+        productScroller.getStyle()
+        .set("overflow-x", "hidden");
+        VerticalLayout vertical = new VerticalLayout();
+        Span span = new Span("Acquisti: ");
+        span.getStyle().set("font-weight", "bold");
+        vertical.add(span);
+        vertical.add(productScroller);
+        vertical.getStyle().set("gap", "2px");
+        // Aggiungi i layout al contenitore principale
+        
+        
+        orderBox.add(orderDetailsLayout, vertical);
+        
+        // Stile e allineamento
+        
+        orderBox.setPadding(true);
+        orderBox.getStyle().set("gap", "1px");   
+        orderBox.setWidthFull();
+        orderBox.setWidth("700px");
+        orderDetailsLayout.setWidth("30%");
+        vertical.setWidth("70%");
+		return orderBox;
     }
 }

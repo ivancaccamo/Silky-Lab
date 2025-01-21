@@ -1,6 +1,7 @@
 package com.example.application.services;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +11,9 @@ import java.util.ArrayList;
 
 import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Model;
+import com.example.progetto.backend.Order;
 import com.example.progetto.backend.Product;
+import com.example.progetto.backend.SoldProduct;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
@@ -354,6 +357,80 @@ public void deleteAddressById(int addressId) throws SQLException {
         stmt.executeUpdate();
     }
 }
+public ArrayList<SoldProduct> getSoldProductsByOrderId(int orderId) throws SQLException {
+    String query = "SELECT * FROM SoldProducts WHERE IDorder = ?";
+    ArrayList<SoldProduct> soldProducts = new ArrayList<>();
+
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, orderId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                SoldProduct product = new SoldProduct();
+                product.setID(rs.getInt("ID"));
+                product.setIDorder(rs.getInt("IDorder"));
+                product.setModel(rs.getString("model"));
+                product.setSize(rs.getString("size"));
+                soldProducts.add(product);
+            }
+        }
+    }
+
+    return soldProducts;
+}
+public ArrayList<Order> getOrdersByUserId(int userId) throws SQLException {
+    String query = "SELECT * FROM `Order` WHERE IDuser = ?";
+    ArrayList<Order> orders = new ArrayList<>();
+
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, userId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                
+                int id = rs.getInt("ID");
+                int idUser = rs.getInt("IDuser");
+                Date date = rs.getDate("date");
+                Double tot = rs.getDouble("tot");
+                Order order = new Order(id,idUser,date,tot);
+                orders.add(order);
+            }
+        }
+    }
+
+    return orders;
+}
+public void saveOrder(int userId, double total) throws SQLException {
+    String query = "INSERT INTO `Order` (IDuser, tot) VALUES (?, ?)";
+    
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, userId);  // Imposta l'ID dell'utente
+        stmt.setDouble(2, total);  // Imposta il totale dell'ordine
+        stmt.executeUpdate();  // Esegui l'insert
+    } catch (SQLException e) {
+        throw new SQLException("Errore durante il salvataggio dell'ordine", e);
+    }
+}
+public void saveSoldProducts(int orderId, ArrayList<SoldProduct> soldProducts) throws SQLException {
+    String query = "INSERT INTO SoldProducts (IDorder, model, size) VALUES (?, ?, ?)";
+    
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        for (SoldProduct product : soldProducts) {
+            stmt.setInt(1, orderId);                // Imposta l'ID dell'ordine
+            stmt.setString(2, product.getModel());  // Nome del modello
+            stmt.setString(3, product.getSize());   // Taglia
+            stmt.addBatch();                        // Aggiungi al batch
+        }
+        stmt.executeBatch();  // Esegui il batch
+    } catch (SQLException e) {
+        throw new SQLException("Errore durante il salvataggio dei prodotti venduti", e);
+    }
+}
+
 
 
 
