@@ -402,7 +402,7 @@ public ArrayList<Order> getOrdersByUserId(int userId) throws SQLException {
 
     return orders;
 }
-public void saveOrder(int userId, double total) throws SQLException {
+public void saveOrder(int userId, double total, ArrayList<SoldProduct> soldProducts) throws SQLException {
     String query = "INSERT INTO `Order` (IDuser, tot) VALUES (?, ?)";
     
     try (Connection conn = getConnection();
@@ -410,10 +410,18 @@ public void saveOrder(int userId, double total) throws SQLException {
         stmt.setInt(1, userId);  // Imposta l'ID dell'utente
         stmt.setDouble(2, total);  // Imposta il totale dell'ordine
         stmt.executeUpdate();  // Esegui l'insert
-    } catch (SQLException e) {
+        
+        Statement stmtID = conn.createStatement();
+        ResultSet rs = stmtID.executeQuery("SELECT LAST_INSERT_ROWID();") ;
+        	if (rs.next()) {
+        	        int lastId = rs.getInt(1);
+        	        System.out.println("Ultimo ID inserito: " + lastId);
+        	        saveSoldProducts(lastId, soldProducts);
+        	    }
+        	} catch (SQLException e) { 
         throw new SQLException("Errore durante il salvataggio dell'ordine", e);
-    }
-}
+        	}	
+    	}
 public void saveSoldProducts(int orderId, ArrayList<SoldProduct> soldProducts) throws SQLException {
     String query = "INSERT INTO SoldProducts (IDorder, model, size) VALUES (?, ?, ?)";
     
@@ -428,6 +436,23 @@ public void saveSoldProducts(int orderId, ArrayList<SoldProduct> soldProducts) t
         stmt.executeBatch();  // Esegui il batch
     } catch (SQLException e) {
         throw new SQLException("Errore durante il salvataggio dei prodotti venduti", e);
+    }
+}
+public void deleteProductsByIdAndQuantity(int startId, int quantity) throws SQLException {
+    String query = "DELETE FROM Product\r\n"
+    		+ "WHERE id IN (\r\n"
+    		+ "    SELECT id\r\n"
+    		+ "    FROM Product\r\n"
+    		+ "    WHERE id >= ?\r\n"
+    		+ "    ORDER BY id ASC\r\n"
+    		+ "    LIMIT ?\r\n"
+    		+ ");";
+                   
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, startId);    // ID del primo prodotto
+        stmt.setInt(2, quantity);  // Numero di record da eliminare
+        stmt.executeUpdate();
     }
 }
 

@@ -27,10 +27,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 public class ProductCard extends Div {
 	DatabaseManager dbManager = new DatabaseManager();
     public ProductCard(Model model) {
-    	
-    	
-    	
-        
+    
         Div productCard = new Div();
         
         
@@ -73,7 +70,7 @@ public class ProductCard extends Div {
 
         productInfo.add(priceSpan);
 
-        if(Current.getCurrentUser()==null||Current.getCurrentUser().getRole().equals("ADMIN")) {
+        if(Current.getCurrentUser()!=null&&Current.getCurrentUser().getRole().equals("ADMIN")) {
         	Div overlay = new Div();
             overlay.setText("Elimina");
             overlay.getStyle().set("position", "absolute");

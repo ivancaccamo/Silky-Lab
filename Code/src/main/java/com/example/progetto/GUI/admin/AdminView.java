@@ -68,7 +68,64 @@ import com.vaadin.hilla.ApplicationContextProvider;
 
         public AdminView() { 	
         	if(Current.getCurrentUser()==null||Current.getCurrentUser().getRole().equals("CLIENT")) {
-        		
+        	HorizontalLayout layoutRow = new HorizontalLayout();
+            H1 h12 = new H1();
+            
+            HorizontalLayout layoutRow2 = new HorizontalLayout();
+            VerticalLayout layoutColumn8 = new VerticalLayout();
+            VerticalLayout layoutColumn2 = new VerticalLayout();
+            VerticalLayout layoutColumn3 = new VerticalLayout();
+            Paragraph textMedium2 = new Paragraph();
+            Image image = new Image("/Images/warning.png","");
+            VerticalLayout layoutColumn9 = new VerticalLayout();
+            HorizontalLayout layoutRow5 = new HorizontalLayout();
+            setWidth("100%");
+            getStyle().set("flex-grow", "1");
+            setJustifyContentMode(JustifyContentMode.CENTER);
+            setAlignItems(Alignment.CENTER);
+            layoutRow.addClassName(Gap.MEDIUM);
+            layoutRow.setWidth("100%");
+            layoutRow.setHeight("min-content");
+            layoutRow.setAlignItems(Alignment.CENTER);
+            layoutRow.setJustifyContentMode(JustifyContentMode.CENTER);
+            h12.setText("Impossibile accedere alla pagina");
+            h12.setWidth("max-content");
+            layoutRow2.addClassName(Gap.MEDIUM);
+            layoutRow2.setWidth("100%");
+            layoutRow2.getStyle().set("flex-grow", "1");
+            layoutColumn8.getStyle().set("flex-grow", "1");
+            layoutColumn2.setWidth("100%");
+            layoutColumn2.getStyle().set("flex-grow", "1");
+            layoutColumn3.setWidthFull();
+            layoutColumn2.setFlexGrow(1.0, layoutColumn3);
+            layoutColumn3.setWidth("100%");
+            layoutColumn3.getStyle().set("flex-grow", "1");
+            layoutColumn3.setAlignSelf(Alignment.CENTER, image);
+            layoutColumn3.setAlignSelf(Alignment.CENTER, textMedium2);
+            image.setHeight("300px");
+            image.setWidth("300px");
+            textMedium2.setText("Attenzione! Stai cercando di accedere ad una pagina che richiede un rango che non possiedi");
+            
+            textMedium2.setWidth("max-content");
+            textMedium2.getStyle().set("font-size", "var(--lumo-font-size-m)");
+            layoutColumn9.getStyle().set("flex-grow", "1");
+            layoutRow5.addClassName(Gap.MEDIUM);
+            layoutRow5.setWidth("100%");
+            layoutRow5.setHeight("min-content");
+            add(layoutRow);
+            layoutRow.add(h12);
+            add(layoutRow2);
+            layoutRow2.add(layoutColumn8);
+            layoutRow2.add(layoutColumn2);
+            layoutColumn2.add(layoutColumn3);
+            layoutColumn3.add(image);
+            layoutColumn3.add(textMedium2);
+            
+            layoutRow2.add(layoutColumn9);
+            add(layoutRow5);
+        
+    	}else {
+    		
         	H1 h1 = new H1();	
         	TextField textField = new TextField("Inserisci il nome del prodotto");
             TextArea textArea = new TextArea("Descrizione dettagliata");
@@ -136,8 +193,7 @@ import com.vaadin.hilla.ApplicationContextProvider;
             layoutColumn.getStyle().set("flex-grow", "1");
             layoutColumn.getStyle().set("display", "flex");
             layoutColumn.getStyle().set("flex-direction", "column");
-            layoutColumn.getStyle().set("overflow", "auto");
-            Current.setCategoryView("prova");
+            layoutColumn.getStyle().set("overflow", "auto"); 
             if(Current.getCategoryView()!=null)
             h1.setText("Aggiungi un modello di prodotto nella categoria "+Current.getCategoryView());
             add(h1);
@@ -158,63 +214,6 @@ import com.vaadin.hilla.ApplicationContextProvider;
             layoutColumn.add(addButton);
             layoutColumn.add(buttonSecondary);  
             layoutRow.expand(layoutColumn);
-        
-    	}else {
-    		HorizontalLayout layoutRow = new HorizontalLayout();
-            H1 h12 = new H1();
-            
-            HorizontalLayout layoutRow2 = new HorizontalLayout();
-            VerticalLayout layoutColumn8 = new VerticalLayout();
-            VerticalLayout layoutColumn2 = new VerticalLayout();
-            VerticalLayout layoutColumn3 = new VerticalLayout();
-            Paragraph textMedium2 = new Paragraph();
-            Image image = new Image("/Images/warning.png","");
-            VerticalLayout layoutColumn9 = new VerticalLayout();
-            HorizontalLayout layoutRow5 = new HorizontalLayout();
-            setWidth("100%");
-            getStyle().set("flex-grow", "1");
-            setJustifyContentMode(JustifyContentMode.CENTER);
-            setAlignItems(Alignment.CENTER);
-            layoutRow.addClassName(Gap.MEDIUM);
-            layoutRow.setWidth("100%");
-            layoutRow.setHeight("min-content");
-            layoutRow.setAlignItems(Alignment.CENTER);
-            layoutRow.setJustifyContentMode(JustifyContentMode.CENTER);
-            h12.setText("Impossibile accedere alla pagina");
-            h12.setWidth("max-content");
-            layoutRow2.addClassName(Gap.MEDIUM);
-            layoutRow2.setWidth("100%");
-            layoutRow2.getStyle().set("flex-grow", "1");
-            layoutColumn8.getStyle().set("flex-grow", "1");
-            layoutColumn2.setWidth("100%");
-            layoutColumn2.getStyle().set("flex-grow", "1");
-            layoutColumn3.setWidthFull();
-            layoutColumn2.setFlexGrow(1.0, layoutColumn3);
-            layoutColumn3.setWidth("100%");
-            layoutColumn3.getStyle().set("flex-grow", "1");
-            layoutColumn3.setAlignSelf(Alignment.CENTER, image);
-            layoutColumn3.setAlignSelf(Alignment.CENTER, textMedium2);
-            image.setHeight("300px");
-            image.setWidth("300px");
-            textMedium2.setText("Attenzione! Stai cercando di accedere ad una pagina che richiede un rango che non possiedi");
-            
-            textMedium2.setWidth("max-content");
-            textMedium2.getStyle().set("font-size", "var(--lumo-font-size-m)");
-            layoutColumn9.getStyle().set("flex-grow", "1");
-            layoutRow5.addClassName(Gap.MEDIUM);
-            layoutRow5.setWidth("100%");
-            layoutRow5.setHeight("min-content");
-            add(layoutRow);
-            layoutRow.add(h12);
-            add(layoutRow2);
-            layoutRow2.add(layoutColumn8);
-            layoutRow2.add(layoutColumn2);
-            layoutColumn2.add(layoutColumn3);
-            layoutColumn3.add(image);
-            layoutColumn3.add(textMedium2);
-            
-            layoutRow2.add(layoutColumn9);
-            add(layoutRow5);
     	}
         	
         	}
@@ -229,7 +228,7 @@ import com.vaadin.hilla.ApplicationContextProvider;
                         outputStream.write(bufferData, 0, bytesRead);
                     }
                 }
-                
+                 
                 Files.move(Path.of(IMAGE_PATH+buffer.getFileName()), Path.of(IMAGE_PATH+model.getName()+".png"), StandardCopyOption.REPLACE_EXISTING);
                 
             } catch (IOException e) {

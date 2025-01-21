@@ -4,7 +4,10 @@ import com.example.application.services.DatabaseManager;
 import com.example.progetto.GUI.CartView;
 import com.example.progetto.GUI.dialogs.AddressChooseDialog;
 import com.example.progetto.backend.Address;
+import com.example.progetto.backend.Cart;
+import com.example.progetto.backend.CartItem;
 import com.example.progetto.backend.Current;
+import com.example.progetto.backend.SoldProduct;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -42,6 +45,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -357,14 +361,41 @@ public class CheckoutFormView extends Div {
 					e.printStackTrace();
 				}
         	}
-				// Naviga alla pagina di riepilogo ordine
-			getUI().ifPresent(ui -> {
-				if (!validateForm()) {
-					Notification.show("Per favore compila tutti i campi obbligatori correttamente.", 3000, Notification.Position.MIDDLE);
-					return; // Interrompi l'esecuzione
+
+        	if (!validateForm()) {
+				Notification.show("Per favore compila tutti i campi obbligatori correttamente.", 3000, Notification.Position.MIDDLE);
+        	}else {
+        		ArrayList<SoldProduct> soldProducts = new ArrayList<>();
+        		
+        		for(CartItem item : Cart.getCartItems()) {
+        			for(int i = 0; i<item.getQuantity();i++) {
+        				SoldProduct sp = new SoldProduct();
+        				sp.setModel(item.getProduct().getModel().getName());
+        				sp.setSize(item.getProduct().getSize());
+        				soldProducts.add(sp);
+        			}
+        			try {
+						dbManager.deleteProductsByIdAndQuantity(item.getProduct().getId(), item.getQuantity());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        		}
+        		try {
+        			
+        			dbManager.saveOrder(Current.getCurrentUser().getId(), CartView.getTotal(), soldProducts);
+					
+					getUI().ifPresent(ui -> { ui.navigate("Riepilogo-ordine");});
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				ui.navigate("Riepilogo-ordine");
-			});
+        		
+        	}
+        	
+			
+			
+			
         });
         
         footer.add(cancel, pay);

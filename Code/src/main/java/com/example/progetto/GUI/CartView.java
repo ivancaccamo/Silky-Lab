@@ -215,6 +215,11 @@ public class CartView extends Composite<VerticalLayout> {
     }
     
     public static float getTotal() {
-        return tot;
+    	if(tot >= 100) {
+    		return tot;
+    	}else {
+    		return (float) (tot+7.9);
+    	}
+        
     }
 }

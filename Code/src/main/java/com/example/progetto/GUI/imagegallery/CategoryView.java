@@ -88,7 +88,7 @@ public class CategoryView extends VerticalLayout {
              ProductCard productCard = new ProductCard(model);
              grid.add(productCard);             
         } 
-        if(Current.getUser()==null||Current.getUser().getRole().equals("ADMIN")) {
+        if(Current.getUser()!=null&&Current.getUser().getRole().equals("ADMIN")) {
         	ProductCard productCard = new ProductCard();
         	grid.add(productCard);
         }
