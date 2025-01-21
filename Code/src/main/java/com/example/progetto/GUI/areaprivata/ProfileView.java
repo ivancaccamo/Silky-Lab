@@ -16,6 +16,7 @@ import com.example.progetto.backend.Current;
 import com.example.progetto.backend.Order;
 import com.example.progetto.backend.SoldProduct;
 import com.example.progetto.backend.User;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -70,8 +71,25 @@ public class ProfileView extends VerticalLayout {
 
         Span userName = new Span(user.getName() + " " + user.getSurname());
         userName.getStyle().set("font-size", "24px").set("font-weight", "bold");
+        Button disconnectButton = new Button("Disconnetti");
+        disconnectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        disconnectButton.addClickListener(event -> {
+        	Current.ExitUser();
+            Notification.show("Disconnesso con successo");
+            UI.getCurrent().access(() -> {
+                MainLayout.getInstance().updateFooter();
+            });
+            getUI().ifPresent(ui -> {
+                ui.navigate("");
+            }); 
+            
+            
+        });
+        VerticalLayout verL = new VerticalLayout();
+        verL.add(userName);
+        verL.add(disconnectButton);
 
-        header.add(accountIcon, userName);
+        header.add(accountIcon, verL);
         header.setSpacing(true);
         header.setAlignItems(Alignment.CENTER);
 

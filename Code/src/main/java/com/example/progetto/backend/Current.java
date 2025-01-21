@@ -77,7 +77,7 @@ public class Current{
 	private Current() {
     	
     }
-    public static Current ExitUser() {
-		return null;	
+    public static void ExitUser() {
+    	currentUser=null;
     }
 }

@@ -117,11 +117,15 @@ public class MainLayout extends AppLayout{
         	
         	userNameSpan = new Span("Login");
         	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL); 	
-        	route = "Login"; 	
+        	route = "Login"; 	 
         	
         }
-        // Link alla pagina del profilo
-        Anchor profileLink = new Anchor(route, userIcon, userNameSpan); // Cambia "profile" con il tuo route
+        
+       
+    	
+        Anchor profileLink = new Anchor(route, userIcon, userNameSpan); 
+       
+        
         profileLink.addClassNames(LumoUtility.TextColor.SECONDARY, LumoUtility.Display.FLEX, LumoUtility.AlignItems.CENTER);
         profileLink.getStyle().set("text-decoration", "none");
         footer.add(profileLink); 

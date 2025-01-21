@@ -55,7 +55,9 @@ private User user = Current.getCurrentUser();
                 	Current.setUser(user);
                 	 UI.getCurrent().access(() -> {
                          MainLayout.getInstance().updateFooter();
-                     });         	
+                     });
+                	 
+                         	
                     if ("ADMIN".equals(user.getRole())) {
                     	
                     	
