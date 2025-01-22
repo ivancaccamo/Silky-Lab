@@ -59,14 +59,17 @@ public class AddressAddDialog extends Dialog {
     public AddressAddDialog(DatabaseManager db,int idUser) {
         // Campi del form
         TextField addressField = new TextField("Indirizzo");
+        addressField.setRequiredIndicatorVisible(true);
         ComboBox<String> countryField = new ComboBox<>("Paese");
         countryField.setRequiredIndicatorVisible(true);
         countryField.setItems(countries);
         TextField cityField = new TextField("Città");
+        cityField.setRequiredIndicatorVisible(true);
         TextField capField = new TextField("CAP");
         capField.setPattern("[0-9]{5}");
         capField.setMaxLength(5);
         capField.setMinLength(5);
+        capField.setRequiredIndicatorVisible(true);
         countryField.setValue("Italy");
         // Layout del form
         FormLayout formLayout = new FormLayout();

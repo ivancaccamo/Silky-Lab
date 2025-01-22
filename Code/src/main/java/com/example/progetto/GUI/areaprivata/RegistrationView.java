@@ -5,6 +5,7 @@ import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -89,6 +90,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
     	ComboBox<String> countrySelect = new ComboBox<>("Country");
         countrySelect.setRequiredIndicatorVisible(true);
         countrySelect.setItems(countries);
+        countrySelect.setValue("Italy");
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn3 = new VerticalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
@@ -138,21 +140,22 @@ public class RegistrationView extends Composite<VerticalLayout> {
                 address.setCountry(countrySelect.getValue());
                 
                 try {
-                	Current.setUser(user);
-                	
                     DatabaseManager dbManager = new DatabaseManager();
                     dbManager.saveUser(user);
-
                     User savedUser = dbManager.findUserByEmail(user.getEmail());
+                    Current.setUser(savedUser);
                     if (savedUser == null) {
                     	throw new RuntimeException("Errore: l'utente non è stato salvato correttamente.");
                     }
 
                     dbManager.saveAddress(address, savedUser.getId());
-                    getUI().ifPresent(ui -> ui.navigate("Profile"));
+                    /*getUI().ifPresent(ui -> ui.navigate("Profile"));
                     success.open();
                    
-                    getUI().ifPresent(ui -> ui.getPage().reload());
+                    getUI().ifPresent(ui -> ui.getPage().reload());*/
+                    UI.getCurrent().access(() -> {
+               		 UI.getCurrent().getPage().executeJs("window.location.href = $0", "Profile");
+                    });
                     
                 } catch (SQLException e) {
                     error.open();
