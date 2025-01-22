@@ -44,7 +44,7 @@ import com.vaadin.flow.component.textfield.TextField;
 @Menu(order = 3, icon = LineAwesomeIconUrl.ADDRESS_CARD_SOLID)
 public class ProfileView extends VerticalLayout {
     private ArrayList<Address> addresses = new ArrayList<>();
-    DatabaseManager dbManager = new DatabaseManager();
+    static DatabaseManager dbManager = new DatabaseManager();
     private User user = Current.getCurrentUser();
     private ArrayList<Order> orders = new ArrayList<>();
     
@@ -112,7 +112,7 @@ public class ProfileView extends VerticalLayout {
                 } else if (event.getSelectedTab().equals(ordersTab)) {
                 	H3 h3 = new H3();
                 	
-                	h3.setText("Elenco dei tuoi ordini: ");
+                	h3.setText("I tuoi acquisti: ");
                 	content.add(h3);
                 	if(orders.isEmpty()) {
                 		Span emptyList = new Span("Noi hai mai effettuato ordini da noi, continua ad esplorare il nostro sito");
@@ -120,7 +120,7 @@ public class ProfileView extends VerticalLayout {
                 	}
                 	Collections.reverse(orders);
                 	for(Order order : orders) {
-                		content.add(cerateOrderDetailLayout(order));
+                		content.add(createOrderDetailLayout(order));
                 		Hr hr = new Hr();
                 		content.add(hr);
                 	}
@@ -228,7 +228,7 @@ public class ProfileView extends VerticalLayout {
         return addressItem;
     }
 
-    public HorizontalLayout cerateOrderDetailLayout(Order order) throws SQLException {
+    public static HorizontalLayout createOrderDetailLayout(Order order) throws SQLException {
         // Sezione sinistra: dettagli dell'ordine
     	HorizontalLayout orderBox = new HorizontalLayout();
     	ArrayList<SoldProduct> soldProducts = new ArrayList<>();
@@ -265,7 +265,7 @@ public class ProfileView extends VerticalLayout {
         productScroller.getStyle()
         .set("overflow-x", "hidden");
         VerticalLayout vertical = new VerticalLayout();
-        Span span = new Span("Acquisti: ");
+        Span span = new Span("Prodotti: ");
         span.getStyle().set("font-weight", "bold");
         vertical.add(span);
         vertical.add(productScroller);

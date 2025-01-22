@@ -91,7 +91,9 @@ public class MainLayout extends AppLayout{
         	if (user != null && user.getRole().equals("ADMIN") && (entry.title().equals("Carrello") || entry.title().equals("Profilo Personale"))) {
                 return; // Salta questa voce
             }
-        	
+        	if ((user == null || user.getRole().equals("CLIENT")) && entry.title().equals("Archivio ordini")) {
+                return;
+        	}
         	if (entry.icon() != null) {
                 nav.addItem(new SideNavItem(entry.title(), entry.path(), new SvgIcon(entry.icon())));
             } else {
@@ -99,16 +101,12 @@ public class MainLayout extends AppLayout{
             }
         }); 
     }
-    
-    /*public void updateNavigation() {
-    	createNavigation();
-    }*/
 
     private void createFooter() {  
         // Icona utente
         Icon userIcon = new Icon("vaadin", "user");
         userIcon.setSize("26px");
-        userIcon.addClassNames(LumoUtility.Margin.Right.MEDIUM, LumoUtility.Margin.Left.SMALL);
+        userIcon.addClassNames(LumoUtility.Margin.Left.SMALL);
 
         // Nome dell'utente corrente
         Span userNameSpan;
@@ -118,36 +116,38 @@ public class MainLayout extends AppLayout{
  
         	String currentUserName = "Ciao "+user.getName(); // Metodo per ottenere il nome dell'utente
         	userNameSpan = new Span(currentUserName);
-        	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.MEDIUM);
-        	route = "Profile";
-
+        	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD);
+        	HorizontalLayout userContainer = new HorizontalLayout(userIcon, userNameSpan);
+            userContainer.addClassNames(LumoUtility.TextColor.SECONDARY);
+            footer.add(userContainer);
         }else {
         	
         	userNameSpan = new Span("Login");
-        	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.MEDIUM); 	
-        	route = "Login"; 	 
+        	userNameSpan.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD, LumoUtility.Margin.Left.SMALL); 	
+        	route = "Login"; 	
+        	Anchor profileLink = new Anchor(route, userIcon, userNameSpan); 
+        	profileLink.addClassNames(LumoUtility.TextColor.SECONDARY);
+        	footer.add(profileLink);
+        	profileLink.getStyle().set("cursor", "pointer"); 
+        	profileLink.getStyle().set("width", "auto");
         }
-    	
-        Anchor profileLink = new Anchor(route, userIcon, userNameSpan); 
         
-        profileLink.addClassNames(LumoUtility.TextColor.SECONDARY);
-        footer.add(profileLink); 
         footer.getStyle().set("background", "#dcdcdc");
         footer.getStyle().set("border-radius", "30px");
         footer.getStyle().set("padding", "10px");
-        footer.getStyle().set("margin", "10px");
-        footer.getStyle().set("cursor", "pointer");
+        footer.getStyle().set("margin", "10px"); 
+        footer.getStyle().set("width", "auto ! important");
     }
     
     private void createLogout() {
     	// Creazione dell'icona per il logout
         Icon logoutIcon = new Icon("vaadin", "sign-out");
         logoutIcon.setSize("24px");
-        logoutIcon.addClassNames(LumoUtility.Margin.Right.SMALL, LumoUtility.Margin.Left.SMALL);
+        logoutIcon.addClassNames(LumoUtility.Margin.Left.SMALL);
 
         // Creazione del testo "Logout"
         Span logoutText = new Span("Logout");
-        logoutText.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD,LumoUtility.Margin.Left.SMALL);
+        logoutText.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.FontWeight.BOLD);
         
         // Creazione del contenitore cliccabile senza bottone
         HorizontalLayout logoutContainer = new HorizontalLayout(logoutIcon, logoutText);
@@ -157,12 +157,12 @@ public class MainLayout extends AppLayout{
             Current.ExitUser(); // Metodo per il logout (assicurati che esista)
             UI.getCurrent().getPage().executeJs("window.location.href = $0", "");
         });
+        logoutContainer.getStyle().set("cursor", "pointer");
         logout.add(logoutContainer);
         logout.getStyle().set("background", "#dcdcdc");
         logout.getStyle().set("border-radius", "30px");
         logout.getStyle().set("padding", "10px");
         logout.getStyle().set("margin", "10px");
-        logout.getStyle().set("cursor", "pointer");
         addToDrawer(logout);
     }
 }
