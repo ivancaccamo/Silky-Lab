@@ -477,6 +477,38 @@ public void deleteProductsByIdAndQuantity(int startId, int quantity) throws SQLE
     }
 }
 
+public void updateQuantity(Model model, String size, int quantity) throws SQLException {
+	int currentQuantity=countRecords(model, size);
+	Connection conn = getConnection();
+	if (quantity > currentQuantity) {
+        // Aggiungi record
+        int recordsToAdd = quantity - currentQuantity;
+        
+        String insertQuery = "INSERT INTO Product (modelID, size) VALUES (?, ?)";
+
+        try (PreparedStatement insertStatement = conn.prepareStatement(insertQuery)) {
+            for (int i = 0; i < recordsToAdd; i++) {
+                insertStatement.setInt(1, model.getId());
+                insertStatement.setString(2, size);
+                insertStatement.addBatch();
+            }
+            insertStatement.executeBatch();
+        }
+    } else if (quantity < currentQuantity) {
+        // Rimuovi record
+        int recordsToRemove = currentQuantity - quantity;
+        String deleteQuery = "DELETE FROM Product WHERE id IN (SELECT id FROM Product WHERE modelID = ? AND size = ? LIMIT ?)";
+        
+        try (PreparedStatement deleteStatement = conn.prepareStatement(deleteQuery)) {
+            deleteStatement.setInt(1, model.getId());
+            deleteStatement.setString(2, size);
+            deleteStatement.setInt(3, recordsToRemove);
+            deleteStatement.executeUpdate();
+        }
+    }
+	
+}
+
 
 
 
