@@ -103,6 +103,7 @@ public class CartView extends Composite<VerticalLayout> {
         layoutRow3.setAlignSelf(FlexComponent.Alignment.CENTER, buttonPrimary);
         buttonPrimary.getStyle().set("flex-grow", "1");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonPrimary.getStyle().set("cursor", "pointer");
         buttonPrimary.addClickListener(event -> {
             getUI().ifPresent(ui -> {
             	if (currentUser != null) {
@@ -120,6 +121,7 @@ public class CartView extends Composite<VerticalLayout> {
         buttonSecondary.setText("Torna allo shop");
         layoutRow3.setAlignSelf(FlexComponent.Alignment.CENTER, buttonSecondary);
         buttonSecondary.getStyle().set("flex-grow", "1");
+        buttonSecondary.getStyle().set("cursor", "pointer");
         buttonSecondary.addClickListener(event -> {
             getUI().ifPresent(ui -> {
                 ui.navigate("Shop");
@@ -168,6 +170,7 @@ public class CartView extends Composite<VerticalLayout> {
         });
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR);
         deleteButton.getStyle().set("margin-left", "auto");
+        deleteButton.getStyle().set("cursor", "pointer");
         
         layout.add(productName, productSize, quantity, price, deleteButton);
         cartItemsContainer.add(layout);

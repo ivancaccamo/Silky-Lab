@@ -53,6 +53,7 @@ public class ProfileView extends VerticalLayout {
     	if (user == null) {
     		Button goLogin = new Button("Login");
             goLogin.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            goLogin.getStyle().set("cursor", "pointer");
             goLogin.addClickListener(event -> {
                 getUI().ifPresent(ui -> {
                     ui.navigate("Login");
@@ -73,6 +74,7 @@ public class ProfileView extends VerticalLayout {
         userName.getStyle().set("font-size", "24px").set("font-weight", "bold");
         Button disconnectButton = new Button("Disconnetti");
         disconnectButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        disconnectButton.getStyle().set("cursor", "pointer");
         disconnectButton.addClickListener(event -> {
         	Current.ExitUser();
             Notification.show("Disconnesso con successo");
@@ -97,6 +99,9 @@ public class ProfileView extends VerticalLayout {
         Tab personalDataTab = new Tab("Dati Personali");
         Tab addressesTab = new Tab("Indirizzi di Spedizione");
         Tab ordersTab = new Tab("Ordini Effettuati");
+        personalDataTab.getStyle().set("cursor", "pointer");
+        addressesTab.getStyle().set("cursor", "pointer");
+        ordersTab.getStyle().set("cursor", "pointer");
 
         Tabs tabs = new Tabs(personalDataTab, addressesTab, ordersTab);
         tabs.setWidth("100%");
@@ -164,6 +169,7 @@ public class ProfileView extends VerticalLayout {
             }
         });;
         editButton.getStyle().set("margin-top", "20px");
+        editButton.getStyle().set("cursor", "pointer");
 
         FormLayout form = new FormLayout(nameField, surnameField, emailField, passwordField, editButton);
         layout.add(form);
@@ -183,11 +189,9 @@ public class ProfileView extends VerticalLayout {
         }
         
         Button addButton = new Button("Aggiungi Indirizzo", VaadinIcon.PLUS.create(),event ->{
-        	dialog.open();        	
-        	
-        	
-        }
-);
+        	dialog.open();        	       	  	
+        });
+        addButton.getStyle().set("cursor", "pointer");
         layout.add(addressesLabel, addressList, addButton);
 
         return layout;
@@ -205,6 +209,8 @@ public class ProfileView extends VerticalLayout {
         	editDialog.open();
         	
         });
+        deleteButton.getStyle().set("cursor", "pointer");
+        editButton.getStyle().set("cursor", "pointer");
         Hr hr = new Hr();
         deleteButton.addClickListener(event -> addressItem.getParent().ifPresent(parent -> {
         	try {

@@ -17,7 +17,7 @@ import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Cons
 public class AddressChooseDialog extends Dialog{
 	
 	public AddressChooseDialog(ArrayList<Address> addresses, Consumer<Address> onAddressSelected){
-		setWidth("500px"); // Larghezza del dialog
+		setWidth("470px"); // Larghezza del dialog
         setHeight("500px"); // Altezza del dialog
 
 		VerticalLayout layout = new VerticalLayout();
@@ -47,6 +47,7 @@ public class AddressChooseDialog extends Dialog{
 			close();
 		});
         cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        cancelButton.getStyle().set("cursor", "pointer");
 		
         HorizontalLayout footer = new HorizontalLayout(cancelButton);
         footer.setJustifyContentMode(JustifyContentMode.END);
@@ -67,6 +68,13 @@ public class AddressChooseDialog extends Dialog{
         VerticalLayout addressDetails = new VerticalLayout(countryLabel, cityLabel, addressLabel);
         addressDetails.getStyle().set("gap", "2px");
         addressItem.add(addressDetails);
+        addressItem.getStyle().set("cursor", "pointer");
+        addressItem.getElement().addEventListener("mouseover", e -> addressItem.getStyle()
+                .set("box-shadow", "0px 4px 15px rgba(0, 0, 0, 0.2)")
+                .set("border", "4px solid #ccc"));
+        addressItem.getElement().addEventListener("mouseout", e -> addressItem.getStyle()
+                .set("box-shadow", "0px 2px 10px rgba(0, 0, 0, 0.1)")
+                .set("border", "4px solid transparent"));
         return addressItem;
     }
 }

@@ -264,6 +264,7 @@ public class RegistrationView extends Composite<VerticalLayout> {
         buttonPrimary.setWidth("180px");
         buttonPrimary.setHeight("40px");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonPrimary.getStyle().set("cursor", "pointer");
         layoutColumn4.getStyle().set("flex-grow", "1");
         getContent().add(layoutRow);
         layoutRow.add(layoutColumn3);

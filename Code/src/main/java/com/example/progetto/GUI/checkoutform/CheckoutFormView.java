@@ -252,8 +252,10 @@ public class CheckoutFormView extends Div {
 				e.printStackTrace();
 			}
         });
+        changeAddress.getStyle().set("cursor", "pointer");
         
         saveNewAddress.addClassNames(Margin.Top.SMALL);
+        saveNewAddress.getStyle().set("cursor", "pointer");
 
         shippingDetails.add(stepTwo, header, countrySelect, address, subSection, changeAddress, saveNewAddress);
         return shippingDetails;
@@ -324,10 +326,17 @@ public class CheckoutFormView extends Div {
 
         Button cancel = new Button("Annulla ordine");
         cancel.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        cancel.getStyle().set("cursor", "pointer");
         cancel.setWidth("240px");
+        
+        cancel.addClickListener(event -> {
+        	Cart.removeAll();
+        	getUI().ifPresent(ui -> { ui.navigate("");});
+        });
 
         Button pay = new Button("Paga", new Icon(VaadinIcon.LOCK));
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+        pay.getStyle().set("cursor", "pointer");
         pay.setWidth("240px");
         pay.getStyle().set("margin-left", "20px");
 
@@ -384,19 +393,13 @@ public class CheckoutFormView extends Div {
         		}
         		try {
         			
-        			dbManager.saveOrder(Current.getCurrentUser().getId(), CartView.getTotal(), soldProducts);
-					
+        			dbManager.saveOrder(Current.getCurrentUser().getId(), CartView.getTotal(), soldProducts);				
 					getUI().ifPresent(ui -> { ui.navigate("Riepilogo-ordine");});
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-        		
-        	}
-        	
-			
-			
-			
+				}        		
+        	}			
         });
         
         footer.add(cancel, pay);
@@ -416,6 +419,7 @@ public class CheckoutFormView extends Div {
         
         Button edit = new Button("Torna al carrello");
         edit.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        edit.getStyle().set("cursor", "pointer");
         edit.addClickListener(event -> {
             getUI().ifPresent(ui -> {
                 ui.navigate("Carrello");
@@ -433,7 +437,7 @@ public class CheckoutFormView extends Div {
         DecimalFormat df = new DecimalFormat("0.00");
         float total = CartView.getTotal();
 
-        Span totalPrice = new Span("Totale: €" + df.format(total));
+        Span totalPrice = new Span("Totale: " + df.format(total) + " €");
         totalPrice.addClassNames(FontSize.LARGE, TextColor.PRIMARY);
 
         aside.add(headerSection, ul, totalPrice);

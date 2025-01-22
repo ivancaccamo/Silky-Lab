@@ -100,6 +100,7 @@ public class ProductView extends VerticalLayout {
                 quantityField.setValue(currentValue - 1);
             }
         });
+        decreaseButton.getStyle().set("cursor", "pointer");
 
         Button increaseButton = new Button(new Icon(VaadinIcon.PLUS), event -> {
             int currentValue = quantityField.getValue();
@@ -107,6 +108,7 @@ public class ProductView extends VerticalLayout {
                 quantityField.setValue(currentValue + 1);
             }
         });
+        increaseButton.getStyle().set("cursor", "pointer");
 
         HorizontalLayout quantityLayout = new HorizontalLayout(decreaseButton, quantityField, increaseButton);
         quantityLayout.setAlignItems(Alignment.CENTER);
@@ -127,6 +129,7 @@ public class ProductView extends VerticalLayout {
         addToCartButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         addToCartButton.setWidth("100%");
         addToCartButton.setHeight("45px");
+        addToCartButton.getStyle().set("cursor", "pointer");
         
         addToCartButton.addClickListener(event -> {
             int selectedQuantity = quantityField.getValue();
@@ -163,6 +166,7 @@ public class ProductView extends VerticalLayout {
         buttonSecondary.setWidth("100%");
         buttonSecondary.setHeight("45px");
         buttonSecondary.getStyle().set("margin-bottom", "30px");
+        buttonSecondary.getStyle().set("cursor", "pointer");
 
         // Configurazione stili e layout principali
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -210,6 +214,7 @@ public class ProductView extends VerticalLayout {
             Button sizeButton = new Button(size);
             sizeButton.setWidth("80px");
             sizeButton.setHeight("40px");
+            sizeButton.getStyle().set("cursor", "pointer");
 
             if (availableQuantity > 0) {
                 sizeButton.addClickListener(event -> {
@@ -230,6 +235,7 @@ public class ProductView extends VerticalLayout {
                 // Disattiva il pulsante se non ci sono quantità disponibili
                 sizeButton.getStyle().set("background-color", "#e0e0e0");
                 sizeButton.getStyle().set("color", "#b0b0b0");
+                sizeButton.getStyle().set("cursor", "default");
                 sizeButton.setEnabled(false);
             }
              // Imposta la quantità a zero

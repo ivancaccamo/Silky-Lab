@@ -1,5 +1,6 @@
 package com.example.progetto.GUI.recaporder;
 
+import com.example.application.services.DatabaseManager;
 import com.example.progetto.GUI.CartView;
 import com.example.progetto.GUI.checkoutform.CheckoutFormView;
 import com.example.progetto.backend.Cart;
@@ -19,6 +20,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.BorderRadius;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 @PageTitle("Riepilogo Ordine")
@@ -27,6 +29,8 @@ public class RecapOrderView extends VerticalLayout {
 
     public RecapOrderView() {
         addClassName("order-summary-view");
+        
+        DatabaseManager db = new DatabaseManager();
         
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -39,7 +43,14 @@ public class RecapOrderView extends VerticalLayout {
         mainLayout.setWidth("80%");
 
         // Creazione della UI di riepilogo
-        H2 header = new H2("Riepilogo Ordine");
+        H2 header;
+		try {
+			header = new H2("Riepilogo Ordine #" + db.getOrders().getLast().getID());
+			add(header);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         VerticalLayout recapOrderLayout = new VerticalLayout();
 
@@ -63,6 +74,7 @@ public class RecapOrderView extends VerticalLayout {
         // Bottone per tornare al carrello o alla home
         Button goBack = new Button("Chiudi");
         goBack.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        goBack.getStyle().set("cursor", "pointer");
         goBack.addClickListener(event -> {
             getUI().ifPresent(ui -> {
                 ui.navigate("");
@@ -108,7 +120,7 @@ public class RecapOrderView extends VerticalLayout {
         recapOrderLayout.setAlignItems(Alignment.START);
         customerInfoLayout.setAlignItems(Alignment.START);
         
-        add(header, mainLayout);
+        add(mainLayout);
         mainLayout.add(recapOrderLayout, customerInfoLayout);
         recapOrderLayout.add(message1, message2, cartItems);
         

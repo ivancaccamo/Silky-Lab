@@ -107,6 +107,8 @@ private User user = Current.getCurrentUser();
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Registrazione");
         buttonSecondary.setWidth("min-content");
+        buttonPrimary.getStyle().set("cursor", "pointer");
+        buttonSecondary.getStyle().set("cursor", "pointer");
         layoutColumn4.setWidth("300px");
         layoutColumn4.getStyle().set("flex-grow", "1");
         getContent().add(layoutRow);
@@ -125,6 +127,7 @@ private User user = Current.getCurrentUser();
     	}else {
     		Button goBack = new Button("Chiudi");
             goBack.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            goBack.getStyle().set("cursor", "pointer");
             goBack.addClickListener(event -> {
                 getUI().ifPresent(ui -> {
                     ui.navigate("");

@@ -82,6 +82,7 @@ public class AddressEditDialog extends Dialog {
 
         // Pulsanti
         Button cancelButton = new Button("Annulla", event -> close());
+        cancelButton.getStyle().set("cursor", "pointer");
         Button saveButton = new Button("Salva", event -> {
         	if (addressField.isEmpty() || countryField.isEmpty() || cityField.isEmpty() || capField.isEmpty()) {
                 Notification.show("Tutti i campi sono obbligatori.", 2000, Notification.Position.MIDDLE);
@@ -102,36 +103,45 @@ public class AddressEditDialog extends Dialog {
 			}
             close();
         });
+        saveButton.getStyle().set("cursor", "pointer");
         capField.addValueChangeListener(event -> {
             String capValue = capField.getValue();
             if (capValue.matches("[0-9]{5}") && !addressField.isEmpty() && !countryField.isEmpty() && !cityField.isEmpty()) {
                 saveButton.setEnabled(true);
+                saveButton.getStyle().set("cursor", "pointer");
             } else {
                 saveButton.setEnabled(false);
+                saveButton.getStyle().set("cursor", "default");
             }
         });
         cityField.addValueChangeListener(event -> {
             String capValue = capField.getValue();
             if (capValue.matches("[0-9]{5}") && !addressField.isEmpty() && !countryField.isEmpty() && !cityField.isEmpty()) {
                 saveButton.setEnabled(true);
+                saveButton.getStyle().set("cursor", "pointer");
             } else {
                 saveButton.setEnabled(false);
+                saveButton.getStyle().set("cursor", "default");
             }
         });
         countryField.addValueChangeListener(event -> {
             String capValue = capField.getValue();
             if (capValue.matches("[0-9]{5}") && !addressField.isEmpty() && !countryField.isEmpty() && !cityField.isEmpty()) {
                 saveButton.setEnabled(true);
+                saveButton.getStyle().set("cursor", "pointer");
             } else {
                 saveButton.setEnabled(false);
+                saveButton.getStyle().set("cursor", "default");
             }
         });
         addressField.addValueChangeListener(event -> {
             String capValue = capField.getValue();
             if (capValue.matches("[0-9]{5}") && !addressField.isEmpty() && !countryField.isEmpty() && !cityField.isEmpty()) {
                 saveButton.setEnabled(true);
+                saveButton.getStyle().set("cursor", "pointer");
             } else {
                 saveButton.setEnabled(false);
+                saveButton.getStyle().set("cursor", "default");
             }
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
