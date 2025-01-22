@@ -90,9 +90,12 @@ public class AdminOrdersView extends Composite<VerticalLayout> {
                     HorizontalLayout orderContainer = new HorizontalLayout();
                     orderContainer.add(ProfileView.createOrderDetailLayout(order));
                     Span idClient = new Span("ID Cliente: #" + order.getIDuser());
+                    //Span email = new Span("Email: #" + order.getIDuser());
+                    //VerticalLayout client = new VerticalLayout (idClient, email); 
+                   
                     idClient.getStyle().set("font-weight", "bold");
                     idClient.getStyle().set("margin-top", "40px");
-                    orderContainer.add(idClient);
+                    orderContainer.add(idClient); //client
                     layout.add(orderContainer);
 
                     Hr hr = new Hr();

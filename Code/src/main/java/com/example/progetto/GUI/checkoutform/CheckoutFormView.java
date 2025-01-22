@@ -237,7 +237,7 @@ public class CheckoutFormView extends Div {
         }
         subSection.add(postalCode, city);
 
-        Button changeAddress = new Button("Scegli un'altro indirizzo", event ->{
+        Button changeAddress = new Button("Scegli un altro indirizzo", event ->{
         	AddressChooseDialog acd;
 			try {
 				acd = new AddressChooseDialog(dbManager.getAddressesByUserId(currentUser.getId()), selectedAddress -> {
