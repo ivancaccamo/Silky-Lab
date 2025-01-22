@@ -274,8 +274,8 @@ public class ProfileView extends VerticalLayout {
         productScroller.setContent(productsLayout);
         productScroller.setHeight("100px");
         productScroller.setWidth("100%");// Altezza fissa per lo scroller
-        productScroller.getStyle()
-        .set("overflow-x", "hidden");
+        productScroller.getStyle().set("overflow-x", "hidden");
+        productScroller.getStyle().set("margin-top", "14px");
         VerticalLayout vertical = new VerticalLayout();
         Span span = new Span("Prodotti: ");
         span.getStyle().set("font-weight", "bold");

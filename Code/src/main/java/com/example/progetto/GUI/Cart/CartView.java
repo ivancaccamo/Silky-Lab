@@ -1,4 +1,4 @@
-package com.example.progetto.GUI;
+package com.example.progetto.GUI.Cart;
 
 import com.example.progetto.backend.Cart;
 import com.example.progetto.backend.CartItem;

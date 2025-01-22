@@ -1,7 +1,7 @@
 package com.example.progetto.GUI.recaporder;
 
 import com.example.application.services.DatabaseManager;
-import com.example.progetto.GUI.CartView;
+import com.example.progetto.GUI.Cart.CartView;
 import com.example.progetto.GUI.checkoutform.CheckoutFormView;
 import com.example.progetto.backend.Cart;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

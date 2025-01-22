@@ -1,7 +1,7 @@
 package com.example.progetto.GUI.checkoutform;
 
 import com.example.application.services.DatabaseManager;
-import com.example.progetto.GUI.CartView;
+import com.example.progetto.GUI.Cart.CartView;
 import com.example.progetto.GUI.dialogs.AddressChooseDialog;
 import com.example.progetto.backend.Address;
 import com.example.progetto.backend.Cart;
