@@ -162,7 +162,7 @@ public class ProfileView extends VerticalLayout {
         	try {             
                 DatabaseManager dbManager = new DatabaseManager();
                 dbManager.updateUser(user); // Metodo per inserire l'utente nel database
-                Notification.show("Modifiche avvenute con successo");
+                getUI().ifPresent(ui -> ui.getPage().reload());
             } catch (SQLException e) {
                 Notification.show("Errore");
                 e.printStackTrace();
