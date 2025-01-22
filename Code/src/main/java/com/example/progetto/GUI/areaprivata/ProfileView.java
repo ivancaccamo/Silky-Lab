@@ -36,6 +36,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -149,7 +150,7 @@ public class ProfileView extends VerticalLayout {
         nameField.setValue(user.getName());
         TextField surnameField = new TextField("Cognome");
         surnameField.setValue(user.getSurname());
-        TextField emailField = new TextField("Email");
+        EmailField emailField = new EmailField("Email");
         emailField.setValue(user.getEmail());
         PasswordField passwordField = new PasswordField("Password");
         passwordField.setValue(user.getPassword());
@@ -163,7 +164,7 @@ public class ProfileView extends VerticalLayout {
         	try {             
                 DatabaseManager dbManager = new DatabaseManager();
                 dbManager.updateUser(user); 
-                user=dbManager.findUserByID(user.getId());
+                Current.setCurrentUser(dbManager.findUserByID(user.getId()));
                 getUI().ifPresent(ui -> ui.getPage().reload());
             } catch (SQLException e) {
                 Notification.show("Errore");
