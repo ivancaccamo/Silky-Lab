@@ -57,15 +57,15 @@ public class QuantityManagerDialog extends Dialog {
         	
         	quantityField.setValue(availableQuantity);
             // Valore iniziale
-            quantityField.setMin(1); // Quantità minima
-             // Quantità massima
+            quantityField.setMin(0); // Quantità minima
+             
             quantityField.setStep(1); // Incremento
             quantityField.setWidth("80px");
             
             // Pulsanti per aumentare/diminuire la quantità
             Button decreaseButton = new Button(new Icon(VaadinIcon.MINUS), event -> {
                 int currentValue = quantityField.getValue();
-                if (currentValue > 1) {
+                if (currentValue > 0) {
                     quantityField.setValue(currentValue - 1);
                 }
             });

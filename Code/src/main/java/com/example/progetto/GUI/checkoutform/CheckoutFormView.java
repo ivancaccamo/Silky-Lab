@@ -449,11 +449,11 @@ public class CheckoutFormView extends Div {
     	if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || countrySelect.isEmpty() || address.isEmpty() ||
     		postalCode.isEmpty() || city.isEmpty() || cardHolder.isEmpty() || cardNumber.isEmpty() || securityCode.isEmpty() ||
     		expirationMonth.isEmpty() || expirationYear.isEmpty()) {
-    		return false; // Almeno un campo obbligatorio è vuoto
+    		return false;
     	}
 
-    	if (!email.isInvalid() && !cardNumber.isInvalid() && !securityCode.isInvalid() && !postalCode.isInvalid()&& !cardHolder.isInvalid()) {
-    		return true; // Tutti i campi sono validi
+    	if (!email.getValue().contains(" ")&&!email.isInvalid() && !cardNumber.isInvalid() && !securityCode.isInvalid() && !postalCode.isInvalid()&& !cardHolder.isInvalid()) {
+    		return true; 
     	}
 
     	return false; // Campi non validi

@@ -125,42 +125,43 @@ public class RegistrationView extends Composite<VerticalLayout> {
         capField.setRequiredIndicatorVisible(true);
       
         Button buttonPrimary = new Button("Registrati", event -> {
-        	if(textField.getValue()==null||textField.getValue()==null||textField2.getValue()==null||emailField.getValue()==null||textField4.getValue()==null||textField5.getValue()==null||countrySelect.getValue()!=null) {
-        		 // Creazione di un nuovo utente
-                User user = new User();
-                Address address = new Address();
-                user.setName(textField.getValue()); // Nome
-                user.setSurname(textField2.getValue()); // Cognome
-                user.setEmail(emailField.getValue()); // Email
-                user.setPassword(passwordField.getValue()); // Password
-                user.setRole("CLIENT"); // Ruolo predefinito
-                address.setAddress(textField4.getValue());
-                address.setCity(textField5.getValue());
-                address.setCap(capField.getValue());
-                address.setCountry(countrySelect.getValue());
-                
-                try {
-                    DatabaseManager dbManager = new DatabaseManager();
-                    dbManager.saveUser(user);
-                    User savedUser = dbManager.findUserByEmail(user.getEmail());
-                    Current.setUser(savedUser);
-                    if (savedUser == null) {
-                    	throw new RuntimeException("Errore: l'utente non è stato salvato correttamente.");
-                    }
+        	if(!textField.getValue().isEmpty()&&!textField.getValue().isEmpty()&&!textField2.getValue().isEmpty()&&!emailField.getValue().isEmpty()&&!textField4.getValue().isEmpty()&&!textField5.getValue().isEmpty()&&!countrySelect.getValue().isEmpty()) {
+        		 if(!emailField.getValue().contains(" ")&&!capField.isInvalid()&&!emailField.isInvalid()) {
+        			 User user = new User();
+                     Address address = new Address();
+                     user.setName(textField.getValue()); // Nome
+                     user.setSurname(textField2.getValue()); // Cognome
+                     user.setEmail(emailField.getValue()); // Email
+                     user.setPassword(passwordField.getValue()); // Password
+                     user.setRole("CLIENT"); // Ruolo predefinito
+                     address.setAddress(textField4.getValue());
+                     address.setCity(textField5.getValue());
+                     address.setCap(capField.getValue());
+                     address.setCountry(countrySelect.getValue());
+                     
+                     try {
+                         DatabaseManager dbManager = new DatabaseManager();
+                         dbManager.saveUser(user);
+                         User savedUser = dbManager.findUserByEmail(user.getEmail().toLowerCase());
+                         Current.setUser(savedUser);
+                         if (savedUser == null) {
+                         	throw new RuntimeException("Errore: l'utente non è stato salvato correttamente.");
+                         }
 
-                    dbManager.saveAddress(address, savedUser.getId());
-                    /*getUI().ifPresent(ui -> ui.navigate("Profile"));
-                    success.open();
-                   
-                    getUI().ifPresent(ui -> ui.getPage().reload());*/
-                    UI.getCurrent().access(() -> {
-               		 UI.getCurrent().getPage().executeJs("window.location.href = $0", "Profile");
-                    });
-                    
-                } catch (SQLException e) {
-                    error.open();
-                    e.printStackTrace();
-                }
+                         dbManager.saveAddress(address, savedUser.getId());
+                        
+                         UI.getCurrent().access(() -> {
+                    		 UI.getCurrent().getPage().executeJs("window.location.href = $0", "Profile");
+                         });
+                         
+                     } catch (SQLException e) {
+                         error.open();
+                         e.printStackTrace();
+                     }
+        		 }else {
+        			 Notification.show("Dati non validi");
+        		 }
+                
         	}else
         		emptyField.open();
         	

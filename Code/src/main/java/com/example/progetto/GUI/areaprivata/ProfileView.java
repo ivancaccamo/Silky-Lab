@@ -155,18 +155,24 @@ public class ProfileView extends VerticalLayout {
         passwordField.setValue(user.getPassword());
 
         Button editButton = new Button("Modifica", VaadinIcon.EDIT.create(),event ->{
-        	user.setName(nameField.getValue()); // Nome
-            user.setSurname(surnameField.getValue()); // Cognome
-            user.setEmail(emailField.getValue()); // Email
-            user.setPassword(passwordField.getValue()); // Password    
+        	if(!emailField.isInvalid()&&!emailField.getValue().contains(" ")) {
+        		user.setName(nameField.getValue()); // Nome
+        		user.setSurname(surnameField.getValue()); // Cognome
+        		user.setEmail(emailField.getValue()); // Email
+        		user.setPassword(passwordField.getValue()); // Password    
         	try {             
                 DatabaseManager dbManager = new DatabaseManager();
-                dbManager.updateUser(user); // Metodo per inserire l'utente nel database
+                dbManager.updateUser(user); 
+                user=dbManager.findUserByID(user.getId());
                 getUI().ifPresent(ui -> ui.getPage().reload());
             } catch (SQLException e) {
                 Notification.show("Errore");
                 e.printStackTrace();
             }
+        	}else {
+        		Notification.show("Inserisci una email valida");
+        	}
+        	
         });;
         editButton.getStyle().set("margin-top", "20px");
         editButton.getStyle().set("cursor", "pointer");
@@ -286,8 +292,8 @@ public class ProfileView extends VerticalLayout {
         orderBox.setPadding(true);
         orderBox.getStyle().set("gap", "1px");   
         orderBox.setWidthFull();
-        orderBox.setWidth("700px");
-        orderDetailsLayout.setWidth("30%");
+        orderBox.setWidth("800px");
+        orderDetailsLayout.setWidth("300px");
         vertical.setWidth("70%");
 		return orderBox;
     }

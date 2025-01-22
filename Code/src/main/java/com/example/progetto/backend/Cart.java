@@ -46,6 +46,6 @@ public class Cart {
 	}
 	 
 	 public static void removeAll() {
-		 items.clear();
+		 items.removeAll(items);
 	}
 }

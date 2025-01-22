@@ -35,6 +35,7 @@ public class Current{
 
 
 	public static void setCurrentUser(User currentUser) {
+		
 		Current.currentUser = currentUser;
 	}
 
@@ -59,11 +60,6 @@ public class Current{
 	}
 
 
-	public static List<MyListener> getListeners() {
-		return listeners;
-	}
-
-
 	public static User getUser() {
         return currentUser;
     }
@@ -78,6 +74,7 @@ public class Current{
     	
     }
     public static void ExitUser() {
+    	Cart.removeAll();
     	currentUser=null;
     }
 }

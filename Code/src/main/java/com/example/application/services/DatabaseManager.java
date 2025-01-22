@@ -24,25 +24,41 @@ public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:databases/db.db";
 	
 
-    public Connection getConnection() throws SQLException {
-    		
+    public Connection getConnection() throws SQLException {	
     	 Connection connection = null;
          try {
-             // Connessione al database
+            
              connection = DriverManager.getConnection(URL);
-             System.out.println("Connessione al database stabilita.");
-
-             // Abilita le chiavi esterne
+            
              try (Statement stmt = connection.createStatement()) {
-                 stmt.execute("PRAGMA foreign_keys = ON;");
-                 System.out.println("Chiavi esterne abilitate.");
+                 stmt.execute("PRAGMA foreign_keys = ON;"); 
              }
          } catch (SQLException e) {
              System.err.println("Errore durante la connessione al database: " + e.getMessage());
          }
          return connection;
     }
-
+    public User findUserByID(int id) throws SQLException {
+        String query = "SELECT * FROM User WHERE ID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getInt("ID"));
+                    user.setName(rs.getString("name"));
+                    user.setSurname(rs.getString("surname"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPassword(rs.getString("password"));
+                    user.setRole(rs.getString("role"));   
+                    
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
     public User findUserByEmail(String email) throws SQLException {
         String query = "SELECT * FROM User WHERE email = ?";
         try (Connection conn = getConnection();
@@ -71,7 +87,7 @@ public class DatabaseManager {
              PreparedStatement stmt = conn.prepareStatement(query)) {
         	stmt.setString(1, capitalize(user.getName()));
         	stmt.setString(2, capitalize(user.getSurname()));
-        	stmt.setString(3, user.getEmail()); 
+        	stmt.setString(3, user.getEmail().toLowerCase()); 
         	stmt.setString(4, user.getPassword()); 
         	stmt.setString(5, user.getRole());
             stmt.executeUpdate();
@@ -83,7 +99,7 @@ public class DatabaseManager {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
         	pstmt.setString(1, capitalize(user.getName()));
         	pstmt.setString(2, capitalize(user.getSurname()));
-        	pstmt.setString(3, user.getEmail()); 
+        	pstmt.setString(3, user.getEmail().toLowerCase()); 
         	pstmt.setString(4, user.getPassword()); 
             pstmt.setInt(5, user.getId());
             pstmt.executeUpdate();
@@ -156,21 +172,16 @@ public Product returnProductByModel(Model model, String size, int qnt) throws SQ
         pstmt.setInt(1, model.getId());
         pstmt.setString(2, size);
         rs = pstmt.executeQuery();
-
-        if (!rs.next()||countRecords(model,size)<qnt) {
-            System.out.println("ResultSet è vuoto");
+        
+        if (!rs.next()||countRecords(model,size)<qnt) { 
             int id = rs.getInt("ID");
-            System.out.println("ID: " + id);
             return null;
         }
 
-        // Se il ResultSet contiene dati
+       
         int id = rs.getInt("ID");
-        // Creazione del prodotto
+       
         Product product = new Product(id, size, model);
-        System.out.println("ID: " + id);
-        System.out.println("ID: " + model.getId());
-         
         return product;
     }
 }
@@ -296,16 +307,14 @@ public void deleteModelByName(String name) throws SQLException {
 	String sql = "DELETE FROM Model WHERE name = ?";
 	Connection conn = this.getConnection();
 	try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-	    stmt.setString(1, name); // Sostituisci 'modelName' con il nome del modello
-	    int rowsAffected = stmt.executeUpdate();
-	    System.out.println(rowsAffected + " record(s) eliminato/i.");
+	    stmt.setString(1, name); 
 	}
 }
 public void saveAddress(Address address, int IDuser) throws SQLException {
     String query = "INSERT INTO Address (address, city, cap, country, IDuser) VALUES (?, ?, ?, ?, ?)";
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
-    	stmt.setString(1, capitalize(address.getAddress()));
+    	stmt.setString(1, capitalizeAddress(address.getAddress()));
     	stmt.setString(2, capitalize(address.getCity()));
     	stmt.setString(3, address.getCap());
     	stmt.setString(4, capitalize(address.getCountry()));
@@ -429,9 +438,9 @@ public void saveOrder(int userId, double total, ArrayList<SoldProduct> soldProdu
     
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setInt(1, userId);  // Imposta l'ID dell'utente
-        stmt.setDouble(2, total);  // Imposta il totale dell'ordine
-        stmt.executeUpdate();  // Esegui l'insert
+        stmt.setInt(1, userId);  
+        stmt.setDouble(2, total);  
+        stmt.executeUpdate();  
         
         Statement stmtID = conn.createStatement();
         ResultSet rs = stmtID.executeQuery("SELECT LAST_INSERT_ROWID();");
@@ -449,12 +458,12 @@ public void saveSoldProducts(int orderId, ArrayList<SoldProduct> soldProducts) t
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
         for (SoldProduct product : soldProducts) {
-            stmt.setInt(1, orderId);                // Imposta l'ID dell'ordine
-            stmt.setString(2, product.getModel());  // Nome del modello
-            stmt.setString(3, product.getSize());   // Taglia
-            stmt.addBatch();                        // Aggiungi al batch
+            stmt.setInt(1, orderId);                
+            stmt.setString(2, product.getModel());  
+            stmt.setString(3, product.getSize());   
+            stmt.addBatch();                        
         }
-        stmt.executeBatch();  // Esegui il batch
+        stmt.executeBatch();  
     } catch (SQLException e) {
         throw new SQLException("Errore durante il salvataggio dei prodotti venduti", e);
     }
@@ -471,8 +480,8 @@ public void deleteProductsByIdAndQuantity(int startId, int quantity) throws SQLE
                    
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setInt(1, startId);    // ID del primo prodotto
-        stmt.setInt(2, quantity);  // Numero di record da eliminare
+        stmt.setInt(1, startId);  
+        stmt.setInt(2, quantity); 
         stmt.executeUpdate();
     }
 }
@@ -481,7 +490,7 @@ public void updateQuantity(Model model, String size, int quantity) throws SQLExc
 	int currentQuantity=countRecords(model, size);
 	Connection conn = getConnection();
 	if (quantity > currentQuantity) {
-        // Aggiungi record
+        
         int recordsToAdd = quantity - currentQuantity;
         
         String insertQuery = "INSERT INTO Product (modelID, size) VALUES (?, ?)";
@@ -495,7 +504,7 @@ public void updateQuantity(Model model, String size, int quantity) throws SQLExc
             insertStatement.executeBatch();
         }
     } else if (quantity < currentQuantity) {
-        // Rimuovi record
+        
         int recordsToRemove = currentQuantity - quantity;
         String deleteQuery = "DELETE FROM Product WHERE id IN (SELECT id FROM Product WHERE modelID = ? AND size = ? LIMIT ?)";
         
@@ -515,6 +524,25 @@ private String capitalize(String input) {
         return input;
     }
     return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+}
+public String capitalizeAddress(String input) {
+    if (input == null || input.isEmpty()) {
+        return input;
+    }
+    StringBuilder result = new StringBuilder();
+    boolean capitalizeNext = true;
+    for (char c : input.toCharArray()) {
+        if (Character.isWhitespace(c)) {
+            capitalizeNext = true;
+            result.append(c);
+        } else if (capitalizeNext) {
+            result.append(Character.toUpperCase(c));
+            capitalizeNext = false;
+        } else {
+            result.append(Character.toLowerCase(c));
+        }
+    }
+    return result.toString();
 }
 
 }

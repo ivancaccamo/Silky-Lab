@@ -79,11 +79,17 @@ public class AddressAddDialog extends Dialog {
         Button cancelButton = new Button("Annulla", event -> close());
         cancelButton.getStyle().set("cursor", "pointer");
         Button saveButton = new Button("Aggiungi", event -> {
-            Address newAddress = new Address();
-            newAddress.setAddress(addressField.getValue());
-            newAddress.setCountry(countryField.getValue());
-            newAddress.setCity(cityField.getValue());
-            newAddress.setCap(capField.getValue());
+        	if((addressField.getValue().isEmpty()&&countryField.getValue().isEmpty()&&cityField.getValue().isEmpty()&&capField.getValue().isEmpty())) {
+        		
+        			
+        		
+        		 Address newAddress = new Address();
+        		 newAddress.setAddress(addressField.getValue());
+        		 newAddress.setCountry(countryField.getValue());
+        		 newAddress.setCity(cityField.getValue());
+        		 newAddress.setCap(capField.getValue());
+        	
+           
             
             try {
 				db.saveAddress(newAddress, idUser);
@@ -93,6 +99,7 @@ public class AddressAddDialog extends Dialog {
 				e.printStackTrace();
 			}
             close();
+        	}
         });
         saveButton.setEnabled(false);
         saveButton.getStyle().set("cursor", "default");

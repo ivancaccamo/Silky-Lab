@@ -28,7 +28,7 @@ import com.vaadin.flow.router.Route;
 @Menu(order = 4, icon = LineAwesomeIconUrl.ARCHIVE_SOLID)
 public class AdminOrdersView extends Composite<VerticalLayout> {
 
-    static DatabaseManager dbManager = new DatabaseManager();
+    private DatabaseManager dbManager = new DatabaseManager();
     private ArrayList<Order> orders = new ArrayList<>();
     private VerticalLayout layout;
 
@@ -90,12 +90,11 @@ public class AdminOrdersView extends Composite<VerticalLayout> {
                     HorizontalLayout orderContainer = new HorizontalLayout();
                     orderContainer.add(ProfileView.createOrderDetailLayout(order));
                     Span idClient = new Span("ID Cliente: #" + order.getIDuser());
-                    //Span email = new Span("Email: #" + order.getIDuser());
-                    //VerticalLayout client = new VerticalLayout (idClient, email); 
-                   
+                    Span email = new Span("Email: #" + dbManager.findUserByID(order.getIDuser()).getEmail());
+                    VerticalLayout client = new VerticalLayout (idClient, email); 
                     idClient.getStyle().set("font-weight", "bold");
-                    idClient.getStyle().set("margin-top", "40px");
-                    orderContainer.add(idClient); //client
+                    idClient.getStyle().set("margin-top", "15px");
+                    orderContainer.add(client); //client
                     layout.add(orderContainer);
 
                     Hr hr = new Hr();

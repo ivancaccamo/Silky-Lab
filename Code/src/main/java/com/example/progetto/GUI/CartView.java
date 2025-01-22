@@ -37,9 +37,8 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Uses(Icon.class)
 public class CartView extends Composite<VerticalLayout> {
 	
-	private User currentUser = Current.getCurrentUser();
 	
-	static VerticalLayout cartItemsContainer = new VerticalLayout();
+	static VerticalLayout cartItemsContainer;
 	private static float tot = 0;
 	private H4 h4 = new H4();
     private H4 h42 = new H4();
@@ -47,7 +46,10 @@ public class CartView extends Composite<VerticalLayout> {
     private H6 h6 = new H6();
     
     public CartView() {
+    		cartItemsContainer=null;
+    		cartItemsContainer = new VerticalLayout();
     	
+    	User currentUser = Current.getCurrentUser();
     	Scroller scroller = new Scroller();
         scroller.setScrollDirection(Scroller.ScrollDirection.VERTICAL);
         scroller.setContent(cartItemsContainer);
