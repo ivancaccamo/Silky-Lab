@@ -448,7 +448,7 @@ public class CheckoutFormView extends Div {
     		return false; // Almeno un campo obbligatorio è vuoto
     	}
 
-    	if (!email.isInvalid() && !cardNumber.isInvalid() && !securityCode.isInvalid() && !postalCode.isInvalid()&& cardHolder.isInvalid()) {
+    	if (!email.isInvalid() && !cardNumber.isInvalid() && !securityCode.isInvalid() && !postalCode.isInvalid()&& !cardHolder.isInvalid()) {
     		return true; // Tutti i campi sono validi
     	}
 

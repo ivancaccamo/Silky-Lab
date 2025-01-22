@@ -405,6 +405,25 @@ public ArrayList<Order> getOrdersByUserId(int userId) throws SQLException {
 
     return orders;
 }
+public ArrayList<Order> getOrders() throws SQLException {
+    String query = "SELECT * FROM `Order`";
+    ArrayList<Order> orders = new ArrayList<>();
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {   
+                int id = rs.getInt("ID");
+                int idUser = rs.getInt("IDuser");
+                Date date = rs.getDate("date");
+                Double tot = rs.getDouble("tot");
+                Order order = new Order(id,idUser,date,tot);
+                orders.add(order);
+            }
+        }
+    }
+
+    return orders;
+}
 public void saveOrder(int userId, double total, ArrayList<SoldProduct> soldProducts) throws SQLException {
     String query = "INSERT INTO `Order` (IDuser, tot) VALUES (?, ?)";
     
