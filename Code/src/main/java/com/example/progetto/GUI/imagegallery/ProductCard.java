@@ -5,6 +5,7 @@ import com.example.progetto.backend.Model;
 import java.sql.SQLException;
 
 import com.example.application.services.DatabaseManager;
+import com.example.progetto.GUI.dialogs.QuantityManagerDialog;
 import com.example.progetto.backend.Current;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -71,26 +72,69 @@ public class ProductCard extends Div {
         productInfo.add(priceSpan);
 
         if(Current.getCurrentUser()!=null&&Current.getCurrentUser().getRole().equals("ADMIN")) {
-        	Div overlay = new Div();
-            overlay.setText("Elimina");
-            overlay.getStyle().set("position", "absolute");
-            overlay.getStyle().set("top", "0");
-            overlay.getStyle().set("left", "0");
-            overlay.setWidth("100%");
-            overlay.setHeight("100%");
-            overlay.getStyle().set("display", "flex");
-            overlay.getStyle().set("align-items", "center");
-            overlay.getStyle().set("justify-content", "center");
-            overlay.getStyle().set("background", "rgba(0, 0, 0, 0.4)");
-            overlay.getStyle().set("color", "white");
-            overlay.getStyle().set("font-size", "20px");
-            overlay.getStyle().set("font-weight", "bold");
-            overlay.getStyle().set("opacity", "0");
-            overlay.getStyle().set("transition", "opacity 0.3s ease");
-            overlay.getStyle().set("border-radius","35px");
-    		productCard.getElement().addEventListener("mouseover", e -> overlay.getStyle().set("opacity", "1"));
-    		productCard.getElement().addEventListener("mouseout", e -> overlay.getStyle().set("opacity", "0"));
-    		productCard.add(productImage, productInfo,overlay);
+        	Div overlay2 = new Div();
+            Span text2 = new Span("Modifica quantità");
+            overlay2.add(text2);
+            text2.getStyle().set("font-size","30px");
+            overlay2.getStyle().set("position", "absolute");
+            overlay2.getStyle().set("top", "0");
+            overlay2.getStyle().set("left", "0");
+            overlay2.setWidth("100%");
+            overlay2.setHeight("49.8%");
+            overlay2.getStyle().set("display", "flex");
+            overlay2.getStyle().set("align-items", "center");
+            overlay2.getStyle().set("justify-content", "center");
+            overlay2.getStyle().set("background", "rgba(0, 0, 0, 0.4)");
+            overlay2.getStyle().set("color", "white");
+            overlay2.getStyle().set("font-size", "20px");
+            overlay2.getStyle().set("font-weight", "bold");
+            overlay2.getStyle().set("opacity", "0");
+            overlay2.getStyle().set("transition", "opacity 0.3s ease");
+            overlay2.getStyle().set("border-top-left-radius","35px");
+            overlay2.getStyle().set("border-top-right-radius","35px");
+    		
+    		overlay2.getElement().addEventListener("mouseover", e -> {
+    			text2.getStyle().set("transform", "scale(1.3)");
+    			text2.getElement().getStyle().set("transition", "transform 0.3s ease");
+    		});
+    		overlay2.getElement().addEventListener("mouseout", e -> {
+    			text2.getElement().getStyle().set("transform", "scale(1)");
+    			text2.getElement().getStyle().set("transition", "transform 0.3s ease");
+    		});
+        	Div overlay1 = new Div();
+            Span text1 = new Span("Elimina");
+            text1.getStyle().set("font-size","30px");
+            overlay1.add(text1);
+            overlay1.getStyle().set("position", "absolute");
+            overlay1.getStyle().set("bottom", "0");
+            overlay1.getStyle().set("left", "0");
+            overlay1.setWidth("100%");
+            overlay1.setHeight("49.8%");
+            overlay1.getStyle().set("display", "flex");
+            overlay1.getStyle().set("align-items", "center");
+            overlay1.getStyle().set("justify-content", "center");
+            overlay1.getStyle().set("background", "rgba(0, 0, 0, 0.4)");
+            overlay1.getStyle().set("color", "white");
+            overlay1.getStyle().set("font-size", "20px");
+            overlay1.getStyle().set("font-weight", "bold");
+            overlay1.getStyle().set("opacity", "0");
+            overlay1.getStyle().set("transition", "opacity 0.3s ease");
+            overlay1.getStyle().set("border-bottom-left-radius","35px");
+            overlay1.getStyle().set("border-bottom-right-radius","35px");
+    		
+    		overlay1.getElement().addEventListener("mouseover", e -> {
+    			text1.getStyle().set("transform", "scale(1.3)");
+    			text1.getElement().getStyle().set("transition", "transform 0.3s ease");
+    		});
+    		overlay1.getElement().addEventListener("mouseout", e -> {
+    			text1.getElement().getStyle().set("transform", "scale(1)");
+    			text1.getElement().getStyle().set("transition", "transform 0.3s ease");
+    		});
+    		productCard.getElement().addEventListener("mouseover", e -> overlay1.getStyle().set("opacity", "1"));
+    		productCard.getElement().addEventListener("mouseout", e -> overlay1.getStyle().set("opacity", "0"));
+    		productCard.getElement().addEventListener("mouseover", e -> overlay2.getStyle().set("opacity", "1"));
+    		productCard.getElement().addEventListener("mouseout", e -> overlay2.getStyle().set("opacity", "0"));
+    		productCard.add(productImage, productInfo,overlay2,overlay1);
     		
     		Dialog dialog = new Dialog();
     	    Button cancelButton = new Button("Annulla", event -> dialog.close());
@@ -107,6 +151,8 @@ public class ProductCard extends Div {
 
                 dialog.close(); // Chiudi il dialogo
             });
+            confirmButton.getStyle().set("cursor", "pointer");
+            confirmButton.getStyle().set("cursor", "pointer");
             cancelButton.getStyle().set("margin-right", "10px");
             confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             confirmButton.getStyle().set("color", "white");
@@ -118,11 +164,21 @@ public class ProductCard extends Div {
             // Aggiunta del messaggio e dei pulsanti al dialogo
             Paragraph messageParagraph = new Paragraph("Sei sicuro di voler cancellare questo modello:\n"+model.getName());
             dialog.add(messageParagraph, buttonLayout);
-    		productCard.addClickListener(event -> {
+    		overlay1.addClickListener(event -> {
     			dialog.open();	
-    	    Current.setProductView(model.getName());
-    	    
+    	        	    });
+    		overlay2.addClickListener(event -> {
+    			QuantityManagerDialog qntDialog;
+				try {
+					qntDialog = new QuantityManagerDialog(model.getName(),model);
+					qntDialog.open();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    				   	    
     	    });
+    		
     	}else {
     		productCard.add(productImage, productInfo);
     		productCard.addClickListener(event -> {

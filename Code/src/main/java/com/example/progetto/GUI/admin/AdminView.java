@@ -123,6 +123,8 @@ import com.vaadin.hilla.ApplicationContextProvider;
             Button buttonSecondary = new Button("Torna alle categorie", event -> {
                 getUI().ifPresent(ui -> ui.navigate("category-detail"));
             });
+            buttonSecondary.getStyle().set("cursor", "pointer");
+            addButton.getStyle().set("cursor", "pointer");
             buttonSecondary.setWidth("100%");
             buttonSecondary.setHeight("45px");
             buttonSecondary.getStyle().set("margin-bottom", "30px");
