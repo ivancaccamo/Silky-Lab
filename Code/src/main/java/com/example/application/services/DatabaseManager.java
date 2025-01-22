@@ -69,11 +69,11 @@ public class DatabaseManager {
         String query = "INSERT INTO User (name, surname, email, password, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getSurname());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getPassword());
-            stmt.setString(5, user.getRole());
+        	stmt.setString(1, capitalize(user.getName()));
+        	stmt.setString(2, capitalize(user.getSurname()));
+        	stmt.setString(3, user.getEmail()); 
+        	stmt.setString(4, user.getPassword()); 
+        	stmt.setString(5, user.getRole());
             stmt.executeUpdate();
         }
     }
@@ -81,10 +81,10 @@ public class DatabaseManager {
         String sql = "UPDATE User SET name = ?, surname = ?, email = ?, password = ? WHERE id = ?";
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getName());
-            pstmt.setString(2, user.getSurname());
-            pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getPassword());
+        	pstmt.setString(1, capitalize(user.getName()));
+        	pstmt.setString(2, capitalize(user.getSurname()));
+        	pstmt.setString(3, user.getEmail()); 
+        	pstmt.setString(4, user.getPassword()); 
             pstmt.setInt(5, user.getId());
             pstmt.executeUpdate();
         }
@@ -305,10 +305,10 @@ public void saveAddress(Address address, int IDuser) throws SQLException {
     String query = "INSERT INTO Address (address, city, cap, country, IDuser) VALUES (?, ?, ?, ?, ?)";
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setString(1, address.getAddress());
-        stmt.setString(2, address.getCity());
-        stmt.setString(3, address.getCap()); // CAP gestito come stringa
-        stmt.setString(4, address.getCountry());
+    	stmt.setString(1, capitalize(address.getAddress()));
+    	stmt.setString(2, capitalize(address.getCity()));
+    	stmt.setString(3, address.getCap());
+    	stmt.setString(4, capitalize(address.getCountry()));
         stmt.setInt(5, IDuser);
         stmt.executeUpdate();
     }
@@ -318,10 +318,10 @@ public void updateAddressById(Address address) throws SQLException {
     String query = "UPDATE Address SET address = ?, country = ?, cap = ?, city = ? WHERE id = ?";
     try (Connection conn = getConnection();
          PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setString(1, address.getAddress());
-        stmt.setString(2, address.getCountry());
-        stmt.setString(3, address.getCap()); // CAP gestito come stringa
-        stmt.setString(4, address.getCity());
+    	stmt.setString(1, capitalize(address.getAddress()));
+    	stmt.setString(2, capitalize(address.getCountry()));
+    	stmt.setString(3, address.getCap()); 
+    	stmt.setString(4, capitalize(address.getCity()));
         stmt.setInt(5, address.getID());
         stmt.executeUpdate();
     }
@@ -510,7 +510,12 @@ public void updateQuantity(Model model, String size, int quantity) throws SQLExc
 }
 
 
-
+private String capitalize(String input) {
+    if (input == null || input.isEmpty()) {
+        return input;
+    }
+    return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+}
 
 }
 	

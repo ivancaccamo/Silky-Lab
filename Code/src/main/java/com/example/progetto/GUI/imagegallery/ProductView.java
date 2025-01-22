@@ -7,6 +7,7 @@ import com.example.progetto.backend.Model;
 import com.example.progetto.backend.Product;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -77,8 +78,10 @@ public class ProductView extends VerticalLayout {
         H2 h2 = new H2(model.getName()); // Nome del prodotto
         Paragraph textMedium = new Paragraph(model.getDescription()); // Descrizione del prodotto
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
-
-        H3 h3 = new H3(model.getPrice() + " euro"); // Prezzo del prodotto
+        
+        DecimalFormat df = new DecimalFormat("0.00");
+        String price = df.format(model.getPrice());
+        H3 h3 = new H3(price + " €"); // Prezzo del prodotto
 
         H4 sezione1 = new H4("Dettagli del prodotto");
         H4 sezione2 = new H4("Spedizione");
