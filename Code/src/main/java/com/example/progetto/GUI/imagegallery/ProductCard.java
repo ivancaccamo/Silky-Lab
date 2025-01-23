@@ -3,6 +3,7 @@ package com.example.progetto.GUI.imagegallery;
 import com.example.progetto.backend.Model;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import com.example.application.services.DatabaseManager;
 import com.example.progetto.GUI.dialogs.QuantityManagerDialog;
@@ -61,8 +62,9 @@ public class ProductCard extends Div {
         productInfo.addClassName("product-info");
 
         productInfo.add(new H3(model.getName()));
-
-        Span priceSpan = new Span(model.getPrice() + " €");
+        DecimalFormat df = new DecimalFormat("0.00");
+        String price = df.format(model.getPrice());
+        Span priceSpan = new Span(price + " €");
         priceSpan.getStyle().set("font-weight", "bold");
         priceSpan.getStyle().set("background", "grey");
         priceSpan.getStyle().set("color", "white");
@@ -144,7 +146,6 @@ public class ProductCard extends Div {
             	try {
 					dbManager.deleteModelByName(model.getName());
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
             	getUI().ifPresent(ui -> ui.getPage().reload());
@@ -186,10 +187,6 @@ public class ProductCard extends Div {
             getUI().ifPresent(ui -> ui.navigate("product-detail"));
         });
     	}
-        
-
-        
-
         add(productCard);
     }
 

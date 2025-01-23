@@ -305,11 +305,15 @@ public int returnIdModel(Model model) throws SQLException {
 }
 public void deleteModelByName(String name) throws SQLException {
 	String sql = "DELETE FROM Model WHERE name = ?";
+	
 	Connection conn = this.getConnection();
 	try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 	    stmt.setString(1, name); 
+	    stmt.executeUpdate();
 	}
 }
+
+
 public void saveAddress(Address address, int IDuser) throws SQLException {
     String query = "INSERT INTO Address (address, city, cap, country, IDuser) VALUES (?, ?, ?, ?, ?)";
     try (Connection conn = getConnection();

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H4;
@@ -42,8 +43,8 @@ public class ProductView extends VerticalLayout {
     private Product p = new Product(); // Prodotto attuale
     private Model model = new Model(); // Modello del prodotto
     DatabaseManager dbManager = new DatabaseManager(); // Gestore del database
-    private String detail = "Designed and made in Italy."; // Dettagli del prodotto
-    private String shipping = "Spedizione gratuita per gli ordini superiori a 100 €."; // Info sulla spedizione
+    private String detail = "Designed and made in Italy"; // Dettagli del prodotto
+    private String shipping = "Spedizione gratuita per gli ordini superiori a 100 €"; // Info sulla spedizione
     private Button previouslySelectedButton = null; // Memorizza l'ultimo pulsante taglia selezionato
     private int max; // Quantità massima disponibile per la taglia selezionata
 
@@ -76,7 +77,9 @@ public class ProductView extends VerticalLayout {
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn = new VerticalLayout();
         H2 h2 = new H2(model.getName()); // Nome del prodotto
-        Paragraph textMedium = new Paragraph(model.getDescription()); // Descrizione del prodotto
+   
+        Div textMedium = new Div();
+        textMedium.getElement().setProperty("innerHTML",model.getDescription().replace("\n", "<br>"));
         textMedium.getStyle().set("font-size", "var(--lumo-font-size-m)");
         
         DecimalFormat df = new DecimalFormat("0.00");

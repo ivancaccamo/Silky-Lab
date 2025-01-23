@@ -283,12 +283,8 @@ public class ProfileView extends VerticalLayout {
         vertical.add(span);
         vertical.add(productScroller);
         vertical.getStyle().set("gap", "2px");
-        // Aggiungi i layout al contenitore principale
-        
-        
+       
         orderBox.add(orderDetailsLayout, vertical);
-        
-        // Stile e allineamento
         
         orderBox.setPadding(true);
         orderBox.getStyle().set("gap", "1px");   
