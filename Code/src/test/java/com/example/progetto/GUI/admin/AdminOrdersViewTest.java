@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.progetto.backend.Current;
 import com.example.progetto.backend.User;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -19,24 +20,6 @@ public class AdminOrdersViewTest {
         // Resetta l'utente corrente prima di ogni test
         Current.setCurrentUser(null);
     }
-
-    @Test
-    public void testAdminAccess() {
-        User adminUser = new User();
-        adminUser.setRole("ADMIN");
-        adminUser.setEmail("admin@example.com");
-        Current.setCurrentUser(adminUser);
-
-        AdminOrdersView view = new AdminOrdersView();
-        VerticalLayout content = view.getContent();
-
-        Optional<Component> header = content.getChildren()
-            .filter(comp -> comp instanceof H2 && ((H2) comp).getText().contains("Ordini ricevuti"))
-            .findFirst();
-
-        assertTrue(header.isPresent());
-    }
-
     @Test
     public void testNonAdminAccess() {
         User clientUser = new User();

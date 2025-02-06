@@ -11,8 +11,7 @@ public class Cart {
 	public static int getCartItemByModel(Model model,String size) {
 		
 		for(CartItem item : items) {
-			System.out.println(item.getProduct().getModel().getName()+item.getProduct().getSize());
-			System.out.println(model.getName()+size);
+			
 			if(item.getProduct().getModel().getName().equals(model.getName())&&item.getProduct().getSize().equals(size)) {
 				return item.getQuantity();
 			}
