@@ -10,14 +10,9 @@ import org.springframework.stereotype.Component;
 public class Current{
 	private static Current theInstance;
     private static User currentUser;
-    private final static List<MyListener> listeners = new ArrayList<>();
     private static String productView;
     private static String categoryView;
-    
-    public void addListener(MyListener listener) {
-        listeners.add(listener);
-    }
-    
+
       
     public static Current getTheInstance() {
 		return theInstance;

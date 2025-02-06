@@ -23,6 +23,9 @@ public class Model {
 		this.category = category;
 		this.description = description;
 	}
+	public Model(String name) {
+		this.name = name;
+	}
 
 	public Model() {
 		// TODO Auto-generated constructor stub
