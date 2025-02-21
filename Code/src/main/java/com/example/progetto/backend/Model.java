@@ -6,18 +6,15 @@ public class Model {
 	private double price;
 	private String category;
 	private String description;
-	private String imageUrl;
 	
-	public Model(String name, double price, String category, String description,String image) {
+	public Model(int id, String name, double price, String category, String description) {
+		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.category = category;
 		this.description = description;
-		this.imageUrl=image;
 	}
-	
-	public Model(int id, String name, double price, String category, String description) {
-		this.id = id;
+	public Model(String name, double price, String category, String description) {
 		this.name = name;
 		this.price = price;
 		this.category = category;
@@ -28,7 +25,6 @@ public class Model {
 	}
 
 	public Model() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getId() {
@@ -37,12 +33,7 @@ public class Model {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getImageUrl() {
-		return imageUrl;
-	}
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+
 	public String getName() {
 		return name;
 	}

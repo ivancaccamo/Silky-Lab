@@ -1,81 +1,81 @@
 package com.example.progetto.backend;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.lang.reflect.Field;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CurrentTest {
 
-   
-    @BeforeEach
-    public void setUp() throws Exception {
-        // Resettiamo l'istanza singleton e gli altri attributi statici
-        resetStaticField("theInstance", null);
-        resetStaticField("currentUser", null);
-        resetStaticField("productView", null);
-        resetStaticField("categoryView", null);
-        // Svuotiamo la lista dei listener
+    @Before
+    public void setUp() {
+        Current.setTheInstance(null);
+        Current.setCurrentUser(null);
+        Current.setProductView(null);
+        Current.setCategoryView(null);
+        Cart.setCartItems(new ArrayList<CartItem>());
     }
-    
-    
-     // Metodo di supporto per resettare i campi statici tramite reflection.
-    
-    private void resetStaticField(String fieldName, Object value) throws Exception {
-        Field field = Current.class.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(null, value);
-    }
-  
+
     @Test
-    public void testSetAndGetUser() {
-        // Creiamo un utente di test
-        User testUser = new User();
-        // Utilizziamo il metodo setUser
-        Current.setUser(testUser);
-        // Verifichiamo che l'utente impostato sia quello restituito dai metodi getUser e getCurrentUser
-        assertEquals(testUser, Current.getUser());
-        assertEquals(testUser, Current.getCurrentUser());
-        
-        // Verifichiamo che l'istanza singleton sia stata creata
-        assertNotNull(Current.getTheInstance());
+    public void testCurrentUserSetGet() {
+        User user = new User();
+        user.setId(1);
+        user.setName("Alice");
+        Current.setCurrentUser(user);
+        assertEquals(user, Current.getCurrentUser());
     }
-    
-    
-//      Testa il corretto funzionamento dei metodi set/get per il campo productView.
-    
+
     @Test
-    public void testSetAndGetProductView() {
+    public void testProductViewSetGet() {
         String productView = "TestProductView";
         Current.setProductView(productView);
         assertEquals(productView, Current.getProductView());
     }
-    
-   
-//     Testa il corretto funzionamento dei metodi set/get per il campo categoryView.
-    
+
     @Test
-    public void testSetAndGetCategoryView() {
+    public void testCategoryViewSetGet() {
         String categoryView = "TestCategoryView";
         Current.setCategoryView(categoryView);
         assertEquals(categoryView, Current.getCategoryView());
     }
-    
+
     @Test
-    public void testExitUser() {
-        User testUser = new User();
-        Current.setUser(testUser);
-        
-        // Verifichiamo che l'utente sia stato impostato
-        assertNotNull(Current.getUser());
-        
-        // Chiamando ExitUser l'utente corrente deve essere impostato a null
-        Current.ExitUser();
-        assertNull(Current.getUser());
+    public void testSetUserCreatesInstance() {
+        User user = new User();
+        user.setId(2);
+        user.setName("Bob");
+        Current.setUser(user);
+        assertNotNull(Current.getTheInstance());
+        assertEquals(user, Current.getUser());
     }
 
-}
+    @Test
+    public void testExitUser() {
+        User user = new User();
+        user.setId(3);
+        user.setName("Charlie");
+        Current.setUser(user);
+        Model model = new Model("TestModel");
+        Product product = new Product(1, "M", model);
+        Cart.addItem(product, 5);
+        assertFalse(Cart.getCartItems().isEmpty());
+        Current.ExitUser();
+        assertNull(Current.getCurrentUser());
+        assertTrue(Cart.getCartItems().isEmpty());
+    }
 
+    @Test
+    public void testSetTheInstance() {
+        Current instance = null;
+        try {
+            Constructor<Current> cons = Current.class.getDeclaredConstructor();
+            cons.setAccessible(true);
+            instance = cons.newInstance();
+        } catch (Exception e) {
+            fail("Failed to create instance");
+        }
+        Current.setTheInstance(instance);
+        assertEquals(instance, Current.getTheInstance());
+    }
+}

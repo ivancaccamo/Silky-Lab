@@ -8,7 +8,7 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 
-public class Product {
+public class Product{
     private int id;
     private String size;
     private Model model;

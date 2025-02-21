@@ -126,18 +126,28 @@ public class DatabaseManager {
         }
     }
 
-    public ResultSet returnAllUser() throws SQLException {
+    public ArrayList<User> returnAllUser() throws SQLException {
+        ArrayList<User> users = new ArrayList<>();
         String sql = "SELECT * FROM User";
-        ResultSet rs = null;
         try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            rs = pstmt.executeQuery();
-            logger.info("Tutti gli utenti ritornati");
-        } catch (SQLException e) {
-            logger.error("Errore in returnAllUser", e);
-            throw e;
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+             while (rs.next()) {
+                 User user = new User();
+                 user.setId(rs.getInt("ID"));
+                 user.setName(rs.getString("name"));
+                 user.setSurname(rs.getString("surname"));
+                 user.setEmail(rs.getString("email"));
+                 user.setPassword(rs.getString("password"));
+                 user.setRole(rs.getString("role"));
+                 users.add(user);
+             }
+             logger.info("Tutti gli utenti ritornati");
+        } catch(SQLException e) {
+             logger.error("Errore in returnAllUser", e);
+             throw e;
         }
-        return rs;
+        return users;
     }
 
     public ArrayList<Model> returnModelsOnCategory(String category) throws SQLException {
@@ -250,7 +260,6 @@ public class DatabaseManager {
     public void loadProducts(int idModel) throws SQLException {
         String sql = "INSERT INTO Product (modelID, size)\r\n"
                 + "VALUES \r\n"
-                + "-- 15 righe per Small\r\n"
                 + "(?, 'S'),\r\n"
                 + "(?, 'S'),\r\n"
                 + "(?, 'S'),\r\n"
@@ -266,29 +275,29 @@ public class DatabaseManager {
                 + "(?, 'S'),\r\n"
                 + "(?, 'S'),\r\n"
                 + "(?, 'S'),\r\n"
+                + "(?, 'S'),\r\n"
+                + "(?, 'S'),\r\n"
+                + "\r\n"  
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
+                + "(?, 'L'),\r\n"
                 + "\r\n"
-                + "-- 20 righe per Large\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "(?, 'L'),\r\n"
-                + "\r\n"
-                + "-- 20 righe per Medium\r\n"
                 + "(?, 'M'),\r\n"
                 + "(?, 'M'),\r\n"
                 + "(?, 'M'),\r\n"
@@ -309,7 +318,6 @@ public class DatabaseManager {
                 + "(?, 'M'),\r\n"
                 + "(?, 'M'),\r\n"
                 + "\r\n"
-                + "-- 10 righe per Extra Large\r\n"
                 + "(?, 'XL'),\r\n"
                 + "(?, 'XL'),\r\n"
                 + "(?, 'XL'),\r\n"

@@ -22,71 +22,41 @@ public class Order {
 		items = dbManager.getSoldProductsByOrderId(iD);
 	}
 
-	
-
-
 	public int getID() {
 		return ID;
 	}
-
-
-
 
 	public void setID(int iD) {
 		ID = iD;
 	}
 
-
-
-
 	public int getIDuser() {
 		return IDuser;
 	}
-
-
-
 
 	public void setIDuser(int iDuser) {
 		IDuser = iDuser;
 	}
 
-
-
-
 	public Date getDate() {
 		return date;
 	}
-
-
-
 
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
-
-
-
 	public Double getTot() {
 		return tot;
 	}
-
-
-
 
 	public void setTot(Double tot) {
 		this.tot = tot;
 	}
 
-
-
-
 	public ArrayList<SoldProduct> getItems() {
 		return items;
 	}
-
-
-
 
 	public void setItems(ArrayList<SoldProduct> items) {
 		this.items = items;
