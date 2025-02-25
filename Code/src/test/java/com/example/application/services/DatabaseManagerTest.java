@@ -31,7 +31,7 @@ public class DatabaseManagerTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws SQLException {
-        try (Connection conn = dbManager.getConnection()) {
+        try (Connection conn = ConnectionFactory.getConnection()) {
             initialUserMax = getMaxId(conn, "User");
             initialModelMax = getMaxId(conn, "Model");
             initialProductMax = getMaxId(conn, "Product");
@@ -55,7 +55,7 @@ public class DatabaseManagerTest {
 
     @AfterClass
     public static void tearDownAfterClass() throws SQLException {
-        try (Connection conn = dbManager.getConnection()) {
+        try (Connection conn = ConnectionFactory.getConnection()) {
             deleteNewRows(conn, "User", initialUserMax);
             deleteNewRows(conn, "Model", initialModelMax);
             deleteNewRows(conn, "Product", initialProductMax);
@@ -75,7 +75,7 @@ public class DatabaseManagerTest {
 
     @Test
     public void testGetConnection() throws SQLException {
-        Connection conn = dbManager.getConnection();
+        Connection conn = ConnectionFactory.getConnection();
         assertNotNull(conn);
         conn.close();
     }
@@ -274,7 +274,7 @@ public class DatabaseManagerTest {
 
     @Test
     public void testCapitalizeAddress() {
-        String result = dbManager.capitalizeAddress("main street");
+        String result = StringUtils.capitalizeAddress("main street");
         assertEquals("Main Street", result);
     }
 }

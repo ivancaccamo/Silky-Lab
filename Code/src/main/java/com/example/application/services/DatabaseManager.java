@@ -24,23 +24,11 @@ public class DatabaseManager {
     private static final Logger logger = LogManager.getLogger(DatabaseManager.class);
     private static final String URL = "jdbc:sqlite:databases/db.db";
 
-    public Connection getConnection() throws SQLException {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(URL);
-            try (Statement stmt = connection.createStatement()) {
-                stmt.execute("PRAGMA foreign_keys = ON;");
-            }
-            logger.info("Connessione al database riuscita");
-        } catch (SQLException e) {
-            logger.error("Errore durante la connessione al database: " + e.getMessage(), e);
-        }
-        return connection;
-    }
+    
 
     public User findUserByID(int id) throws SQLException {
         String query = "SELECT * FROM User WHERE ID = ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -67,7 +55,7 @@ public class DatabaseManager {
 
     public User findUserByEmail(String email) throws SQLException {
         String query = "SELECT * FROM User WHERE email = ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -94,10 +82,10 @@ public class DatabaseManager {
 
     public void saveUser(User user) throws SQLException {
         String query = "INSERT INTO User (name, surname, email, password, role) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, capitalize(user.getName()));
-            stmt.setString(2, capitalize(user.getSurname()));
+            stmt.setString(1, StringUtils.capitalize(user.getName()));
+            stmt.setString(2, StringUtils.capitalize(user.getSurname()));
             stmt.setString(3, user.getEmail().toLowerCase());
             stmt.setString(4, user.getPassword());
             stmt.setString(5, user.getRole());
@@ -111,10 +99,10 @@ public class DatabaseManager {
 
     public void updateUser(User user) throws SQLException {
         String sql = "UPDATE User SET name = ?, surname = ?, email = ?, password = ? WHERE id = ?";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, capitalize(user.getName()));
-            pstmt.setString(2, capitalize(user.getSurname()));
+            pstmt.setString(1, StringUtils.capitalize(user.getName()));
+            pstmt.setString(2, StringUtils.capitalize(user.getSurname()));
             pstmt.setString(3, user.getEmail().toLowerCase());
             pstmt.setString(4, user.getPassword());
             pstmt.setInt(5, user.getId());
@@ -129,7 +117,7 @@ public class DatabaseManager {
     public ArrayList<User> returnAllUser() throws SQLException {
         ArrayList<User> users = new ArrayList<>();
         String sql = "SELECT * FROM User";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
              while (rs.next()) {
@@ -153,7 +141,7 @@ public class DatabaseManager {
     public ArrayList<Model> returnModelsOnCategory(String category) throws SQLException {
         ArrayList<Model> models = new ArrayList<>();
         String sql = "SELECT * FROM Model WHERE category = '" + category + "'";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -175,7 +163,7 @@ public class DatabaseManager {
 
     public void saveModel(Model model) throws SQLException {
         String query = "INSERT INTO Model (name, price, category, description) VALUES (?, ?, ?, ?)";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, model.getName());
             stmt.setDouble(2, model.getPrice());
@@ -191,7 +179,7 @@ public class DatabaseManager {
 
     public Model returnModelByName(String name) throws SQLException {
         String sql = "SELECT * FROM Model WHERE name = '" + name + "'";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -215,7 +203,7 @@ public class DatabaseManager {
 
     public Product returnProductByModel(Model model, String size, int qnt) throws SQLException {
         String sql = "SELECT * FROM Product WHERE modelID = ? AND size = ? LIMIT 1;";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, model.getId());
             pstmt.setString(2, size);
@@ -238,7 +226,7 @@ public class DatabaseManager {
     public int countRecords(Model model, String size) throws SQLException {
         int count = 0;
         String sql = "SELECT COUNT(*) AS TotalRecord FROM Product WHERE modelID = ? AND size = ?;";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, model.getId());
             pstmt.setString(2, size);
@@ -328,7 +316,7 @@ public class DatabaseManager {
                 + "(?, 'XL'),\r\n"
                 + "(?, 'XL'),\r\n"
                 + "(?, 'XL');\r\n";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             for (int i = 1; i < 66; i++) {
                 pstmt.setInt(i, idModel);
@@ -343,7 +331,7 @@ public class DatabaseManager {
 
     public int returnIdModel(Model model) throws SQLException {
         String sql = "SELECT * FROM Model WHERE name = ? AND price = ? AND category = ? AND description = ?;";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, model.getName());
             pstmt.setDouble(2, model.getPrice());
@@ -367,7 +355,7 @@ public class DatabaseManager {
 
     public void deleteModelByName(String name) throws SQLException {
         String sql = "DELETE FROM Model WHERE name = ?";
-        try (Connection conn = this.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name);
             int rowsAffected = stmt.executeUpdate();
@@ -380,12 +368,12 @@ public class DatabaseManager {
 
     public void saveAddress(Address address, int IDuser) throws SQLException {
         String query = "INSERT INTO Address (address, city, cap, country, IDuser) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, capitalizeAddress(address.getAddress()));
-            stmt.setString(2, capitalize(address.getCity()));
+            stmt.setString(1, StringUtils.capitalizeAddress(address.getAddress()));
+            stmt.setString(2, StringUtils.capitalize(address.getCity()));
             stmt.setString(3, address.getCap());
-            stmt.setString(4, capitalize(address.getCountry()));
+            stmt.setString(4, StringUtils.capitalize(address.getCountry()));
             stmt.setInt(5, IDuser);
             stmt.executeUpdate();
             logger.info("Indirizzo salvato per utente ID: " + IDuser);
@@ -397,12 +385,12 @@ public class DatabaseManager {
 
     public void updateAddressById(Address address) throws SQLException {
         String query = "UPDATE Address SET address = ?, country = ?, cap = ?, city = ? WHERE id = ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, capitalize(address.getAddress()));
-            stmt.setString(2, capitalize(address.getCountry()));
+            stmt.setString(1, StringUtils.capitalize(address.getAddress()));
+            stmt.setString(2, StringUtils.capitalize(address.getCountry()));
             stmt.setString(3, address.getCap());
-            stmt.setString(4, capitalize(address.getCity()));
+            stmt.setString(4, StringUtils.capitalize(address.getCity()));
             stmt.setInt(5, address.getID());
             int rowsAffected = stmt.executeUpdate();
             logger.info("Indirizzo aggiornato per ID: " + address.getID() + ", righe modificate: " + rowsAffected);
@@ -415,7 +403,7 @@ public class DatabaseManager {
     public ArrayList<Address> getAddressesByUserId(int userId) throws SQLException {
         String query = "SELECT * FROM Address WHERE IDuser = ?";
         ArrayList<Address> addresses = new ArrayList<>();
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -440,7 +428,7 @@ public class DatabaseManager {
 
     public void deleteAddressById(int addressId) throws SQLException {
         String query = "DELETE FROM Address WHERE id = ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, addressId);
             int rowsAffected = stmt.executeUpdate();
@@ -454,7 +442,7 @@ public class DatabaseManager {
     public ArrayList<SoldProduct> getSoldProductsByOrderId(int orderId) throws SQLException {
         String query = "SELECT * FROM SoldProducts WHERE IDorder = ?";
         ArrayList<SoldProduct> soldProducts = new ArrayList<>();
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, orderId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -478,7 +466,7 @@ public class DatabaseManager {
     public ArrayList<Order> getOrdersByUserId(int userId) throws SQLException {
         String query = "SELECT * FROM `Order` WHERE IDuser = ?";
         ArrayList<Order> orders = new ArrayList<>();
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -502,7 +490,7 @@ public class DatabaseManager {
     public ArrayList<Order> getOrders() throws SQLException {
         String query = "SELECT * FROM `Order`";
         ArrayList<Order> orders = new ArrayList<>();
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -524,7 +512,7 @@ public class DatabaseManager {
 
     public void saveOrder(int userId, double total, ArrayList<SoldProduct> soldProducts) throws SQLException {
         String query = "INSERT INTO `Order` (IDuser, tot) VALUES (?, ?)";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.setDouble(2, total);
@@ -545,7 +533,7 @@ public class DatabaseManager {
 
     public void saveSoldProducts(int orderId, ArrayList<SoldProduct> soldProducts) throws SQLException {
         String query = "INSERT INTO SoldProducts (IDorder, model, size) VALUES (?, ?, ?)";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             for (SoldProduct product : soldProducts) {
                 stmt.setInt(1, orderId);
@@ -570,7 +558,7 @@ public class DatabaseManager {
                 + "    ORDER BY id ASC\r\n"
                 + "    LIMIT ?\r\n"
                 + ");";
-        try (Connection conn = getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, startId);
             stmt.setInt(2, quantity);
@@ -584,7 +572,7 @@ public class DatabaseManager {
 
     public void updateQuantity(Model model, String size, int quantity) throws SQLException {
         int currentQuantity = countRecords(model, size);
-        Connection conn = getConnection();
+        Connection conn = ConnectionFactory.getConnection();
         try {
             if (quantity > currentQuantity) {
                 int recordsToAdd = quantity - currentQuantity;
@@ -615,30 +603,5 @@ public class DatabaseManager {
         }
     }
 
-    private String capitalize(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
-        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
-    }
-
-    public String capitalizeAddress(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
-        StringBuilder result = new StringBuilder();
-        boolean capitalizeNext = true;
-        for (char c : input.toCharArray()) {
-            if (Character.isWhitespace(c)) {
-                capitalizeNext = true;
-                result.append(c);
-            } else if (capitalizeNext) {
-                result.append(Character.toUpperCase(c));
-                capitalizeNext = false;
-            } else {
-                result.append(Character.toLowerCase(c));
-            }
-        }
-        return result.toString();
-    }
+   
 }
