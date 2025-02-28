@@ -1,5 +1,6 @@
-# <p align = "center"> Silky Lab </p>
-
+# <p align = "center"> 
+<img src=Code/src/main/resources/META-INF/resources/Images/SilkyLabIcon.png alt="Silky Lab Logo" width="300" />
+</p>
 
 **<p align = "center"> Progetto di Ingegneria del Software </p>**
 
