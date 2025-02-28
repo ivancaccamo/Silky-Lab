@@ -49,5 +49,3 @@ Dopo il completamento del download, accedi alla cartella del progetto:
 
 Ora l'applicazione dovrebbe avviarsi correttamente!
 
-🚀 Buon lavoro con Silky Lab!
-
