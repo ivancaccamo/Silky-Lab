@@ -1,5 +1,11 @@
 package com.example.progetto.backend;
-
+/**
+ * Rappresenta un utente all'interno del sistema.
+ * <p>
+ * La classe memorizza informazioni di base come nome, cognome, email e ruolo,
+ * necessarie per l'autenticazione e la gestione dei permessi.
+ * </p>
+ */
 public class User {
 	
     private int id;

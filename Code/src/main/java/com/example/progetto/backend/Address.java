@@ -1,5 +1,11 @@
 package com.example.progetto.backend;
-
+/**
+ * Rappresenta un indirizzo associato a un utente.
+ * <p>
+ * Questa classe memorizza informazioni relative all'indirizzo di un utente,
+ * inclusi dettagli come città, CAP e paese.
+ * </p>
+ */
 public class Address {
 	private int ID;
 	private String address;

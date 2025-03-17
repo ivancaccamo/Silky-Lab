@@ -1,5 +1,12 @@
 package com.example.progetto.backend;
-
+/**
+ * Rappresenta un modello di prodotto, contenente informazioni quali nome,
+ * prezzo, categoria e descrizione.
+ * <p>
+ * Questa classe può essere utilizzata per gestire cataloghi di prodotti
+ * e filtrarli in base alle relative categorie.
+ * </p>
+ */
 public class Model {
 	private int id;
 	private String name;

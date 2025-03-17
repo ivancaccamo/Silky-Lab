@@ -2,11 +2,9 @@ package com.example.application.services;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.example.progetto.backend.Address;
@@ -15,17 +13,27 @@ import com.example.progetto.backend.Order;
 import com.example.progetto.backend.Product;
 import com.example.progetto.backend.SoldProduct;
 import com.example.progetto.backend.User;
-import com.vaadin.flow.component.notification.Notification;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Classe per la gestione delle operazioni sul database.
+ * <p>
+ * Questa classe fornisce metodi per gestire utenti, prodotti, ordini e indirizzi
+ * nel database SQLite utilizzato dall'applicazione.
+ * </p>
+ */
 public class DatabaseManager {
     private static final Logger logger = LogManager.getLogger(DatabaseManager.class);
-    private static final String URL = "jdbc:sqlite:databases/db.db";
 
-    
-
+    /**
+     * Trova un utente nel database tramite il suo ID.
+     *
+     * @param id l'ID dell'utente da cercare
+     * @return l'oggetto {@link User} se trovato, altrimenti {@code null}
+     * @throws SQLException in caso di errori nella query
+     */
     public User findUserByID(int id) throws SQLException {
         String query = "SELECT * FROM User WHERE ID = ?";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -42,8 +50,6 @@ public class DatabaseManager {
                     user.setRole(rs.getString("role"));
                     logger.info("Utente trovato con ID: " + id);
                     return user;
-                } else {
-                    logger.warn("Nessun utente trovato con ID: " + id);
                 }
             }
         } catch (SQLException e) {
@@ -53,6 +59,13 @@ public class DatabaseManager {
         return null;
     }
 
+    /**
+     * Trova un utente nel database tramite la sua email.
+     *
+     * @param email l'email dell'utente da cercare
+     * @return l'oggetto {@link User} se trovato, altrimenti {@code null}
+     * @throws SQLException in caso di errori nella query
+     */
     public User findUserByEmail(String email) throws SQLException {
         String query = "SELECT * FROM User WHERE email = ?";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -69,8 +82,6 @@ public class DatabaseManager {
                     user.setRole(rs.getString("role"));
                     logger.info("Utente trovato con email: " + email);
                     return user;
-                } else {
-                    logger.warn("Nessun utente trovato con email: " + email);
                 }
             }
         } catch (SQLException e) {
@@ -80,6 +91,12 @@ public class DatabaseManager {
         return null;
     }
 
+    /**
+     * Salva un nuovo utente nel database.
+     *
+     * @param user l'oggetto {@link User} da salvare
+     * @throws SQLException in caso di errori nella query
+     */
     public void saveUser(User user) throws SQLException {
         String query = "INSERT INTO User (name, surname, email, password, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -97,6 +114,12 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Aggiorna i dati di un utente nel database.
+     *
+     * @param user l'oggetto {@link User} con i dati aggiornati
+     * @throws SQLException in caso di errori nella query
+     */
     public void updateUser(User user) throws SQLException {
         String sql = "UPDATE User SET name = ?, surname = ?, email = ?, password = ? WHERE id = ?";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -114,6 +137,12 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Restituisce tutti gli utenti presenti nel database.
+     *
+     * @return una lista di utenti
+     * @throws SQLException in caso di errori nella query
+     */
     public ArrayList<User> returnAllUser() throws SQLException {
         ArrayList<User> users = new ArrayList<>();
         String sql = "SELECT * FROM User";
@@ -138,19 +167,30 @@ public class DatabaseManager {
         return users;
     }
 
+
+
+    /**
+     * Restituisce una lista di modelli in base alla categoria specificata.
+     *
+     * @param category la categoria dei modelli da cercare
+     * @return una lista di oggetti {@link Model}
+     * @throws SQLException in caso di errori nella query
+     */
     public ArrayList<Model> returnModelsOnCategory(String category) throws SQLException {
         ArrayList<Model> models = new ArrayList<>();
-        String sql = "SELECT * FROM Model WHERE category = '" + category + "'";
+        String sql = "SELECT * FROM Model WHERE category = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, category);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    int id = rs.getInt("ID");
-                    String name = rs.getString("name");
-                    String description = rs.getString("description");
-                    double price = rs.getDouble("price");
-                    Model model = new Model(id, name, price, category, description);
-                    models.add(model);
+                    models.add(new Model(
+                        rs.getInt("ID"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        category,
+                        rs.getString("description")
+                    ));
                 }
             }
             logger.info("Modelli ritornati per la categoria: " + category + ", totale: " + models.size());
@@ -161,6 +201,12 @@ public class DatabaseManager {
         return models;
     }
 
+    /**
+     * Salva un nuovo modello nel database.
+     *
+     * @param model l'oggetto {@link Model} da salvare
+     * @throws SQLException in caso di errori nella query
+     */
     public void saveModel(Model model) throws SQLException {
         String query = "INSERT INTO Model (name, price, category, description) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -201,6 +247,15 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Restituisce un prodotto basato su un modello e una taglia specifica.
+     *
+     * @param model il modello del prodotto
+     * @param size la taglia richiesta
+     * @param qnt la quantità richiesta
+     * @return un oggetto {@link Product} se disponibile, altrimenti {@code null}
+     * @throws SQLException in caso di errori nella query
+     */
     public Product returnProductByModel(Model model, String size, int qnt) throws SQLException {
         String sql = "SELECT * FROM Product WHERE modelID = ? AND size = ? LIMIT 1;";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -212,10 +267,7 @@ public class DatabaseManager {
                     logger.warn("Prodotto non disponibile per modello: " + model.getName() + ", size: " + size + ", richiesta: " + qnt);
                     return null;
                 }
-                int id = rs.getInt("ID");
-                Product product = new Product(id, size, model);
-                logger.info("Prodotto ritornato per modello: " + model.getName() + ", size: " + size);
-                return product;
+                return new Product(rs.getInt("ID"), size, model);
             }
         } catch (SQLException e) {
             logger.error("Errore in returnProductByModel per modello: " + model.getName() + ", size: " + size, e);
@@ -223,6 +275,14 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Conta il numero di prodotti disponibili per un determinato modello e taglia.
+     *
+     * @param model il modello del prodotto
+     * @param size la taglia richiesta
+     * @return il numero di prodotti disponibili
+     * @throws SQLException in caso di errori nella query
+     */
     public int countRecords(Model model, String size) throws SQLException {
         int count = 0;
         String sql = "SELECT COUNT(*) AS TotalRecord FROM Product WHERE modelID = ? AND size = ?;";
@@ -233,8 +293,6 @@ public class DatabaseManager {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     count = rs.getInt("TotalRecord");
-                } else {
-                    count = 0;
                 }
             }
             logger.info("Contatore per modello: " + model.getName() + ", size: " + size + " = " + count);
@@ -510,6 +568,14 @@ public class DatabaseManager {
         return orders;
     }
 
+    /**
+     * Salva un nuovo ordine nel database.
+     *
+     * @param userId ID dell'utente che ha effettuato l'ordine
+     * @param total importo totale dell'ordine
+     * @param soldProducts lista di prodotti venduti nell'ordine
+     * @throws SQLException in caso di errori nella query
+     */
     public void saveOrder(int userId, double total, ArrayList<SoldProduct> soldProducts) throws SQLException {
         String query = "INSERT INTO `Order` (IDuser, tot) VALUES (?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -517,8 +583,8 @@ public class DatabaseManager {
             stmt.setInt(1, userId);
             stmt.setDouble(2, total);
             stmt.executeUpdate();
-            try (Statement stmtID = conn.createStatement();
-                 ResultSet rs = stmtID.executeQuery("SELECT LAST_INSERT_ROWID();")) {
+            try (PreparedStatement stmtID = conn.prepareStatement("SELECT LAST_INSERT_ROWID();");
+                 ResultSet rs = stmtID.executeQuery()) {
                 if (rs.next()) {
                     int lastId = rs.getInt(1);
                     logger.info("Ordine salvato per utente ID: " + userId + " con ID ordine: " + lastId);
@@ -531,6 +597,13 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Salva i prodotti venduti relativi a un ordine.
+     *
+     * @param orderId ID dell'ordine
+     * @param soldProducts lista di prodotti venduti
+     * @throws SQLException in caso di errori nella query
+     */
     public void saveSoldProducts(int orderId, ArrayList<SoldProduct> soldProducts) throws SQLException {
         String query = "INSERT INTO SoldProducts (IDorder, model, size) VALUES (?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -570,6 +643,18 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Aggiorna la quantità di un prodotto nel database in base alla disponibilità richiesta.
+     * <p>
+     * Se la quantità richiesta è maggiore di quella attuale, vengono aggiunti nuovi record.
+     * Se la quantità richiesta è minore, i record in eccesso vengono rimossi.
+     * </p>
+     *
+     * @param model    il modello del prodotto
+     * @param size     la taglia del prodotto
+     * @param quantity la nuova quantità richiesta
+     * @throws SQLException in caso di errori nella query
+     */
     public void updateQuantity(Model model, String size, int quantity) throws SQLException {
         int currentQuantity = countRecords(model, size);
         Connection conn = ConnectionFactory.getConnection();

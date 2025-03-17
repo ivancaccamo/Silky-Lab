@@ -5,7 +5,14 @@ import java.util.List;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
+/**
+ * Classe che gestisce il contesto corrente dell'applicazione, mantenendo informazioni
+ * come l'utente loggato e alcune viste selezionate.
+ * <p>
+ * Utilizza un approccio di tipo "singleton" tramite variabili e metodi statici
+ * per fornire un unico punto di accesso ai dati condivisi.
+ * </p>
+ */
 @Component
 public class Current{
 	private static Current theInstance;
@@ -68,6 +75,10 @@ public class Current{
 	private Current() {
     	
     }
+	/**
+     * Esegue il logout dell'utente, rimuovendo l'istanza dal carrello
+     * e annullando il riferimento all'utente corrente.
+     */
     public static void ExitUser() {
     	Cart.removeAll();
     	currentUser=null;

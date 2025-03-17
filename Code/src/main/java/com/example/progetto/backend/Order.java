@@ -5,7 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.example.application.services.DatabaseManager;
-
+/**
+ * Rappresenta un ordine effettuato da un utente.
+ * <p>
+ * Questa classe conserva le informazioni principali relative all'ordine,
+ * come l'ID dell'utente che l'ha generato, la data, il totale e i prodotti venduti associati.
+ * </p>
+ */
 public class Order {
 	private int ID;
 	private int IDuser;

@@ -7,7 +7,13 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-
+/**
+ * Rappresenta un prodotto specifico, completo di ID, taglia e riferimento a un {@link Model}.
+ * <p>
+ * Questa classe consente di distinguere le varianti di uno stesso modello in base alla taglia
+ * o ad altri attributi che possono essere associati a un singolo articolo nel catalogo.
+ * </p>
+ */
 public class Product{
     private int id;
     private String size;

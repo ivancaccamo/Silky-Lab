@@ -6,7 +6,14 @@ public class SoldProduct {
 	private String model;
 	private String size;
 	
-	
+	/**
+	 * Rappresenta un prodotto venduto all'interno di un ordine.
+	 * <p>
+	 * Questa classe conserva informazioni basilari sul prodotto acquistato,
+	 * come l'ID del prodotto venduto, l'ID dell'ordine di appartenenza,
+	 * il nome del modello e la taglia.
+	 * </p>
+	 */
 	public SoldProduct() {
 	}
 	public int getID() {

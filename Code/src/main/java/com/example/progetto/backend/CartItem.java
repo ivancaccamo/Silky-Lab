@@ -1,5 +1,10 @@
 package com.example.progetto.backend;
-
+/**
+ * Rappresenta un elemento nel carrello.
+ * <p>
+ * Questa classe memorizza un prodotto e la relativa quantità selezionata dall'utente.
+ * </p>
+ */
 public class CartItem {
     private Product product; // Riferimento al prodotto
     private int quantity;    // Quantità del prodotto nel carrello
